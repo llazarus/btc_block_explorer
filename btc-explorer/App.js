@@ -1,7 +1,16 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { CreateStackNavigator } from 'react-navigation';
 
 import AddressList from './components/AddressList';
+import AddAddress from './components/AddAddress';
+import Settings from './components/Settings';
+
+const RootStack = createStackNavigator({
+  AddressList: AddressList,
+  AddAddress: AddAddress,
+  Settings: Settings
+});
 
 export default class App extends React.Component {
   render() {

@@ -56,18 +56,21 @@ export default class AddressList extends React.Component {
       });
       return satoshiConversion(sumSats);
     }
+    const listLength = this.state.addresses.length;
+    const listArr = [];
+    for (let i = 0; i < listLength; i += 1) {
+      listArr.push(i.toString());
+    }
 
     return (
       <View style={styles.container}>
         <Text>Hello from AddressList!</Text>
-        <View>          
-          {this.state.addresses.map(address => (
-            <Text key={address}>{address}</Text>
-          ))}
-          {this.state.balances.map(balance => (
-            <Text key={balance}>{satoshiConversion(balance)}</Text>
-          ))}
-        </View>
+        {listArr.map(addr => (
+          <View key={`view-${addr}`}>
+            <Text key={`addr-${addr}`}>{this.state.addresses[addr]}</Text>
+            <Text key={`balance-${addr}`}>{satoshiConversion(this.state.balances[addr])}</Text>
+          </View>
+        ))}
         <View>
           <Text>
             Sum Balance: {sumBalance(this.state.balances)}
