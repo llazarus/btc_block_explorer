@@ -1,13 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, AsyncStorage, Button } from 'react-native';
+import { StyleSheet, Text, AsyncStorage } from 'react-native';
 import { Container } from 'native-base';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Ionicons } from '@expo/vector-icons';
 import HeaderButtons, { HeaderButton, Item } from 'react-navigation-header-buttons';
 
 import AddressesIndex from './AddressesIndex';
 
 const IoniconsHeaderButton = args => (
-  <HeaderButton {...args} IconComponent={Ionicons} color="#000" />
+  <HeaderButton {...args} IconComponent={Ionicons} color="#000" iconSize={30} />
 );
 
 export default class Home extends React.Component {
@@ -25,24 +25,24 @@ export default class Home extends React.Component {
     this.fetchData = this.fetchData.bind(this);
   }
   
-  static navigationOptions = {
+  static navigationOptions = ({ navigation} ) => ({
     title: 'BTC Block Explorer',
     headerLeft: (
       <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
-        <Item title="settings" iconName="ios-settings" onPress={() => alert('Settings!')} iconSize={25} />
+        <Item title="settings" iconName="md-settings" onPress={() => navigation.navigate("Settings")} />
       </HeaderButtons>
     ),
     headerRight: (
       <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
-        <Item title="add" iconName="ios-add" onPress={() => alert('Add Addr!')} iconSize={30} />
+        <Item title="add" iconName="md-add" onPress={() => navigation.navigate("AddAddress")} />
       </HeaderButtons>
     ),
-  };
-
+  });
+  
   componentDidMount() {
     this.fetchData();
   }
-
+  
   fetchData = async () => {
     // get stored currency or assign default value if none
     let userCurrency = await AsyncStorage.getItem('currency') || 'USD';
@@ -58,7 +58,6 @@ export default class Home extends React.Component {
 
     if (userAddrs === '') {
       // do the things for people that don't have stored addresses!
-
       // for test
       const responseAddresses = await fetch('https://api.blockcypher.com/v1/btc/main/addrs/1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa;1Ez69SnzzmePmZX3WpEzMKTrcBF2gpNQ55;1XPTgDRhN8RFnzniWCddobD9iKZatrvH4');
       const jsonAddresses = await responseAddresses.json();
