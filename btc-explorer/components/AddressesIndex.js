@@ -1,8 +1,9 @@
 import React from 'react';
 import { Text } from 'react-native';
-import { Container, Card, CardItem, Body, List, ListItem, Right, Icon } from 'native-base';
+import { withNavigation } from 'react-navigation';
+import { Container, Card, CardItem, Body, List, ListItem, Right, Icon, Button } from 'native-base';
 
-export default class AddressesIndex extends React.Component {
+class AddressesIndex extends React.Component {
   render() {
     let sumBtc = 0;
     let addressList = [];
@@ -88,7 +89,9 @@ export default class AddressesIndex extends React.Component {
                   </Text>
                 </Body>
                 <Right>
-                  <Icon active name="arrow-forward" />
+                  <Button transparent onPress={() => this.props.navigation.push("TransactionIndex")}>
+                    <Icon active name="arrow-forward" />
+                  </Button>
                 </Right>
               </ListItem>))}
           </List>
@@ -97,3 +100,5 @@ export default class AddressesIndex extends React.Component {
     );
   }
 }
+
+export default withNavigation(AddressesIndex);
