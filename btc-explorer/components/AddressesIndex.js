@@ -37,7 +37,6 @@ class AddressesIndex extends React.Component {
     }
 
     renderUnconfirmed = (num)  => {
-      console.log(num);
       if (num !== 0) {
         if (num > 1) {
           return <Text key={`unconfirmed-tx-${num}`}>{num} unconfirmed TXs</Text>
@@ -79,7 +78,6 @@ class AddressesIndex extends React.Component {
                   <Text key={`address-${a}`}>
                     {addressList[a]}
                   </Text>
-                  <Text></Text>
                   <Text key={`balance-${a}`}>
                     {satConversion(addressBalance[a])} BTC
                   </Text>
@@ -89,7 +87,7 @@ class AddressesIndex extends React.Component {
                   </Text>
                 </Body>
                 <Right>
-                  <Button transparent onPress={() => this.props.navigation.push("TransactionIndex")}>
+                  <Button transparent onPress={() => this.props.navigation.push("AddressShow", { addressInfo: this.props.addresses[a], rate: rate, currencySymbol: currencySymbol })}>
                     <Icon active name="arrow-forward" />
                   </Button>
                 </Right>

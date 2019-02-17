@@ -1,13 +1,97 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
+import { Container, Body, Card, CardItem } from 'native-base';
+const pluralize = require('pluralize');
+
 
 export default class TransactionShow extends React.Component  {
-  render() {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loading: true,
+      tx: {}
+    };
+
+    this.fetchData = this.fetchData.bind(this);
+  }
+
+  componentDidMount() {
+    this.fetchData();
+  }
+
+  fetchData = async () => {
+    const tx_hash = this.props.navigation.getParam('tx_hash', '');
+
+    if (tx_hash !== '') {
+      const responseTX = await fetch(`https://api.blockcypher.com/v1/btc/main/txs/${tx_hash}`);
+      const jsonTX = await responseTX.json();
+      this.setState({
+        tx: jsonTX,
+        loading: false
+      });
+    }
+  }
+
+  render() {    
+    const tx = {...this.state.tx};
+
+    const satConversion = (sats) => {
+      return sats / 100000000;
+    }
+
+    if (this.state.loading) {
+      return (
+        <Container style={styles.container}>
+          <Text>Loading BTC Explorer</Text>
+        </Container>
+      );
+    } 
+    
     return (
-      <View style={styles.container}>
-        <Text>Hello from TransactionShow.js!</Text>
-      </View>
+      <Container>
+        <Card>
+          <CardItem> 
+            <Body>
+              <Text>
+                Transaction Summary {'\n'}
+                Block Hash: {tx.block_hash} {'\n'}
+                Block Height: {tx.block_height} {'\n'}
+                Size: {tx.size} (bytes) {'\n'}
+                Confirmations : {tx.confirmations}
+              </Text>
+            </Body>
+          </CardItem>
+        </Card>
+
+        <Card>
+          <CardItem> 
+            <Body>
+              <Text>
+                Inputs and Outputs {'\n'}
+                Total Input: {satConversion(tx.total) + satConversion(tx.fees)} BTC {'\n'}
+                Total Output: {satConversion(tx.total)} BTC {'\n'}
+                Fees: {satConversion(tx.fees)} BTC
+              </Text>
+            </Body>
+          </CardItem>
+        </Card>
+
+        <Card>
+          <CardItem> 
+            <Body>
+              <Text>
+                {tx.inputs.length} {pluralize('Input', tx.inputs.length)} Consumed: {'\n'}
+              </Text>
+              <Text>
+                {tx.outputs.length} {pluralize('Output', tx.outputs.length)} Consumed: {'\n'}
+              </Text>
+            </Body>
+          </CardItem>
+        </Card>
+      </Container>
     );
+    
   }
 }
 
