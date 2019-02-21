@@ -1,21 +1,34 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text } from 'react-native';
+import { withNavigation } from 'react-navigation';
+import { Container, Content, Form, Item, Input, Label, Button } from 'native-base';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-export default class AddAddress extends React.Component  {
+class AddAddress extends React.Component  {
   render() {
     return (
-      <View style={styles.container}>
-        <Text>Hello from AddAddress.js!</Text>
-      </View>
+      <Container>
+        <Content>
+          <Form>
+            <Item floatingLabel>
+              <Label>Address Name (Optional)</Label>
+              <Input />
+            </Item>
+            <Item floatingLabel>
+              <Label>BTC Address (e.g. 1abc1234567890)</Label>
+              <Input />
+            </Item>
+            <Item>
+              <Button transparent iconRight onPress={() => this.props.navigation.push("BarcodeScanner")}>
+                <Text>Scan QR Code </Text>
+                <MaterialCommunityIcons name='qrcode-scan' />
+              </Button>
+            </Item>
+          </Form>
+        </Content>
+      </Container>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default withNavigation(AddAddress);

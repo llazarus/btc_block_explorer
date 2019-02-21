@@ -1,8 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text } from 'react-native';
 import { Container, Content, List, ListItem } from 'native-base';
+import { withNavigation } from 'react-navigation';
 
-export default class Settings extends React.Component  {
+class Settings extends React.Component  {
   render() {
     return (
       <Container>
@@ -11,7 +12,7 @@ export default class Settings extends React.Component  {
             <ListItem itemDivider>
               <Text>OPTIONS</Text>
             </ListItem>
-            <ListItem>
+            <ListItem onPress={() => this.props.navigation.push("CurrencyList")}>
               <Text>Currency</Text>
             </ListItem>
 
@@ -38,11 +39,4 @@ export default class Settings extends React.Component  {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default withNavigation(Settings);

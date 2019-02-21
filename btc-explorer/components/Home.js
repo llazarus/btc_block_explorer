@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, AsyncStorage } from 'react-native';
-import { Container } from 'native-base';
+import { StyleSheet, Text, AsyncStorage, ScrollView, RefreshControl, View } from 'react-native';
+import { Container, Icon } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 import HeaderButtons, { HeaderButton, Item } from 'react-navigation-header-buttons';
 
@@ -19,14 +19,15 @@ export default class Home extends React.Component {
       currencySymbol: '',
       currency: {},
       numAddresses: -1,
-      addresses: {}
+      addresses: {},
+      refreshing: false
     };
 
     this.fetchData = this.fetchData.bind(this);
   }
   
   static navigationOptions = ({ navigation} ) => ({
-    title: 'BTC Block Explorer',
+    title: 'Bitcoin Block Explorer',
     headerLeft: (
       <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
         <Item title="settings" iconName="md-settings" onPress={() => navigation.navigate("Settings")} />
@@ -79,6 +80,14 @@ export default class Home extends React.Component {
     }
   }
 
+
+  _onRefresh = () => {
+    this.setState({refreshing: true});
+    this.fetchData().then(() => {
+      this.setState({refreshing: false});
+    });
+  }
+
   render() {
     let addresses = {...this.state.addresses};
     let currency = {...this.state.currency};
@@ -93,12 +102,21 @@ export default class Home extends React.Component {
 
     return (
       <Container>
-        <AddressesIndex
-          addresses={addresses}
-          numAddresses={this.state.numAddresses}
-          currency={currency}
-          currencySymbol={this.state.currencySymbol}
-        />
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh}
+            />
+          }
+        >
+          <AddressesIndex
+            addresses={addresses}
+            numAddresses={this.state.numAddresses}
+            currency={currency}
+            currencySymbol={this.state.currencySymbol}
+          />
+        </ScrollView>
       </Container>
     );
   }
