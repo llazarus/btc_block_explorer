@@ -16,7 +16,7 @@ export default class Home extends React.Component {
 
     this.state = {
       loading: true,
-      currencySymbol: '',
+      currencySymbol: undefined,
       currency: {},
       numAddresses: -1,
       addresses: {},
