@@ -23,13 +23,13 @@ class AddressesIndex extends React.Component {
       }
     }
 
-    let rate = '';
-    if (this.props.currency.bpi) {
-      rate = this.props.currency.bpi.USD.rate_float.toFixed(2);
-    }
-    let currencySymbol = '';
+    let currencySymbol = 'USD';
     if (this.props.currencySymbol) {
       currencySymbol = this.props.currencySymbol;
+    }
+    let rate = '';
+    if (this.props.currency.bpi) {
+      rate = this.props.currency["bpi"][currencySymbol]["rate_float"].toFixed(2);
     }
 
     const satConversion = (sats) => {

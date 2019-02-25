@@ -42,6 +42,13 @@ export default class Home extends React.Component {
   
   componentDidMount() {
     this.fetchData();
+
+    this.willFocusListener = this.props.navigation.addListener(
+      'willFocus',
+      () => {
+        this.fetchData();
+      }
+    )
   }
   
   fetchData = async () => {

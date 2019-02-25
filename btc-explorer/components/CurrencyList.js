@@ -1,9 +1,15 @@
 import React from 'react';
 import { Text, AsyncStorage } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { withNavigation } from 'react-navigation';
 import { Container, Content, List, ListItem, Button } from 'native-base';
+import HeaderButtons, { HeaderButton, Item } from 'react-navigation-header-buttons';
 
-export default class CurrencyList extends React.Component  {
+const IoniconsHeaderButton = args => (
+  <HeaderButton {...args} IconComponent={Ionicons} color="#000" iconSize={30} />
+);
+
+class CurrencyList extends React.Component  {
   constructor(props) {
     super(props);
 
@@ -68,6 +74,15 @@ export default class CurrencyList extends React.Component  {
       console.log(error);
     }
   }
+
+  static navigationOptions = ({ navigation }) => ({
+    title: 'Currency',
+    headerLeft: (
+      <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
+        <Item title="back" iconName="ios-arrow-back" onPress={() => navigation.navigate('Settings')} />
+      </HeaderButtons>
+    )
+  });
   
   render() {
     const allCurrencies = this.state.allCurrencies
@@ -106,3 +121,5 @@ export default class CurrencyList extends React.Component  {
     );
   }
 }
+
+export default withNavigation(CurrencyList);
