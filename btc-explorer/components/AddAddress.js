@@ -63,7 +63,13 @@ class AddAddress extends React.Component  {
     
     if (addrResponse.status === 200) {
       // Do the things for a valid address
-      const newAddr = [this.state.addressName.trim(), this.state.address];
+      let addrName = this.state.addressName;
+
+      if (addrName === '') {
+        addrName = this.state.address;
+      }
+
+      const newAddr = [addrName.trim(), this.state.address];
       const allAddrs = await AsyncStorage.getItem('addresses' || []);
       try {
         await AsyncStorage.setItem('addresses', allAddrs.push(newAddr));
@@ -109,8 +115,8 @@ class AddAddress extends React.Component  {
   };
   
   render() {
-    let addressNameToPersist = this.props.navigation.getParam('addressName') || this.state.addressName
-    let addressToPersist = this.props.navigation.getParam('address') || this.state.address
+    let addressNameToPersist = this.props.navigation.getParam('addressName') || this.state.addressName;
+    let addressToPersist = this.props.navigation.getParam('address') || this.state.address;
 
     return (
       <Container>

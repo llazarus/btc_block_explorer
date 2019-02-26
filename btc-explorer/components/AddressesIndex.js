@@ -7,6 +7,7 @@ class AddressesIndex extends React.Component {
   render() {
     let sumBtc = 0;
     let addressList = [];
+    let addressNameList = [];
     let addressBalance = [];
     let allTxs = [];
     let unconfirmedTxs = [];
@@ -16,6 +17,7 @@ class AddressesIndex extends React.Component {
       for (let i = 0; i < this.props.numAddresses; i += 1) {
         sumBtc += this.props.addresses[i]["final_balance"];
         addressList.push(this.props.addresses[i]["address"]);
+        addressNameList.push(this.props.addressNames[i]);
         addressBalance.push(this.props.addresses[i]["final_balance"]);
         allTxs.push(this.props.addresses[i]["n_tx"]);
         unconfirmedTxs.push(this.props.addresses[i]["unconfirmed_n_tx"]);
@@ -75,9 +77,12 @@ class AddressesIndex extends React.Component {
             {numAddresses.map(a => (
               <ListItem key={`listItem-${a}`}>
                 <Body>
+
+                  {/* ADDRESS NAME HERE!!!! */}
                   <Text key={`address-${a}`}>
-                    {addressList[a]}
+                    {addressNameList[a]}
                   </Text>
+
                   <Text key={`balance-${a}`}>
                     {satConversion(addressBalance[a])} BTC
                   </Text>
@@ -87,7 +92,7 @@ class AddressesIndex extends React.Component {
                   </Text>
                 </Body>
                 <Right>
-                  <Button transparent onPress={() => this.props.navigation.push("AddressShow", { addressInfo: this.props.addresses[a], rate: rate, currencySymbol: currencySymbol })}>
+                  <Button transparent onPress={() => this.props.navigation.push("AddressShow", { addressInfo: this.props.addresses[a], addressName: addressNameList[a], rate: rate, currencySymbol: currencySymbol })}>
                     <Icon active name="arrow-forward" />
                   </Button>
                 </Right>

@@ -20,6 +20,7 @@ export default class Home extends React.Component {
       currency: {},
       numAddresses: -1,
       addresses: {},
+      addressNames: [],
       refreshing: false
     };
 
@@ -72,11 +73,21 @@ export default class Home extends React.Component {
       this.setState({
         numAddresses: jsonAddresses.length,
         addresses: jsonAddresses,
-        loading: false
+        loading: false,
+        // remove later!!!
+        addressNames: ['Test 1', 'Test 2', 'Test 3']
       });
     } else {
       // do the things for people that have stored addresses!
-      const addressString = userAddrs.join(';');
+      const addressString = ''
+
+      for (let i = 0; i < userAddrs.length; i += 1) {
+        this.setState({
+          addressNames: this.state.addressNames.push(userAddrs[i][0])
+        });
+        i === (userAddrs.length - 1) ? addressString += userAddrs[i][1] : addressString += userAddrs[i][1].concat(';');
+      }
+
       const responseAddresses = await fetch(`https://api.blockcypher.com/v1/btc/main/addrs/${addressString}`);
       const jsonAddresses = await responseAddresses.json();
       this.setState({
@@ -119,6 +130,7 @@ export default class Home extends React.Component {
         >
           <AddressesIndex
             addresses={addresses}
+            addressNames={this.state.addressNames}
             numAddresses={this.state.numAddresses}
             currency={currency}
             currencySymbol={this.state.currencySymbol}

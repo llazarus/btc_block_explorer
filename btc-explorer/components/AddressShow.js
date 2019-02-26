@@ -6,10 +6,11 @@ import { Container, Card, CardItem, List, ListItem, Body, Right, Icon, Button } 
 class AddressShow extends React.Component  {
   render() {
     const addressInfo = this.props.navigation.getParam('addressInfo', '');
+    const  addressName = this.props.navigation.getParam('addressName', '');
     const transactionArr = addressInfo["txrefs"];
     let numTransactions = [];
     const rate = this.props.navigation.getParam('rate', 0); 
-    const currencySymbol = this.props.navigation.getParam('currencySymbol', ''); 
+    const currencySymbol = this.props.navigation.getParam('currencySymbol', '');
 
     for (let i = 0; i < transactionArr.length; i += 1) {
       numTransactions.push(i);
@@ -33,9 +34,11 @@ class AddressShow extends React.Component  {
         <Card>
           <CardItem>
             <Body>
+
               <Text>
-                {addressInfo["address"]}
+                {addressName}
               </Text>
+
               <Text>
                 Account BTC = {satConversion(addressInfo["final_balance"])} BTC
               </Text>
