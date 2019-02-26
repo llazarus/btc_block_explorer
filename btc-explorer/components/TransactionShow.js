@@ -1,10 +1,16 @@
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { Container, Body, Card, CardItem } from 'native-base';
+import { withNavigation } from 'react-navigation';
+import { Ionicons } from '@expo/vector-icons';
+import HeaderButtons, { HeaderButton, Item } from 'react-navigation-header-buttons';
 const pluralize = require('pluralize');
 
+const IoniconsHeaderButton = args => (
+  <HeaderButton {...args} IconComponent={Ionicons} color="#000" iconSize={30} />
+);
 
-export default class TransactionShow extends React.Component  {
+class TransactionShow extends React.Component  {
   constructor(props) {
     super(props);
 
@@ -32,6 +38,15 @@ export default class TransactionShow extends React.Component  {
       });
     }
   }
+
+  static navigationOptions = ({ navigation }) => ({
+    title: 'Transaction Details',
+    headerLeft: (
+      <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
+        <Item title="back" iconName="ios-arrow-back" onPress={() => navigation.navigate('AddressShow')} />
+      </HeaderButtons>
+    )
+  });
 
   render() {    
     const tx = {...this.state.tx};
@@ -103,3 +118,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+export default withNavigation(TransactionShow);

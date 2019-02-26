@@ -2,8 +2,16 @@ import React from 'react';
 import { Text, ScrollView } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import { Container, Card, CardItem, List, ListItem, Body, Right, Icon, Button } from 'native-base';
+import HeaderLeftToHome from './HeaderLeftToHome';
 
 class AddressShow extends React.Component  {
+  static navigationOptions = {
+    title: 'Address Activity',
+    headerLeft: (
+      <HeaderLeftToHome/>
+    )
+  };
+
   render() {
     const addressInfo = this.props.navigation.getParam('addressInfo', '');
     const  addressName = this.props.navigation.getParam('addressName', '');
@@ -34,11 +42,9 @@ class AddressShow extends React.Component  {
         <Card>
           <CardItem>
             <Body>
-
               <Text>
                 {addressName}
               </Text>
-
               <Text>
                 Account BTC = {satConversion(addressInfo["final_balance"])} BTC
               </Text>

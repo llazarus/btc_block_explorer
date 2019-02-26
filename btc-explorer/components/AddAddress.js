@@ -26,7 +26,7 @@ class AddAddress extends React.Component  {
         text: 'Address must begin with "1" or "3"!',
         buttonText: 'Dismiss',
         type: 'danger',
-        duration: 5000
+        duration: 3000
       });
       this.setState({
         addressPossible: false,
