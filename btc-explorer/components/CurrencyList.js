@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, AsyncStorage } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { withNavigation } from 'react-navigation';
-import { Container, Content, List, ListItem, Button } from 'native-base';
+import { Container, Content, List, ListItem, Button, Toast } from 'native-base';
 import HeaderButtons, { HeaderButton, Item } from 'react-navigation-header-buttons';
 
 const IoniconsHeaderButton = args => (
@@ -72,6 +72,12 @@ class CurrencyList extends React.Component  {
     } catch (error) {
       // do something if error, maybe use a toast popup?
       console.log(error);
+      Toast.show({
+        text: 'Unable to update currency!',
+        buttonText: 'Dismiss',
+        type: 'warning',
+        duration: 5000
+      });
     }
   }
 

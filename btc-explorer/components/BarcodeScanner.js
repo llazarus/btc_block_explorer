@@ -2,6 +2,12 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { BarCodeScanner, Permissions } from 'expo';
 import { withNavigation } from 'react-navigation';
+import { Ionicons } from '@expo/vector-icons';
+import HeaderButtons, { HeaderButton, Item } from 'react-navigation-header-buttons';
+
+const IoniconsHeaderButton = args => (
+  <HeaderButton {...args} IconComponent={Ionicons} color="#000" iconSize={30} />
+);
 
 class BarcodeScanner extends React.Component {
   constructor(props) {
@@ -16,6 +22,15 @@ class BarcodeScanner extends React.Component {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({ hasCameraPermission: status === 'granted' });
   }
+
+  static navigationOptions = ({ navigation }) => ({
+    title: 'Scan Address QR Code',
+    headerLeft: (
+      <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
+        <Item title="back" iconName="ios-arrow-back" onPress={() => navigation.navigate('AddAddress')} />
+      </HeaderButtons>
+    )
+  });
 
   render() {
     const { hasCameraPermission } = this.state;

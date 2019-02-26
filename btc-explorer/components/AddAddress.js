@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, AsyncStorage } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import { Container, Content, Form, Item, Input, Label, Button, Toast } from 'native-base';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -11,18 +11,19 @@ class AddAddress extends React.Component  {
     super(props);
 
     this.state = {
-      addressName: '',
-      address: '',
+      addressName: this.props.navigation.getParam('addressName', ''),
+      address: this.props.navigation.getParam('address', ''),
       addressPossible: false,
       addressError: false
     }
     this.possibleAddr = this.possibleAddr.bind(this)
+    this.confirmAddr = this.confirmAddr.bind(this);
   }
 
   possibleAddr = (addr) => {
     if (addr[0] !== undefined && addr[0].search(/[13]/) === -1) {
       Toast.show({
-        text: 'Valid address must begin with either "1" or "3"!',
+        text: 'Address must begin with "1" or "3"!',
         buttonText: 'Dismiss',
         type: 'danger',
         duration: 5000
@@ -32,7 +33,7 @@ class AddAddress extends React.Component  {
         addressError: true,
       });
     } else if (addr.length > 24) {
-      if (addr.length < 35 && addr.search(/\W\D[0Oil]/) === -1) {
+      if (addr.length < 35 && addr.search(/[0Oil]/) === -1 && addr.search(/\W\D/) === -1) {
         this.setState({
           addressPossible: true,
           addressError: false
@@ -57,11 +58,46 @@ class AddAddress extends React.Component  {
     } 
   }
 
-  componentDidMount() {
-    let addressToPersist = this.props.navigation.getParam('address', '');
+  confirmAddr = async (addr) => {
+    const addrResponse = await fetch(`https://blockchain.info/rawaddr/${addr}`);
+    
+    if (addrResponse.status === 200) {
+      // Do the things for a valid address
+      const newAddr = [this.state.addressName.trim(), this.state.address];
+      const allAddrs = await AsyncStorage.getItem('addresses' || []);
+      try {
+        await AsyncStorage.setItem('addresses', allAddrs.push(newAddr));
+        this.props.navigation.navigate('Home');
+      } catch (error) {
+        // do something if error, maybe a toast popup?
+        console.log(error);
+        Toast.show({
+          text: 'Unable to add address!',
+          buttonText: 'Dismiss',
+          type: 'warning',
+          duration: 5000
+        });
+        this.setState({
+          addressError: true
+        });
+      }
+    } else {
+      // Do the things for an invalid address
+      Toast.show({
+        text: 'Unable to add address!',
+        buttonText: 'Dismiss',
+        type: 'warning',
+        duration: 5000
+      });
+      this.setState({
+        addressError: true
+      });
+    }
+  }
 
-    if (addressToPersist.length > 24) {
-      this.possibleAddr(addressToPersist);
+  componentDidMount() {
+    if (this.state.address.length > 24) {
+      this.possibleAddr(this.state.address);
     }
   }
 
@@ -120,7 +156,11 @@ class AddAddress extends React.Component  {
           </Button>
 
           {this.state.addressPossible === true ? (
-            <Button>
+            <Button
+              onPress={() => {
+                this.confirmAddr(this.state.address);
+              }}
+            >
               <Text>Done</Text>
             </Button>
           ) : (
