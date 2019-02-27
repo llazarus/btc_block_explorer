@@ -2,6 +2,7 @@ import React from 'react';
 import { Text } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import { Container, Card, CardItem, Body, List, ListItem, Right, Icon, Button } from 'native-base';
+const commaNumber = require('comma-number');
 
 class AddressesIndex extends React.Component {
   render() {
@@ -38,17 +39,11 @@ class AddressesIndex extends React.Component {
       return sats / 100000000;
     }
 
-    renderUnconfirmed = (num)  => {
+    const renderUnconfirmed = (num)  => {
       if (num !== 0) {
-        if (num > 1) {
-          return <Text key={`unconfirmed-tx-${num}`}>{num} unconfirmed TXs</Text>;
-        } else {
-          return <Text key={`unconfirmed-tx-${num}`}>{num} unconfirmed TX</Text>;
-        }
+        return <Text key>{num} UNCONFIRMED ⚠️</Text>;
       } else {
-        return (
-          <Text key={`unconfirmed-tx-${num}`}>No unconfirmed TXs</Text>
-        );
+        return <Text key={`unconfirmed-tx-${num}`}>No unconfirmed TXs</Text>;
       }
     }
 
@@ -56,20 +51,22 @@ class AddressesIndex extends React.Component {
       <Container>
       {/* Price info card */}
         <Card>
-          <CardItem>
-            <Body>
-              <Text>
-                Sum BTC = {satConversion(sumBtc)} BTC
-              </Text>
-              <Text>
-                Sum Fiat = {(rate*satConversion(sumBtc)).toFixed(2)} {currencySymbol}
-              </Text>
-              <Text>
-                1 BTC = {rate} {currencySymbol}
-              </Text>
-            </Body>
+          <CardItem style={{alignSelf: 'center'}}>
+            <Text>SUM BTC BALANCE: </Text>
+            <Text>{commaNumber(satConversion(sumBtc))} BTC</Text>
+          </CardItem>
+
+          <CardItem style={{alignSelf: 'center'}}>
+            <Text>SUM FIAT BALANCE: </Text>
+            <Text>{commaNumber((rate*satConversion(sumBtc)).toFixed(2))} {currencySymbol}</Text>
+          </CardItem>
+
+          <CardItem style={{alignSelf: 'center'}}>
+            <Text>RATE: </Text>
+            <Text>1 BTC = {commaNumber(rate)} {currencySymbol}</Text>
           </CardItem>
         </Card>
+        {/*  */}
 
         {/* Address(es) info card */}
         <Card>
@@ -78,20 +75,27 @@ class AddressesIndex extends React.Component {
               <ListItem key={`listItem-${a}`}>
                 <Body>
 
-                  {/* ADDRESS NAME HERE!!!! */}
-                  <Text key={`address-${a}`}>
+                  {/* GIVEN ADDRESS NAME HERE!!! */}
+                  <Text>
                     {addressNameList[a]}
                   </Text>
 
-                  <Text key={`balance-${a}`}>
-                    {satConversion(addressBalance[a])} BTC
+                  {/* IF GIVEN NAME !== ADDRESS THEN PUT ADDRESS HERE!!! */}
+                  {/* TODO: Truncate address so text doesn't wrap */}
+                  {addressNameList[a] !== addressList[a] ? <Text>{addressList[a]}</Text> : null }
+
+                  <Text>
+                    BALANCE: {satConversion(addressBalance[a])} BTC
                   </Text>
+                  
                   {renderUnconfirmed(unconfirmedTxs[a])}
-                  <Text key={`all-txs-${a}`}>
-                    {allTxs[a]} TXs
+
+                  <Text>
+                    CONFIRMED TRANSACTIONS: {commaNumber(allTxs[a])}
                   </Text>
                 </Body>
                 <Right>
+                  {/* TODO: make button black, similar to how the header's back arrow appears */}
                   <Button transparent onPress={() => this.props.navigation.push("AddressShow", { addressInfo: this.props.addresses[a], addressName: addressNameList[a], rate: rate, currencySymbol: currencySymbol })}>
                     <Icon active name="arrow-forward" />
                   </Button>
@@ -99,6 +103,7 @@ class AddressesIndex extends React.Component {
               </ListItem>))}
           </List>
         </Card>
+        {/*  */}
       </Container>
     );
   }

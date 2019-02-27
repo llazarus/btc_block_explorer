@@ -11,7 +11,7 @@ class HeaderLeftToHome extends React.Component  {
   render() {
     return (
       <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
-        <Item title="back" iconName="ios-arrow-back" onPress={() => this.props.navigation.navigate('Home')} />
+        <Item title="to-home" iconName="ios-arrow-back" onPress={() => this.props.navigation.navigate('Home')} />
       </HeaderButtons>
     );
   }

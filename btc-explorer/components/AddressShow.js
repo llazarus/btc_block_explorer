@@ -3,8 +3,10 @@ import { Text, ScrollView } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import { Container, Card, CardItem, List, ListItem, Body, Right, Icon, Button } from 'native-base';
 import HeaderLeftToHome from './HeaderLeftToHome';
+const commaNumber = require('comma-number');
 
 class AddressShow extends React.Component  {
+  // TODO: consider adding a button to headerRight that shows a QR Code generated from address hash
   static navigationOptions = {
     title: 'Address Activity',
     headerLeft: (
@@ -14,7 +16,7 @@ class AddressShow extends React.Component  {
 
   render() {
     const addressInfo = this.props.navigation.getParam('addressInfo', '');
-    const  addressName = this.props.navigation.getParam('addressName', '');
+    const addressName = this.props.navigation.getParam('addressName', '');
     const transactionArr = addressInfo.txrefs;
     let numTransactions = [];
     const numUnconfirmed = addressInfo.unconfirmed_n_tx;
@@ -29,22 +31,25 @@ class AddressShow extends React.Component  {
       return sats / 100000000;
     }
 
-    renderUnconfirmed = (num) => {
+    const renderUnconfirmed = (num) => {
       if (num > 0) {
         const unconfirmedTransactionArr = addressInfo.unconfirmed_txrefs;
         for (let i = 0; i < num; i += 1) {
           return (
             <ListItem key={`unconfirmed-${i}`}>
               <Body>
-                <Text key={`tx-${i}`}>
-                  {unconfirmedTransactionArr[i]['tx_hash']} ⚠️
+                {/* TODO: Truncate wrapping text */}
+                <Text>
+                  TX HASH: {unconfirmedTransactionArr[i]['tx_hash']}
                 </Text>
-                <Text key={`txValue-${i}`}>
+                <Text>
                   {satConversion(unconfirmedTransactionArr[i]["value"])} BTC
                 </Text>
                 {txFlow(unconfirmedTransactionArr[i]["tx_input_n"], i)}
+                <Text>UNCONFIRMED ⚠️</Text>
               </Body>
               <Right>
+                {/* TODO: make button black, similar to how the header's back arrow appears */}
                 <Button transparent onPress={() => this.props.navigation.push("TransactionShow", { tx_hash: unconfirmedTransactionArr[i]['tx_hash'] })}>
                   <Icon active name="arrow-forward" />
                 </Button>
@@ -52,14 +57,16 @@ class AddressShow extends React.Component  {
             </ListItem>
           );
         }
+      } else {
+        return null;
       }
     }
 
-    txFlow = (input, key) => {
+    const txFlow = (input, key) => {
       if (input === -1) {
-        return <Text key={`txFlow-${key}`}>Incoming TX</Text>
+        return <Text key={`txFlow-${key}`}>INCOMING TX</Text>
       } else {
-        return <Text key={`txFlow-${key}`}>Outgoing TX</Text>
+        return <Text key={`txFlow-${key}`}>OUTGOING TX</Text>
       }
     }
 
@@ -69,17 +76,17 @@ class AddressShow extends React.Component  {
           <Card>
             <CardItem>
               <Body>
+                <Text>{addressName}</Text>
+                {/* TODO: Truncate wrapping text */}
+                <Text>{addressInfo['address']}</Text>
                 <Text>
-                  {addressName}
+                  ACCOUNT BTC BALANCE: {commaNumber(satConversion(addressInfo["final_balance"]))} BTC
                 </Text>
                 <Text>
-                  Account BTC = {satConversion(addressInfo["final_balance"])} BTC
+                  ACCOUNT FIAT BALANCE: {commaNumber((rate*satConversion(addressInfo["final_balance"])).toFixed(2))} {currencySymbol}
                 </Text>
                 <Text>
-                  Account Fiat = {(rate*satConversion(addressInfo["final_balance"])).toFixed(2)} {currencySymbol}
-                </Text>
-                <Text>
-                  1 BTC = {rate} {currencySymbol}
+                  RATE: 1 BTC = {commaNumber(rate)} {currencySymbol}
                 </Text>
               </Body>
             </CardItem>
@@ -87,19 +94,23 @@ class AddressShow extends React.Component  {
 
           <Card>
             <List>
+
               {renderUnconfirmed(numUnconfirmed)}
+
               {numTransactions.map(tx => (
                 <ListItem key={`listItem-${tx}`}>
                   <Body>
-                    <Text key={`tx-${tx}`}>
-                      {transactionArr[tx]['tx_hash']}
+                    {/* TODO: Truncate wrapping text */}
+                    <Text>
+                      TX HASH: {transactionArr[tx]['tx_hash']}
                     </Text>
-                    <Text key={`txValue-${tx}`}>
-                      {satConversion(transactionArr[tx]["value"])} BTC
+                    <Text>
+                      VALUE: {commaNumber(satConversion(transactionArr[tx]["value"]))} BTC
                     </Text>
                     {txFlow(transactionArr[tx]["tx_input_n"], tx)}
                   </Body>
                   <Right>
+                    {/* TODO: make button black, similar to how the header's back arrow appears */}
                     <Button transparent onPress={() => this.props.navigation.push("TransactionShow", { tx_hash: transactionArr[tx]['tx_hash'] })}>
                       <Icon active name="arrow-forward" />
                     </Button>

@@ -70,15 +70,20 @@ export default class Home extends React.Component {
       // for test
       const responseAddresses = await fetch('https://api.blockcypher.com/v1/btc/main/addrs/1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa;1Ez69SnzzmePmZX3WpEzMKTrcBF2gpNQ55;1XPTgDRhN8RFnzniWCddobD9iKZatrvH4');
       const jsonAddresses = await responseAddresses.json();
-      this.setState({
-        numAddresses: jsonAddresses.length,
-        addresses: jsonAddresses,
-        loading: false,
-        // remove later!!!
-        addressNames: ['Test 1', 'Test 2', 'Test 3']
-      });
+      if (jsonAddresses[0]['error']) {
+        // Do something if error getting addresses
+        console.log(jsonAddresses[0]['error']);
+      } else {
+        this.setState({
+          numAddresses: jsonAddresses.length,
+          addresses: jsonAddresses,
+          loading: false,
+          // remove later!!!
+          addressNames: ['Test 1', 'Test 2', 'Test 3']
+        });
+      }
     } else {
-      // do the things for people that have stored addresses!
+      // Do the things for people that have stored addresses!
       const addressString = ''
 
       for (let i = 0; i < userAddrs.length; i += 1) {
@@ -90,11 +95,17 @@ export default class Home extends React.Component {
 
       const responseAddresses = await fetch(`https://api.blockcypher.com/v1/btc/main/addrs/${addressString}`);
       const jsonAddresses = await responseAddresses.json();
-      this.setState({
-        numAddresses: jsonAddresses.length,
-        addresses: jsonAddresses,
-        loading: false
-      });
+
+      if (jsonAddresses[0]['error']) {
+        // Do something if error getting addresses
+        console.log(jsonAddresses[0]['error']);
+      } else {
+        this.setState({
+          numAddresses: jsonAddresses.length,
+          addresses: jsonAddresses,
+          loading: false
+        });
+      }
     }
   }
 

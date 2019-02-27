@@ -5,6 +5,7 @@ import { withNavigation } from 'react-navigation';
 import { Ionicons } from '@expo/vector-icons';
 import HeaderButtons, { HeaderButton, Item } from 'react-navigation-header-buttons';
 const pluralize = require('pluralize');
+const commaNumber = require('comma-number');
 
 const IoniconsHeaderButton = args => (
   <HeaderButton {...args} IconComponent={Ionicons} color="#000" iconSize={30} />
@@ -39,6 +40,7 @@ class TransactionShow extends React.Component  {
     }
   }
 
+  // TODO: consider adding a button to headerRight that shows a QR Code generated from tx hash
   static navigationOptions = ({ navigation }) => ({
     title: 'Transaction Details',
     headerLeft: (
@@ -55,6 +57,10 @@ class TransactionShow extends React.Component  {
       return sats / 100000000;
     }
 
+    // Function to iterate inputs here
+
+    // Function to iterate outputs here
+
     if (this.state.loading) {
       return (
         <Container style={styles.container}>
@@ -69,11 +75,14 @@ class TransactionShow extends React.Component  {
           <CardItem> 
             <Body>
               <Text>
-                Transaction Summary {'\n'}
-                Block Hash: {tx.block_hash} {'\n'}
-                Block Height: {tx.block_height} {'\n'}
-                Size: {tx.size} (bytes) {'\n'}
-                Confirmations : {tx.confirmations}
+                {/* TODO: Truncate wrapping text */}
+                BLOCK HASH: {tx.block_hash}{'\n'}
+                BLOCK HEIGHT: {tx.block_height}{'\n'}
+                SIZE: {tx.size} bytes{'\n'}
+                CONFIRMATIONS: {tx.confirmations}{'\n'}
+                TOTAL INPUT: {commaNumber(satConversion(tx.total) + satConversion(tx.fees))} BTC{'\n'}
+                TOTAL OUTPUT: {commaNumber(satConversion(tx.total))} BTC{'\n'}
+                FEES: {commaNumber(satConversion(tx.fees))} BTC
               </Text>
             </Body>
           </CardItem>
@@ -83,25 +92,12 @@ class TransactionShow extends React.Component  {
           <CardItem> 
             <Body>
               <Text>
-                Inputs and Outputs {'\n'}
-                Total Input: {satConversion(tx.total) + satConversion(tx.fees)} BTC {'\n'}
-                Total Output: {satConversion(tx.total)} BTC {'\n'}
-                Fees: {satConversion(tx.fees)} BTC
-              </Text>
-            </Body>
-          </CardItem>
-        </Card>
-
-        <Card>
-          <CardItem> 
-            <Body>
-              <Text>
-                {/* Function to iterate inputs here */}
-                {tx.inputs.length} {pluralize('Input', tx.inputs.length)} Consumed: {'\n'}
+                {/* TODO: Function to iterate inputs here */}
+                {tx.inputs.length} {pluralize('INPUT', tx.inputs.length)} CONSUMED:{'\n'}
               </Text>
               <Text>
-                {/* Function to iterate outputs here */}
-                {tx.outputs.length} {pluralize('Output', tx.outputs.length)} Consumed: {'\n'}
+                {/* TODO: Function to iterate outputs here */}
+                {tx.outputs.length} {pluralize('OUTPUT', tx.outputs.length)} EXPENDED:{'\n'}
               </Text>
             </Body>
           </CardItem>
