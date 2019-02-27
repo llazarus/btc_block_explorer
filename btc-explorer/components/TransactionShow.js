@@ -61,7 +61,7 @@ class TransactionShow extends React.Component  {
           <Text>Loading BTC Explorer</Text>
         </Container>
       );
-    } 
+    }
     
     return (
       <Container>
@@ -96,9 +96,11 @@ class TransactionShow extends React.Component  {
           <CardItem> 
             <Body>
               <Text>
+                {/* Function to iterate inputs here */}
                 {tx.inputs.length} {pluralize('Input', tx.inputs.length)} Consumed: {'\n'}
               </Text>
               <Text>
+                {/* Function to iterate outputs here */}
                 {tx.outputs.length} {pluralize('Output', tx.outputs.length)} Consumed: {'\n'}
               </Text>
             </Body>

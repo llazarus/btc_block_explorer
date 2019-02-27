@@ -15,8 +15,9 @@ class AddressShow extends React.Component  {
   render() {
     const addressInfo = this.props.navigation.getParam('addressInfo', '');
     const  addressName = this.props.navigation.getParam('addressName', '');
-    const transactionArr = addressInfo["txrefs"];
+    const transactionArr = addressInfo.txrefs;
     let numTransactions = [];
+    const numUnconfirmed = addressInfo.unconfirmed_n_tx;
     const rate = this.props.navigation.getParam('rate', 0); 
     const currencySymbol = this.props.navigation.getParam('currencySymbol', '');
 
@@ -26,6 +27,32 @@ class AddressShow extends React.Component  {
 
     const satConversion = (sats) => {
       return sats / 100000000;
+    }
+
+    renderUnconfirmed = (num) => {
+      if (num > 0) {
+        const unconfirmedTransactionArr = addressInfo.unconfirmed_txrefs;
+        for (let i = 0; i < num; i += 1) {
+          return (
+            <ListItem key={`unconfirmed-${i}`}>
+              <Body>
+                <Text key={`tx-${i}`}>
+                  {unconfirmedTransactionArr[i]['tx_hash']} ⚠️
+                </Text>
+                <Text key={`txValue-${i}`}>
+                  {satConversion(unconfirmedTransactionArr[i]["value"])} BTC
+                </Text>
+                {txFlow(unconfirmedTransactionArr[i]["tx_input_n"], i)}
+              </Body>
+              <Right>
+                <Button transparent onPress={() => this.props.navigation.push("TransactionShow", { tx_hash: unconfirmedTransactionArr[i]['tx_hash'] })}>
+                  <Icon active name="arrow-forward" />
+                </Button>
+              </Right>
+            </ListItem>
+          );
+        }
+      }
     }
 
     txFlow = (input, key) => {
@@ -38,29 +65,29 @@ class AddressShow extends React.Component  {
 
     return (
       <Container>  
-      
-        <Card>
-          <CardItem>
-            <Body>
-              <Text>
-                {addressName}
-              </Text>
-              <Text>
-                Account BTC = {satConversion(addressInfo["final_balance"])} BTC
-              </Text>
-              <Text>
-                Account Fiat = {(rate*satConversion(addressInfo["final_balance"])).toFixed(2)} {currencySymbol}
-              </Text>
-              <Text>
-                1 BTC = {rate} {currencySymbol}
-              </Text>
-            </Body>
-          </CardItem>
-        </Card>
-
         <ScrollView>
           <Card>
+            <CardItem>
+              <Body>
+                <Text>
+                  {addressName}
+                </Text>
+                <Text>
+                  Account BTC = {satConversion(addressInfo["final_balance"])} BTC
+                </Text>
+                <Text>
+                  Account Fiat = {(rate*satConversion(addressInfo["final_balance"])).toFixed(2)} {currencySymbol}
+                </Text>
+                <Text>
+                  1 BTC = {rate} {currencySymbol}
+                </Text>
+              </Body>
+            </CardItem>
+          </Card>
+
+          <Card>
             <List>
+              {renderUnconfirmed(numUnconfirmed)}
               {numTransactions.map(tx => (
                 <ListItem key={`listItem-${tx}`}>
                   <Body>
@@ -81,6 +108,7 @@ class AddressShow extends React.Component  {
               )}
             </List>
           </Card>
+
         </ScrollView>
 
       </Container>
