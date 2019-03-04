@@ -41,7 +41,7 @@ class AddressesIndex extends React.Component {
 
     const renderUnconfirmed = (num)  => {
       if (num !== 0) {
-        return <Text key>{num} UNCONFIRMED ⚠️</Text>;
+        return <Text key>{num} Unconfirmed ⚠️</Text>;
       } else {
         return <Text key={`unconfirmed-tx-${num}`}>No unconfirmed TXs</Text>;
       }

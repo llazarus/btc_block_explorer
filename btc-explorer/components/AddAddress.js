@@ -33,7 +33,7 @@ class AddAddress extends React.Component  {
         addressError: true,
       });
     } else if (addr.length > 24) {
-      if (addr.length < 35 && addr.search(/[0Oil]/) === -1 && addr.search(/\W\D/) === -1) {
+      if (addr.length < 36 && addr.search(/[0OIl]/) === -1 && addr.search(/\W\D/) === -1) {
         this.setState({
           addressPossible: true,
           addressError: false

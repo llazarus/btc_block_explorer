@@ -46,7 +46,8 @@ class AddressShow extends React.Component  {
                   {satConversion(unconfirmedTransactionArr[i]["value"])} BTC
                 </Text>
                 {txFlow(unconfirmedTransactionArr[i]["tx_input_n"], i)}
-                <Text>UNCONFIRMED ⚠️</Text>
+                <Text>TX UNCONFIRMED ⚠️</Text>
+                <Text>RECEIVED AT (UTC): {unconfirmedTransactionArr[i]["tx_received"].slice(0, 19).replace(/[^:-\d]/g, ' ')}</Text>
               </Body>
               <Right>
                 {/* TODO: make button black, similar to how the header's back arrow appears */}
@@ -78,13 +79,37 @@ class AddressShow extends React.Component  {
               <Body>
                 <Text>{addressName}</Text>
                 {/* TODO: Truncate wrapping text */}
-                <Text>{addressInfo['address']}</Text>
+              </Body>
+            </CardItem>
+
+            {addressName !== addressInfo['address'] ? (
+              <CardItem>
+                <Body>
+                  <Text>
+                    {addressInfo['address']}
+                  </Text>
+                </Body>
+              </CardItem>
+            ) : null }
+
+            <CardItem>
+              <Body>
                 <Text>
                   ACCOUNT BTC BALANCE: {commaNumber(satConversion(addressInfo["final_balance"]))} BTC
                 </Text>
+              </Body>
+            </CardItem>
+
+            <CardItem>
+              <Body>
                 <Text>
                   ACCOUNT FIAT BALANCE: {commaNumber((rate*satConversion(addressInfo["final_balance"])).toFixed(2))} {currencySymbol}
                 </Text>
+              </Body>
+            </CardItem>
+
+            <CardItem>
+              <Body>
                 <Text>
                   RATE: 1 BTC = {commaNumber(rate)} {currencySymbol}
                 </Text>
@@ -108,6 +133,7 @@ class AddressShow extends React.Component  {
                       VALUE: {commaNumber(satConversion(transactionArr[tx]["value"]))} BTC
                     </Text>
                     {txFlow(transactionArr[tx]["tx_input_n"], tx)}
+                    <Text>CONFIRMED AT (UTC): {transactionArr[tx]["confirmed"].slice(0, 19).replace(/[^:-\d]/g, ' ')}</Text>
                   </Body>
                   <Right>
                     {/* TODO: make button black, similar to how the header's back arrow appears */}
