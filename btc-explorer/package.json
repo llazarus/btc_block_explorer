@@ -7,12 +7,21 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@expo/vector-icons": "^9.0.0",
+    "comma-number": "^2.0.0",
+    "date-and-time": "^0.6.3",
     "expo": "^32.0.0",
+    "native-base": "^2.12.0",
+    "pluralize": "^7.0.0",
     "react": "16.5.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz"
+    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "react-native-vector-icons": "^6.2.0",
+    "react-navigation": "^3.2.1",
+    "react-navigation-header-buttons": "^2.1.2"
   },
   "devDependencies": {
     "babel-preset-expo": "^5.0.0"
   },
-  "private": true
+  "private": true,
+  "name": "block_explorer"
 }
