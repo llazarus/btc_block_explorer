@@ -1,8 +1,8 @@
 import React from 'react';
-import { Text, AsyncStorage } from 'react-native';
+import { Text, AsyncStorage, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { withNavigation } from 'react-navigation';
-import { Container, Content, List, ListItem, Button, Toast } from 'native-base';
+import { Container, Content, List, ListItem, Button, Toast, Icon } from 'native-base';
 import HeaderButtons, { HeaderButton, Item } from 'react-navigation-header-buttons';
 
 const IoniconsHeaderButton = args => (
@@ -70,7 +70,6 @@ class CurrencyList extends React.Component  {
         userCurrency: string
       });
     } catch (error) {
-      // do something if error, maybe use a toast popup?
       console.log(error);
       Toast.show({
         text: 'Unable to update currency!',
@@ -100,19 +99,19 @@ class CurrencyList extends React.Component  {
             {allCurrencies.map(c => {
               if (c[1] === this.state.userCurrency) {
                 return (
-                  <ListItem key={`currecy-${c}`}>
-                    <Button transparent style={{flex: 1}}>
+                  <ListItem key={`currecy-${c}`} style={styles.currencyRow}>
+                    <Button transparent style={styles.buttonFlex} iconLeft>
                       <Text>
                         {c[0] + ` (${c[1]})`}
-                        <Ionicons name="md-checkmark"/>
                       </Text>
+                      <Icon type="Ionicons" name="md-checkmark" style={{color: 'black'}}/>
                     </Button>
                   </ListItem>
                 );  
               } else {
                 return (
-                  <ListItem key={`currecy-${c}`}>
-                    <Button transparent onPress={() => this.updateCurrency(c[1])} style={{flex: 1}}>
+                  <ListItem key={`currecy-${c}`} style={styles.currencyRow}>
+                    <Button transparent style={styles.buttonFlex} onPress={() => this.updateCurrency(c[1])}>
                       <Text>
                         {c[0] + ` (${c[1]})`}
                       </Text>
@@ -127,5 +126,16 @@ class CurrencyList extends React.Component  {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  currencyRow: {
+    flex: 1,
+    paddingTop: 0,
+    paddingBottom: 0
+  },
+  buttonFlex: {
+    flex: 1
+  }
+});
 
 export default withNavigation(CurrencyList);

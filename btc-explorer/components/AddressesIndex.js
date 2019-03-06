@@ -72,7 +72,16 @@ class AddressesIndex extends React.Component {
         <Card>
           <List>
             {numAddresses.map(a => (
-              <ListItem key={`listItem-${a}`}>
+              <ListItem
+                key={`listItem-${a}`}
+                onPress={() => this.props.navigation.push("AddressShow", 
+                  { addressInfo: this.props.addresses[a],
+                    addressName: addressNameList[a], 
+                    rate: rate, 
+                    currencySymbol: currencySymbol 
+                  })
+                }
+              >
                 <Body>
 
                   {/* GIVEN ADDRESS NAME HERE!!! */}
@@ -96,9 +105,7 @@ class AddressesIndex extends React.Component {
                 </Body>
                 <Right>
                   {/* TODO: make button black, similar to how the header's back arrow appears */}
-                  <Button transparent onPress={() => this.props.navigation.push("AddressShow", { addressInfo: this.props.addresses[a], addressName: addressNameList[a], rate: rate, currencySymbol: currencySymbol })}>
-                    <Icon active name="arrow-forward" />
-                  </Button>
+                  <Icon active name="arrow-forward" />
                 </Right>
               </ListItem>))}
           </List>

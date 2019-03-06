@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text } from 'react-native';
-import { Container, Content, List, ListItem } from 'native-base';
+import { Container, Content, List, ListItem, Icon, Right, Left } from 'native-base';
 import { withNavigation } from 'react-navigation';
 
 import HeaderLeftToHome from './HeaderLeftToHome';
@@ -22,28 +22,37 @@ class Settings extends React.Component  {
       <Container>
         <Content>
           <List>
-            <ListItem itemDivider>
+            <ListItem itemDivider style={{borderBottomWidth: 0.5}}>
               <Text>OPTIONS</Text>
             </ListItem>
-            <ListItem onPress={() => this.props.navigation.push("CurrencyList")}>
-              <Text>Currency</Text>
+            <ListItem onPress={() => this.props.navigation.push("CurrencyList")} noIndent>
+              <Left>
+                <Text>Currency Options</Text>
+              </Left>
+              <Right>
+                <Icon name="arrow-forward" />
+              </Right>
             </ListItem>
 
-            <ListItem itemDivider>
-              <Text>SOCIAL</Text>
+            <ListItem itemDivider style={{borderBottomWidth: 0.5}}>
+              <Text>BITCOIN BLOCK EXPLORER</Text>
             </ListItem>
             <ListItem>
-              <Text>Rate this app in the App Store</Text>
+              {/* USE FIREBASE LINK HERE TO DYNAMICALLY LINK TO iOS/ANDROID STORE */}
+              <Left>
+                <Text>Review This App</Text>
+              </Left>
+              <Right>
+                <Icon name="arrow-forward" />
+              </Right>
             </ListItem>
-
-            <ListItem itemDivider>
-              <Text>BTC Block Explorer</Text>
-            </ListItem>
-            <ListItem>
-              <Text>Feedback</Text>
-            </ListItem>
-            <ListItem>
-            <Text>Privacy Policy</Text>
+            <ListItem last>
+              <Left>
+                <Text>Privacy Policy</Text>
+              </Left>
+              <Right>
+                <Icon name="arrow-forward" />
+              </Right>
             </ListItem>
           </List>
         </Content>
