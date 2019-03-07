@@ -54,67 +54,75 @@ export default class Home extends React.Component {
   }
   
   fetchData = async () => {
-    // get stored currency or assign default value if none
-    let userCurrency = await AsyncStorage.getItem('currency') || 'USD';
-    // get stored addresses or assign default value if none
-    let userAddrs = await AsyncStorage.getItem('addresses') || '';
-
-    const currencyResponse = await fetch(`https://api.coindesk.com/v1/bpi/currentprice/${userCurrency}.json`);
-    const jsonCurrency = await currencyResponse.json();
-    this.setState({
-      currencySymbol: userCurrency,
-      currency: jsonCurrency
-    });
-
-    if (userAddrs === '') {
-      // do the things for people that don't have stored addresses!
-      // for test
-      const responseAddresses = await fetch('https://api.blockcypher.com/v1/btc/main/addrs/1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa;1Ez69SnzzmePmZX3WpEzMKTrcBF2gpNQ55;1XPTgDRhN8RFnzniWCddobD9iKZatrvH4');
-      const jsonAddresses = await responseAddresses.json();
-      if (jsonAddresses[0]['error']) {
-        // Do something if error getting addresses
-        console.log(jsonAddresses[0]['error']);
-        this.setState({
-          loadingError: true
-        });
+    try {
+      // get stored currency or assign default value if none
+      let userCurrency = await AsyncStorage.getItem('currency') || 'USD';
+      // get stored addresses or assign default value if none
+      let userAddrs = await AsyncStorage.getItem('addresses') || '';
+  
+      const currencyResponse = await fetch(`https://api.coindesk.com/v1/bpi/currentprice/${userCurrency}.json`);
+      const jsonCurrency = await currencyResponse.json();
+      this.setState({
+        currencySymbol: userCurrency,
+        currency: jsonCurrency
+      });
+  
+      if (userAddrs === '') {
+        // do the things for people that don't have stored addresses!
+        // for test
+        const responseAddresses = await fetch('https://api.blockcypher.com/v1/btc/main/addrs/1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa;1Ez69SnzzmePmZX3WpEzMKTrcBF2gpNQ55;1XPTgDRhN8RFnzniWCddobD9iKZatrvH4');
+        const jsonAddresses = await responseAddresses.json();
+        if (jsonAddresses[0]['error']) {
+          // Do something if error getting addresses
+          console.log(jsonAddresses[0]['error']);
+          this.setState({
+            loadingError: true
+          });
+        } else {
+          this.setState({
+            numAddresses: jsonAddresses.length,
+            addresses: jsonAddresses,
+            loading: false,
+            loadingError: false,
+            // remove later!!!
+            addressNames: ['Test 1', 'Test 2', 'Test 3']
+          });
+        }
       } else {
-        this.setState({
-          numAddresses: jsonAddresses.length,
-          addresses: jsonAddresses,
-          loading: false,
-          loadingError: false,
-          // remove later!!!
-          addressNames: ['Test 1', 'Test 2', 'Test 3']
-        });
+        // Do the things for people that have stored addresses!
+        const addressString = ''
+  
+        for (let i = 0; i < userAddrs.length; i += 1) {
+          this.setState({
+            addressNames: this.state.addressNames.push(userAddrs[i][0])
+          });
+          i === (userAddrs.length - 1) ? addressString += userAddrs[i][1] : addressString += userAddrs[i][1].concat(';');
+        }
+  
+        const responseAddresses = await fetch(`https://api.blockcypher.com/v1/btc/main/addrs/${addressString}`);
+        const jsonAddresses = await responseAddresses.json();
+  
+        if (jsonAddresses[0]['error']) {
+          // Do something if error getting addresses
+          console.log(jsonAddresses[0]['error']);
+          this.setState({
+            loadingError: true
+          });
+        } else {
+          this.setState({
+            numAddresses: jsonAddresses.length,
+            addresses: jsonAddresses,
+            loading: false,
+            loadingError: false
+          });
+        }
       }
-    } else {
-      // Do the things for people that have stored addresses!
-      const addressString = ''
 
-      for (let i = 0; i < userAddrs.length; i += 1) {
-        this.setState({
-          addressNames: this.state.addressNames.push(userAddrs[i][0])
-        });
-        i === (userAddrs.length - 1) ? addressString += userAddrs[i][1] : addressString += userAddrs[i][1].concat(';');
-      }
-
-      const responseAddresses = await fetch(`https://api.blockcypher.com/v1/btc/main/addrs/${addressString}`);
-      const jsonAddresses = await responseAddresses.json();
-
-      if (jsonAddresses[0]['error']) {
-        // Do something if error getting addresses
-        console.log(jsonAddresses[0]['error']);
-        this.setState({
-          loadingError: true
-        });
-      } else {
-        this.setState({
-          numAddresses: jsonAddresses.length,
-          addresses: jsonAddresses,
-          loading: false,
-          loadingError: false
-        });
-      }
+    } catch {
+      console.log("3rd party API offline 😡");
+      this.setState({
+        loadingError: true
+      });
     }
   }
 
