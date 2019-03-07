@@ -120,6 +120,7 @@ export default class Home extends React.Component {
 
     } catch {
       console.log("3rd party API offline 😡");
+      // Maybe have a different state, ie serverError, to differentiate from a loading error or request exception
       this.setState({
         loadingError: true
       });

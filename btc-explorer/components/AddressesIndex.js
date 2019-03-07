@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import { Container, Card, CardItem, Body, List, ListItem, Right, Icon, Button } from 'native-base';
+import { Container, Card, CardItem, Body, List, ListItem, Icon } from 'native-base';
 const commaNumber = require('comma-number');
 
 class AddressesIndex extends React.Component {
@@ -69,10 +69,13 @@ class AddressesIndex extends React.Component {
         {/*  */}
 
         {/* Address(es) info card */}
-        <Card>
+        <Card style={{borderColor: "#ff9500"}}>
           <List>
             {numAddresses.map(a => (
               <ListItem
+                noIndent
+                iconRight
+                style={{borderColor: "#ff9500", paddingTop: 0}}
                 key={`listItem-${a}`}
                 onPress={() => this.props.navigation.push("AddressShow", 
                   { addressInfo: this.props.addresses[a],
@@ -83,11 +86,11 @@ class AddressesIndex extends React.Component {
                 }
               >
                 <Body>
-
                   {/* GIVEN ADDRESS NAME HERE!!! */}
-                  <Text>
+                  <Text style={{alignSelf: "center", margin: 0.5}}>
                     {addressNameList[a]}
                   </Text>
+
 
                   {/* IF GIVEN NAME !== ADDRESS THEN PUT ADDRESS HERE!!! */}
                   {/* TODO: Truncate address so text doesn't wrap */}
@@ -103,10 +106,8 @@ class AddressesIndex extends React.Component {
                     CONFIRMED TRANSACTIONS: {commaNumber(allTxs[a])}
                   </Text>
                 </Body>
-                <Right>
-                  {/* TODO: make button black, similar to how the header's back arrow appears */}
-                  <Icon active name="arrow-forward" />
-                </Right>
+                {/* TODO: make button black, similar to how the header's back arrow appears */}
+                <Icon name="arrow-forward" style={{fontSize: 27}} />
               </ListItem>))}
           </List>
         </Card>
