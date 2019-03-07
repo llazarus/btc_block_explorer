@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, AsyncStorage, ScrollView, RefreshControl, View } from 'react-native';
+import { StyleSheet, Text, AsyncStorage, ScrollView, RefreshControl } from 'react-native';
 import { Container, Icon } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 import HeaderButtons, { HeaderButton, Item } from 'react-navigation-header-buttons';
@@ -16,6 +16,7 @@ export default class Home extends React.Component {
 
     this.state = {
       loading: true,
+      loadingError: false,
       currencySymbol: undefined,
       currency: {},
       numAddresses: -1,
@@ -28,7 +29,7 @@ export default class Home extends React.Component {
   }
   
   static navigationOptions = ({ navigation} ) => ({
-    title: 'Bitcoin Block Explorer',
+    headerTitle: 'Bitcoin Block Explorer',
     headerLeft: (
       <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
         <Item title="settings" iconName="md-settings" onPress={() => navigation.navigate("Settings")} />
@@ -38,7 +39,7 @@ export default class Home extends React.Component {
       <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
         <Item title="add" iconName="md-add" onPress={() => navigation.navigate("AddAddress")} />
       </HeaderButtons>
-    ),
+    )
   });
   
   componentDidMount() {
@@ -73,11 +74,15 @@ export default class Home extends React.Component {
       if (jsonAddresses[0]['error']) {
         // Do something if error getting addresses
         console.log(jsonAddresses[0]['error']);
+        this.setState({
+          loadingError: true
+        });
       } else {
         this.setState({
           numAddresses: jsonAddresses.length,
           addresses: jsonAddresses,
           loading: false,
+          loadingError: false,
           // remove later!!!
           addressNames: ['Test 1', 'Test 2', 'Test 3']
         });
@@ -99,11 +104,15 @@ export default class Home extends React.Component {
       if (jsonAddresses[0]['error']) {
         // Do something if error getting addresses
         console.log(jsonAddresses[0]['error']);
+        this.setState({
+          loadingError: true
+        });
       } else {
         this.setState({
           numAddresses: jsonAddresses.length,
           addresses: jsonAddresses,
-          loading: false
+          loading: false,
+          loadingError: false
         });
       }
     }
@@ -121,34 +130,57 @@ export default class Home extends React.Component {
     let addresses = {...this.state.addresses};
     let currency = {...this.state.currency};
 
-    if (this.state.loading) {
+    if (this.state.loadingError) {
       return (
-        <Container style={styles.container}>
-          <Text>Loading BTC Explorer</Text>
-        </Container>
-      );
-    }
-
-    return (
-      <Container>
-        <ScrollView
+        <Container>
+          <ScrollView
+          contentContainerStyle={{flexGrow: 1, justifyContent: 'center'}}
           refreshControl={
             <RefreshControl
               refreshing={this.state.refreshing}
               onRefresh={this._onRefresh}
             />
           }
-        >
-          <AddressesIndex
-            addresses={addresses}
-            addressNames={this.state.addressNames}
-            numAddresses={this.state.numAddresses}
-            currency={currency}
-            currencySymbol={this.state.currencySymbol}
-          />
-        </ScrollView>
-      </Container>
-    );
+          >
+            <Text style={{textAlign: "center"}}>
+              Error retrieving data, swipe down to refresh!{'\n\n\n'}
+              <Icon type="MaterialCommunityIcons" name="gesture-swipe-down" style={{fontSize: 60}}/>{'\n\n\n'}
+              Note that due to the free nature of this app you are limited to 200 data requests per hour!{"\n\n"}
+              Request limit is reset at the top of each hour.
+            </Text>
+          </ScrollView>
+        </Container>
+      );
+    } else if (this.state.loading) {
+      return (
+        <Container style={styles.container}>
+          <Text>
+            Loading Bitcoin Block Explorer . . .
+          </Text>
+        </Container>
+      );
+    } else {
+      return (
+        <Container>
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh}
+              />
+            }
+          >
+            <AddressesIndex
+              addresses={addresses}
+              addressNames={this.state.addressNames}
+              numAddresses={this.state.numAddresses}
+              currency={currency}
+              currencySymbol={this.state.currencySymbol}
+            />
+          </ScrollView>
+        </Container>
+      );
+    }
   }
 }
 

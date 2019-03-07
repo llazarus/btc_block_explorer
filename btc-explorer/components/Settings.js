@@ -27,7 +27,7 @@ class Settings extends React.Component  {
             </ListItem>
             <ListItem onPress={() => this.props.navigation.push("CurrencyList")} noIndent>
               <Left>
-                <Text>Currency Options</Text>
+                <Text>Currency</Text>
               </Left>
               <Right>
                 <Icon name="arrow-forward" />
@@ -37,7 +37,7 @@ class Settings extends React.Component  {
             <ListItem itemDivider style={{borderBottomWidth: 0.5}}>
               <Text>BITCOIN BLOCK EXPLORER</Text>
             </ListItem>
-            <ListItem>
+            <ListItem noIndent>
               {/* USE FIREBASE LINK HERE TO DYNAMICALLY LINK TO iOS/ANDROID STORE */}
               <Left>
                 <Text>Review This App</Text>
@@ -46,7 +46,7 @@ class Settings extends React.Component  {
                 <Icon name="arrow-forward" />
               </Right>
             </ListItem>
-            <ListItem last>
+            <ListItem noIndent>
               <Left>
                 <Text>Privacy Policy</Text>
               </Left>
