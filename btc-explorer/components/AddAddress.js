@@ -83,7 +83,8 @@ class AddAddress extends React.Component  {
           text: 'Unable to add address!',
           buttonText: 'Dismiss',
           type: 'warning',
-          duration: 5000
+          duration: 3000,
+          position: 'top'
         });
         this.setState({
           addressError: true
@@ -95,7 +96,8 @@ class AddAddress extends React.Component  {
         text: 'Unable to add address!',
         buttonText: 'Dismiss',
         type: 'warning',
-        duration: 5000
+        duration: 3000,
+        position: 'top'
       });
       this.setState({
         addressError: true
@@ -123,7 +125,7 @@ class AddAddress extends React.Component  {
     return (
       <Container>
         <Content>
-          <Form>
+          <Form style={{marginRight: 15}}>
             <Item stackedLabel>
               <Label>Address Name (Optional)</Label>
               <Input 
@@ -156,24 +158,34 @@ class AddAddress extends React.Component  {
             )}
           </Form>
 
-          <Button transparent iconRight 
+          <Button 
+            transparent
+            iconRight
+            style={{alignSelf: "center", paddingTop: 0, paddingBottom: 10, margin: 15, borderBottomWidth: 1, borderColor: "#ccc"}} 
             onPress={() => this.props.navigation.push("BarcodeScanner", { addressName: this.state.addressName })}
           >
-            <Text>Scan QR Code </Text>
-            <MaterialCommunityIcons name='qrcode-scan' />
+            <Text style={{paddingLeft: 70, paddingRight: 30}}>Scan Address QR Code</Text>
+            <MaterialCommunityIcons name='qrcode-scan' style={{fontSize: 30, paddingRight: 70, paddingTop: 1}}/>
           </Button>
 
+          
           {this.state.addressPossible === true ? (
             <Button
+              success
+              style={{alignSelf: "center", marginTop: 30}}
               onPress={() => {
                 this.confirmAddr(this.state.address);
               }}
             >
-              <Text>Done</Text>
+              <Text style={{paddingHorizontal: 125, color: "#fff"}}>Done</Text>
             </Button>
           ) : (
-            <Button disabled>
-              <Text>Done</Text>
+            <Button
+              disabled
+              bordered
+              style={{alignSelf: "center", marginTop: 30, borderColor: "#ccc"}}
+            >
+              <Text style={{paddingHorizontal: 125, color: "#ccc"}}>Done</Text>
             </Button>
           )}
 
