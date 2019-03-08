@@ -155,7 +155,7 @@ export default class Home extends React.Component {
               Error retrieving data, swipe down to refresh!{'\n\n\n'}
               <Icon type="MaterialCommunityIcons" name="gesture-swipe-down" style={{fontSize: 60}}/>{'\n\n\n'}
               Note that due to the free nature of this app you are limited to 200 data requests per hour!{"\n\n"}
-              Request limit is reset at the top of each hour.
+              Requests are reset at the top of the hour.
             </Text>
           </ScrollView>
         </Container>
