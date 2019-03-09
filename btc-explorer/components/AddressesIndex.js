@@ -74,9 +74,19 @@ class AddressesIndex extends React.Component {
 
     const renderUnconfirmed = (num)  => {
       if (num !== 0) {
-        return <Text key>{num} Unconfirmed ⚠️</Text>;
+        return (
+          <Text
+            key={`unconfirmed-tx-${num}`}
+          >
+            | {num} UNCONFIRMED ⚠️
+          </Text>);
       } else {
-        return <Text key={`unconfirmed-tx-${num}`}>No unconfirmed TXs</Text>;
+        return (
+          <Text
+            key={`unconfirmed-tx-${num}`}
+          >
+            | NONE UNCONFIRMED
+          </Text>);
       }
     }
     return (
@@ -87,13 +97,13 @@ class AddressesIndex extends React.Component {
             <Text style={{color: "#fff", fontSize: 17, fontWeight: "bold"}}>SUM BALANCE - ALL ADDRESSES</Text>
           </CardItem>
 
-          <CardItem style={{alignSelf: 'center', paddingVertical: 0, backgroundColor: "#ff9500"}}>
-            <Text style={{fontSize: 18, fontWeight: "bold", color: "#fff"}}>
+          <CardItem style={{alignSelf: 'center', paddingVertical: 0, backgroundColor: "#ff9500", borderBottomWidth: 1, borderColor: "#fff"}}>
+            <Text style={{fontSize: 20, fontWeight: "bold", color: "#fff"}}>
               {commaNumber(satConversion(sumBtc))} BTC
             </Text>
           </CardItem>
 
-          <CardItem style={{alignSelf: "center", borderTopWidth: 1, borderColor: "#fff", backgroundColor: "#ff9500"}}>
+          <CardItem style={{alignSelf: "center", backgroundColor: "#ff9500"}}>
             <Text style={{fontSize: 17, fontWeight: "bold", color: "#fff"}}>
               {currencyIcon(currencySymbol)}{commaNumber((rate*satConversion(sumBtc)).toFixed(2))} {currencySymbol}
             </Text>
@@ -128,27 +138,28 @@ class AddressesIndex extends React.Component {
               >
                 <Body>
                   {/* GIVEN ADDRESS NAME HERE!!! */}
-                  <Text style={{alignSelf: "center"}}>
-                    {addressNameList[a]}
-                  </Text>
+                  <View style={{marginBottom: 12, borderColor: "#000", borderBottomWidth: 0.25}}>
+                    <Text numberOfLines={1} ellipsizeMode={"middle"} style={{alignSelf: "center", fontWeight: "bold", paddingBottom: 5}}>
+                      {addressNameList[a]}
+                    </Text>
+                  </View>
 
 
                   {/* IF GIVEN NAME !== ADDRESS THEN PUT ADDRESS HERE!!! */}
                   {/* TODO: Truncate address so text doesn't wrap */}
-                  {addressNameList[a] !== addressList[a] ? <Text>{addressList[a]}</Text> : null }
+                  {addressNameList[a] !== addressList[a] ? <Text numberOfLines={1} ellipsizeMode={"middle"} style={{paddingRight: 20}}>ADDRESS: {addressList[a]}</Text> : null }
 
                   <Text>
                     BALANCE: {satConversion(addressBalance[a])} BTC
                   </Text>
                   
-                  {renderUnconfirmed(unconfirmedTxs[a])}
-
+                  
                   <Text>
-                    CONFIRMED TRANSACTIONS: {commaNumber(allTxs[a])}
+                    TRANSACTIONS: {commaNumber(allTxs[a])} {renderUnconfirmed(unconfirmedTxs[a])}
                   </Text>
                 </Body>
                 {/* TODO: make button black, similar to how the header's back arrow appears */}
-                <Icon name="arrow-forward" style={{fontSize: 27}} />
+                <Icon name="arrow-forward" style={{fontSize: 20, paddingTop: 25}} />
               </ListItem>))}
           </List>
         </Card>
