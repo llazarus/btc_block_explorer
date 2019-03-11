@@ -94,17 +94,17 @@ class AddressesIndex extends React.Component {
       <Container>
       {/* Price info card */}
         <Card style={{backgroundColor: "#ff9500"}}>
-          <CardItem style={{alignSelf: "center", paddingBottom: 0, backgroundColor: "#ff9500"}}>
+          <CardItem style={{alignSelf: "center", paddingBottom: 2, backgroundColor: "#ff9500"}}>
             <Text style={{color: "#fff", fontSize: 17, fontWeight: "bold"}}>SUM BALANCE - ALL ADDRESSES</Text>
           </CardItem>
 
-          <CardItem style={{alignSelf: 'center', paddingVertical: 0, backgroundColor: "#ff9500", borderBottomWidth: 1, borderColor: "#fff"}}>
+          <CardItem style={{alignSelf: 'center', paddingBottom: 5, backgroundColor: "#ff9500", borderBottomWidth: 1, borderColor: "#fff"}}>
             <Text style={{fontSize: 20, fontWeight: "bold", color: "#fff"}}>
               {commaNumber(satConversion(sumBtc))} BTC
             </Text>
           </CardItem>
 
-          <CardItem style={{alignSelf: "center", backgroundColor: "#ff9500"}}>
+          <CardItem style={{alignSelf: "center", backgroundColor: "#ff9500", paddingTop: 5}}>
             <Text style={{fontSize: 17, fontWeight: "bold", color: "#fff"}}>
               {currencyIcon(currencySymbol)}{commaNumber((rate*satConversion(sumBtc)).toFixed(2))} {currencySymbol}
             </Text>
