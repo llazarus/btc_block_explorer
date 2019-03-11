@@ -31,6 +31,37 @@ class AddressShow extends React.Component  {
       return sats / 100000000;
     }
 
+    const currencyIcon = (currencyName) => {
+      switch (currencyName) {
+        case "TWD":
+          return "NT$"
+        case "KRW":
+          return "₩"
+        case "THB":
+          return "฿"
+        case "PLN":
+          return "zł"
+        case "RUB":
+          return "₽"
+        case "EUR":
+          return "€"
+        case "BRL":
+          return "R$"
+        case "GBP":
+          return "£"
+        case "JPY":
+        case "CNY":
+          return "¥"
+        case "DKK":
+        case "SEK": 
+        case "ISK":
+        case "CHF":
+          return ""
+        default:
+          return "$"
+      }
+    }
+
     const renderUnconfirmed = (num) => {
       if (num > 0) {
         const unconfirmedTransactionArr = addressInfo.unconfirmed_txrefs;
@@ -39,7 +70,7 @@ class AddressShow extends React.Component  {
             <ListItem key={`unconfirmed-${i}`}>
               <Body>
                 <Text>TX UNCONFIRMED ⚠️</Text>
-                <Text numberOfLines={1} ellipsizeMode={"middle"} style={{paddingRight: 20}}>
+                <Text numberOfLines={1} ellipsizeMode={"middle"} style={{paddingRight: 15}}>
                   TX HASH: {unconfirmedTransactionArr[i]['tx_hash']}
                 </Text>
                 <Text>
@@ -109,13 +140,13 @@ class AddressShow extends React.Component  {
               </CardItem>
             ) : null }
 
-            <CardItem style={{alignSelf: "center", paddingBottom: 0, backgroundColor: "#ff9500"}}>
-              <Text style={{color: "#fff", fontSize: 17, fontWeight: "bold"}}>
+            <CardItem style={{alignSelf: "center", paddingBottom: 0, paddingTop: 6, backgroundColor: "#ff9500"}}>
+              <Text style={{color: "#fff", fontSize: 18, fontWeight: "bold"}}>
                 ADDRESS BALANCE
               </Text>
             </CardItem>
 
-            <CardItem style={{alignSelf: 'center', paddingTop: 6, paddingBottom: 4, backgroundColor: "#ff9500", borderBottomWidth: 1, borderColor: "#fff"}}>
+            <CardItem style={{alignSelf: 'center', paddingTop: 4, paddingBottom: 4, backgroundColor: "#ff9500", borderBottomWidth: 1, borderColor: "#fff"}}>
               <Text style={{fontSize: 15, fontWeight: "bold", color: "#fff"}}>
               {commaNumber(satConversion(addressInfo["final_balance"]))} BTC
               </Text>
@@ -123,7 +154,7 @@ class AddressShow extends React.Component  {
 
             <CardItem style={{alignSelf: "center", backgroundColor: "#ff9500", paddingTop: 4, paddingBottom: 15}}>
               <Text style={{fontSize: 14, fontWeight: "bold", color: "#fff"}}>
-                {commaNumber((rate*satConversion(addressInfo["final_balance"])).toFixed(2))} {currencySymbol}
+              {currencyIcon(currencySymbol)}{commaNumber((rate*satConversion(addressInfo["final_balance"])).toFixed(2))} {currencySymbol}
               </Text>
             </CardItem>
 
@@ -147,7 +178,7 @@ class AddressShow extends React.Component  {
                 >
                   <Body>
                     {/* TODO: Truncate wrapping text */}
-                    <Text numberOfLines={1} ellipsizeMode={"middle"} style={{paddingRight: 20}}>
+                    <Text numberOfLines={1} ellipsizeMode={"middle"} style={{paddingRight: 15}}>
                       TX HASH: {transactionArr[tx]['tx_hash']}
                     </Text>
                     <Text>
