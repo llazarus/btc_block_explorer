@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, ScrollView } from 'react-native';
+import { Text, ScrollView, View } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import { Container, Card, CardItem, List, ListItem, Body, Right, Icon, Button } from 'native-base';
 import HeaderLeftToHome from './HeaderLeftToHome';
@@ -38,23 +38,20 @@ class AddressShow extends React.Component  {
           return (
             <ListItem key={`unconfirmed-${i}`}>
               <Body>
-                {/* TODO: Truncate wrapping text */}
-                <Text>
+                <Text>TX UNCONFIRMED ⚠️</Text>
+                <Text numberOfLines={1} ellipsizeMode={"middle"} style={{paddingRight: 20}}>
                   TX HASH: {unconfirmedTransactionArr[i]['tx_hash']}
                 </Text>
                 <Text>
                   {satConversion(unconfirmedTransactionArr[i]["value"])} BTC
                 </Text>
-                {txFlow(unconfirmedTransactionArr[i]["tx_input_n"], i)}
-                <Text>TX UNCONFIRMED ⚠️</Text>
-                <Text>RECEIVED AT (UTC): {unconfirmedTransactionArr[i]["tx_received"].slice(0, 19).replace(/[^:-\d]/g, ' ')}</Text>
+                <Text>RECEIVED: {unconfirmedTransactionArr[i]["tx_received"].slice(0, 19).replace(/[^:-\d]/g, ' ')} UTC</Text>
               </Body>
-              <Right>
-                {/* TODO: make button black, similar to how the header's back arrow appears */}
-                <Button transparent onPress={() => this.props.navigation.push("TransactionShow", { tx_hash: unconfirmedTransactionArr[i]['tx_hash'] })}>
-                  <Icon active name="arrow-forward" />
-                </Button>
-              </Right>
+              
+              <View style={{flexDirection: "row", alignItems: "center"}}>
+                {txFlow(unconfirmedTransactionArr[i]["tx_input_n"], i)}
+                <Icon active name="arrow-forward" style={{fontSize: 20}}/>
+              </View>
             </ListItem>
           );
         }
@@ -65,56 +62,76 @@ class AddressShow extends React.Component  {
 
     const txFlow = (input, key) => {
       if (input === -1) {
-        return <Text key={`txFlow-${key}`}>INCOMING TX</Text>
+        return (
+          <Button
+            small
+            success
+            style={{marginRight: 15}}
+            key={`txFlow-${key}`}
+          >
+            <Text style={{paddingHorizontal: 16, color: "#fff", fontWeight: "bold"}}>IN</Text>
+          </Button>
+        );
       } else {
-        return <Text key={`txFlow-${key}`}>OUTGOING TX</Text>
+        return (
+          <Button
+            small 
+            danger
+            style={{marginRight: 15}}
+            key={`txFlow-${key}`}
+          >
+            <Text style={{paddingHorizontal: 8, color: "#fff", fontWeight: "bold"}}>OUT</Text>
+          </Button>
+        );
       }
     }
 
     return (
       <Container>  
         <ScrollView>
-          <Card>
-            <CardItem>
-              <Body>
-                <Text>{addressName}</Text>
-                {/* TODO: Truncate wrapping text */}
-              </Body>
+          <Card style={{backgroundColor: "#ff9500"}}>
+            <CardItem style={{alignSelf: 'center', backgroundColor: "#ff9500", paddingBottom: 0}}>
+              <Text 
+                numberOfLines={1} ellipsizeMode={"middle"}
+                style={{color: "#fff", fontSize: 20, fontWeight: "bold"}}
+              >
+                {addressName}
+              </Text>
             </CardItem>
 
             {addressName !== addressInfo['address'] ? (
-              <CardItem>
-                <Body>
-                  <Text>
-                    {addressInfo['address']}
-                  </Text>
-                </Body>
+              <CardItem style={{alignSelf: 'center', backgroundColor: "#ff9500", paddingTop: 5}}>
+                <Text numberOfLines={1} ellipsizeMode={"middle"}
+                  style={{color: "#fff", fontSize: 11, fontWeight: "bold"}}
+                >
+                  {addressInfo['address']}
+                </Text>
               </CardItem>
             ) : null }
 
-            <CardItem>
-              <Body>
-                <Text>
-                  ACCOUNT BTC BALANCE: {commaNumber(satConversion(addressInfo["final_balance"]))} BTC
-                </Text>
-              </Body>
+            <CardItem style={{alignSelf: "center", paddingBottom: 0, backgroundColor: "#ff9500"}}>
+              <Text style={{color: "#fff", fontSize: 17, fontWeight: "bold"}}>
+                ADDRESS BALANCE
+              </Text>
             </CardItem>
 
-            <CardItem>
-              <Body>
-                <Text>
-                  ACCOUNT FIAT BALANCE: {commaNumber((rate*satConversion(addressInfo["final_balance"])).toFixed(2))} {currencySymbol}
-                </Text>
-              </Body>
+            <CardItem style={{alignSelf: 'center', paddingTop: 6, paddingBottom: 4, backgroundColor: "#ff9500", borderBottomWidth: 1, borderColor: "#fff"}}>
+              <Text style={{fontSize: 15, fontWeight: "bold", color: "#fff"}}>
+              {commaNumber(satConversion(addressInfo["final_balance"]))} BTC
+              </Text>
             </CardItem>
 
-            <CardItem>
-              <Body>
-                <Text>
-                  RATE: 1 BTC = {commaNumber(rate)} {currencySymbol}
-                </Text>
-              </Body>
+            <CardItem style={{alignSelf: "center", backgroundColor: "#ff9500", paddingTop: 4, paddingBottom: 15}}>
+              <Text style={{fontSize: 14, fontWeight: "bold", color: "#fff"}}>
+                {commaNumber((rate*satConversion(addressInfo["final_balance"])).toFixed(2))} {currencySymbol}
+              </Text>
             </CardItem>
+
+            {/* <CardItem style={{alignSelf: 'center', backgroundColor: "#ff9500", paddingTop: 5}}>
+              <Text style={{fontSize: 12, color: "#fff"}}>
+                1 BTC = {commaNumber(rate)} {currencySymbol}
+              </Text>
+            </CardItem> */}
           </Card>
 
           <Card>
@@ -123,24 +140,27 @@ class AddressShow extends React.Component  {
               {renderUnconfirmed(numUnconfirmed)}
 
               {numTransactions.map(tx => (
-                <ListItem key={`listItem-${tx}`}>
+                <ListItem 
+                  noIndent
+                  key={`listItem-${tx}`}
+                  onPress={() => this.props.navigation.push("TransactionShow", { tx_hash: transactionArr[tx]['tx_hash'] })}
+                >
                   <Body>
                     {/* TODO: Truncate wrapping text */}
-                    <Text>
+                    <Text numberOfLines={1} ellipsizeMode={"middle"} style={{paddingRight: 20}}>
                       TX HASH: {transactionArr[tx]['tx_hash']}
                     </Text>
                     <Text>
                       VALUE: {commaNumber(satConversion(transactionArr[tx]["value"]))} BTC
                     </Text>
-                    {txFlow(transactionArr[tx]["tx_input_n"], tx)}
-                    <Text>CONFIRMED AT (UTC): {transactionArr[tx]["confirmed"].slice(0, 19).replace(/[^:-\d]/g, ' ')}</Text>
+                    <Text>CONFIRMED: {transactionArr[tx]["confirmed"].slice(0, 19).replace(/[^:-\d]/g, ' ')} UTC</Text>
                   </Body>
-                  <Right>
-                    {/* TODO: make button black, similar to how the header's back arrow appears */}
-                    <Button transparent onPress={() => this.props.navigation.push("TransactionShow", { tx_hash: transactionArr[tx]['tx_hash'] })}>
-                      <Icon active name="arrow-forward" />
-                    </Button>
-                  </Right>
+
+                  <View style={{flexDirection: "row", alignItems: "center"}}>
+                    {txFlow(transactionArr[tx]["tx_input_n"], tx)}
+                    <Icon active name="arrow-forward" style={{fontSize: 20}}/>
+                  </View>
+
                 </ListItem>)
               )}
             </List>

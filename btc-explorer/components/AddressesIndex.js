@@ -94,7 +94,7 @@ class AddressesIndex extends React.Component {
       <Container>
       {/* Price info card */}
         <Card style={{backgroundColor: "#ff9500"}}>
-          <CardItem style={{alignSelf: 'center', paddingBottom: 0, backgroundColor: "#ff9500"}}>
+          <CardItem style={{alignSelf: "center", paddingBottom: 0, backgroundColor: "#ff9500"}}>
             <Text style={{color: "#fff", fontSize: 17, fontWeight: "bold"}}>SUM BALANCE - ALL ADDRESSES</Text>
           </CardItem>
 
@@ -160,7 +160,7 @@ class AddressesIndex extends React.Component {
                     TRANSACTIONS: {commaNumber(allTxs[a])} {renderUnconfirmed(unconfirmedTxs[a])}
                   </Text>
                 </Body>
-                {/* TODO: make button black, similar to how the header's back arrow appears */}
+                
                 <Icon name="arrow-forward" style={{fontSize: 20, paddingTop: 30}} />
               </ListItem>))}
           </List>
