@@ -97,7 +97,8 @@ class AddressShow extends React.Component  {
           <Button
             small
             success
-            style={{marginRight: 15}}
+            disabled
+            style={{marginRight: 15, backgroundColor: "#00b64c"}}
             key={`txFlow-${key}`}
           >
             <Text style={{paddingHorizontal: 16, color: "#fff", fontWeight: "bold"}}>IN</Text>
@@ -108,7 +109,8 @@ class AddressShow extends React.Component  {
           <Button
             small 
             danger
-            style={{marginRight: 15}}
+            disabled
+            style={{marginRight: 15, backgroundColor: "#e1142b"}}
             key={`txFlow-${key}`}
           >
             <Text style={{paddingHorizontal: 8, color: "#fff", fontWeight: "bold"}}>OUT</Text>
@@ -174,6 +176,7 @@ class AddressShow extends React.Component  {
                 <ListItem 
                   noIndent
                   key={`listItem-${tx}`}
+                  style={{paddingBottom: 15, paddingTop: 15}}
                   onPress={() => this.props.navigation.push("TransactionShow", { tx_hash: transactionArr[tx]['tx_hash'] })}
                 >
                   <Body>

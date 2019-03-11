@@ -128,7 +128,6 @@ class AddressesIndex extends React.Component {
               <ListItem
                 noIndent
                 iconRight
-                style={{borderWidth: 0.5}}
                 key={`listItem-${a}`}
                 onPress={() => this.props.navigation.push("AddressShow", 
                   { addressInfo: this.props.addresses[a],
@@ -156,7 +155,7 @@ class AddressesIndex extends React.Component {
                   </Text>
                   
                   
-                  <Text style={{marginBottom: 10}}>
+                  <Text style={{marginBottom: 5}}>
                     TRANSACTIONS: {commaNumber(allTxs[a])} {renderUnconfirmed(unconfirmedTxs[a])}
                   </Text>
                 </Body>
