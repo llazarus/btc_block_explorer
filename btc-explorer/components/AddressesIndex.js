@@ -89,6 +89,7 @@ class AddressesIndex extends React.Component {
           </Text>);
       }
     }
+    
     return (
       <Container>
       {/* Price info card */}
@@ -127,6 +128,7 @@ class AddressesIndex extends React.Component {
               <ListItem
                 noIndent
                 iconRight
+                style={{borderWidth: 0.5}}
                 key={`listItem-${a}`}
                 onPress={() => this.props.navigation.push("AddressShow", 
                   { addressInfo: this.props.addresses[a],
@@ -138,8 +140,8 @@ class AddressesIndex extends React.Component {
               >
                 <Body>
                   {/* GIVEN ADDRESS NAME HERE!!! */}
-                  <View style={{marginBottom: 12, borderColor: "#000", borderBottomWidth: 0.25}}>
-                    <Text numberOfLines={1} ellipsizeMode={"middle"} style={{alignSelf: "center", fontWeight: "bold", paddingBottom: 5}}>
+                  <View style={{marginBottom: 10, borderColor: "#000", borderBottomWidth: 0.25}}>
+                    <Text numberOfLines={1} ellipsizeMode={"middle"} style={{alignSelf: "center", fontSize: 15, fontWeight: "bold", paddingBottom: 10}}>
                       {addressNameList[a]}
                     </Text>
                   </View>
@@ -154,12 +156,12 @@ class AddressesIndex extends React.Component {
                   </Text>
                   
                   
-                  <Text>
+                  <Text style={{marginBottom: 10}}>
                     TRANSACTIONS: {commaNumber(allTxs[a])} {renderUnconfirmed(unconfirmedTxs[a])}
                   </Text>
                 </Body>
                 {/* TODO: make button black, similar to how the header's back arrow appears */}
-                <Icon name="arrow-forward" style={{fontSize: 20, paddingTop: 25}} />
+                <Icon name="arrow-forward" style={{fontSize: 20, paddingTop: 30}} />
               </ListItem>))}
           </List>
         </Card>

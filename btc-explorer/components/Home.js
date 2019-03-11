@@ -72,6 +72,10 @@ export default class Home extends React.Component {
         // for test
         const responseAddresses = await fetch('https://api.blockcypher.com/v1/btc/main/addrs/1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa;1Ez69SnzzmePmZX3WpEzMKTrcBF2gpNQ55;1XPTgDRhN8RFnzniWCddobD9iKZatrvH4');
         const jsonAddresses = await responseAddresses.json();
+
+        // TODO remove comment
+        console.log("BlockCypher API Called!")
+
         if (jsonAddresses[0]['error']) {
           // Do something if error getting addresses
           console.log(jsonAddresses[0]['error']);
