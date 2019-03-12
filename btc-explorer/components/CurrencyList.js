@@ -99,7 +99,7 @@ class CurrencyList extends React.Component  {
             {allCurrencies.map(c => {
               if (c[1] === this.state.userCurrency) {
                 return (
-                  <ListItem key={`currecy-${c}`} style={styles.currencyRow}>
+                  <ListItem key={`currecy-${c}`} style={styles.currencyRow} noIndent>
                     <Button transparent style={styles.buttonFlex} iconLeft>
                       <Text>
                         {c[0] + ` (${c[1]})`}
@@ -110,7 +110,7 @@ class CurrencyList extends React.Component  {
                 );  
               } else {
                 return (
-                  <ListItem key={`currecy-${c}`} style={styles.currencyRow}>
+                  <ListItem key={`currecy-${c}`} style={styles.currencyRow} noIndent>
                     <Button transparent style={styles.buttonFlex} onPress={() => this.updateCurrency(c[1])}>
                       <Text>
                         {c[0] + ` (${c[1]})`}

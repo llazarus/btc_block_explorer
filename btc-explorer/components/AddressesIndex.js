@@ -1,7 +1,7 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, View, AsyncStorage } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import { Container, Card, CardItem, Body, List, ListItem, Right, Icon, Button } from 'native-base';
+import { Container, Card, CardItem, Body, List, ListItem, Icon, ActionSheet } from 'native-base';
 const commaNumber = require('comma-number');
 
 class AddressesIndex extends React.Component {
@@ -13,6 +13,21 @@ class AddressesIndex extends React.Component {
     let allTxs = [];
     let unconfirmedTxs = [];
     let numAddresses = [];
+
+    const deleteAddress = async (index) => {
+      let userAddrs = await AsyncStorage.getItem("addresses") || "";
+      if (userAddrs.length > 0) {
+        try {
+          userAddrs.splice(index, 1);
+          await AsyncStorage.setItem("addresses", userAddrs);
+          this.props.navigation.navigate("Home");
+        } catch {
+          console.log("Error deleting address!");
+        }
+      } else {
+        console.log("No address to delete!")
+      }
+    }
 
     if (this.props.numAddresses > -1) {
       for (let i = 0; i < this.props.numAddresses; i += 1) {
@@ -31,40 +46,93 @@ class AddressesIndex extends React.Component {
       currencySymbol = this.props.currencySymbol;
     }
     let rate = '';
+    let updatedAt = '';
     if (this.props.currency.bpi) {
       rate = this.props.currency["bpi"][currencySymbol]["rate_float"].toFixed(2);
+      updatedAt = this.props.currency["time"]["updated"];
     }
 
     const satConversion = (sats) => {
       return sats / 100000000;
     }
 
-    const renderUnconfirmed = (num)  => {
-      if (num !== 0) {
-        return <Text key>{num} Unconfirmed ⚠️</Text>;
-      } else {
-        return <Text key={`unconfirmed-tx-${num}`}>No unconfirmed TXs</Text>;
+    const currencyIcon = (currencyName) => {
+      switch (currencyName) {
+        case "TWD":
+          return "NT$"
+        case "KRW":
+          return "₩"
+        case "THB":
+          return "฿"
+        case "PLN":
+          return "zł"
+        case "RUB":
+          return "₽"
+        case "EUR":
+          return "€"
+        case "BRL":
+          return "R$"
+        case "GBP":
+          return "£"
+        case "JPY":
+        case "CNY":
+          return "¥"
+        case "DKK":
+        case "SEK": 
+        case "ISK":
+        case "CHF":
+          return ""
+        default:
+          return "$"
       }
     }
 
+    const renderUnconfirmed = (num)  => {
+      if (num !== 0) {
+        return (
+          <Text
+            key={`unconfirmed-tx-${num}`}
+          >
+            | {num} UNCONFIRMED ⚠️
+          </Text>);
+      } else {
+        return (
+          <Text
+            key={`unconfirmed-tx-${num}`}
+          >
+            | NONE UNCONFIRMED
+          </Text>);
+      }
+    }
+    
     return (
       <Container>
       {/* Price info card */}
-        <Card>
-          <CardItem style={{alignSelf: 'center'}}>
-            <Text>SUM BTC BALANCE: </Text>
-            <Text>{commaNumber(satConversion(sumBtc))} BTC</Text>
+        <Card style={{backgroundColor: "#ff9500"}}>
+          <CardItem style={{alignSelf: "center", paddingBottom: 2, backgroundColor: "#ff9500"}}>
+            <Text style={{color: "#fff", fontSize: 17, fontWeight: "bold"}}>SUM BALANCE - ALL ADDRESSES</Text>
           </CardItem>
 
-          <CardItem style={{alignSelf: 'center'}}>
-            <Text>SUM FIAT BALANCE: </Text>
-            <Text>{commaNumber((rate*satConversion(sumBtc)).toFixed(2))} {currencySymbol}</Text>
+          <CardItem style={{alignSelf: 'center', paddingBottom: 5, backgroundColor: "#ff9500", borderBottomWidth: 1, borderColor: "#fff"}}>
+            <Text style={{fontSize: 20, fontWeight: "bold", color: "#fff"}}>
+              {commaNumber(satConversion(sumBtc))} BTC
+            </Text>
           </CardItem>
 
-          <CardItem style={{alignSelf: 'center'}}>
-            <Text>RATE: </Text>
-            <Text>1 BTC = {commaNumber(rate)} {currencySymbol}</Text>
+          <CardItem style={{alignSelf: "center", backgroundColor: "#ff9500", paddingTop: 5}}>
+            <Text style={{fontSize: 17, fontWeight: "bold", color: "#fff"}}>
+              {currencyIcon(currencySymbol)}{commaNumber((rate*satConversion(sumBtc)).toFixed(2))} {currencySymbol}
+            </Text>
           </CardItem>
+
+          <View style={{alignSelf: 'center', paddingTop: 5, backgroundColor: "#ff9500"}}>
+            <Text style={{fontSize: 12, color: "#fff"}}>LAST UPDATED: {updatedAt.toUpperCase()}</Text>
+          </View>
+
+          <View style={{alignSelf: 'center', paddingBottom: 10, backgroundColor: "#ff9500"}}>
+            <Text style={{fontSize: 12, color: "#fff"}}>1 BTC = {currencyIcon(currencySymbol)}{commaNumber(rate)} {currencySymbol}</Text>
+          </View>
+
         </Card>
         {/*  */}
 
@@ -73,6 +141,8 @@ class AddressesIndex extends React.Component {
           <List>
             {numAddresses.map(a => (
               <ListItem
+                noIndent
+                iconRight
                 key={`listItem-${a}`}
                 onPress={() => this.props.navigation.push("AddressShow", 
                   { addressInfo: this.props.addresses[a],
@@ -81,32 +151,44 @@ class AddressesIndex extends React.Component {
                     currencySymbol: currencySymbol 
                   })
                 }
+                onLongPress={() => {
+                  ActionSheet.show(
+                    {
+                      options: ["Delete", "Cancel"],
+                      cancelButtonIndex: 1,
+                      destructiveButtonIndex: 0,
+                      title: addressNameList[a]
+                    },
+                    buttonIndex => {
+                      buttonIndex === 0 ? deleteAddress(a) : null
+                    }
+                  )}
+                }
               >
                 <Body>
-
                   {/* GIVEN ADDRESS NAME HERE!!! */}
-                  <Text>
-                    {addressNameList[a]}
-                  </Text>
+                  <View style={{marginBottom: 10, borderColor: "#000", borderBottomWidth: 0.25}}>
+                    <Text numberOfLines={1} ellipsizeMode={"middle"} style={{alignSelf: "center", fontSize: 15, fontWeight: "bold", paddingBottom: 10}}>
+                      {addressNameList[a]}
+                    </Text>
+                  </View>
+
 
                   {/* IF GIVEN NAME !== ADDRESS THEN PUT ADDRESS HERE!!! */}
                   {/* TODO: Truncate address so text doesn't wrap */}
-                  {addressNameList[a] !== addressList[a] ? <Text>{addressList[a]}</Text> : null }
+                  {addressNameList[a] !== addressList[a] ? <Text numberOfLines={1} ellipsizeMode={"middle"} style={{paddingRight: 20}}>ADDRESS: {addressList[a]}</Text> : null }
 
                   <Text>
                     BALANCE: {satConversion(addressBalance[a])} BTC
                   </Text>
                   
-                  {renderUnconfirmed(unconfirmedTxs[a])}
-
-                  <Text>
-                    CONFIRMED TRANSACTIONS: {commaNumber(allTxs[a])}
+                  
+                  <Text style={{marginBottom: 5}}>
+                    TRANSACTIONS: {commaNumber(allTxs[a])} {renderUnconfirmed(unconfirmedTxs[a])}
                   </Text>
                 </Body>
-                <Right>
-                  {/* TODO: make button black, similar to how the header's back arrow appears */}
-                  <Icon active name="arrow-forward" />
-                </Right>
+                
+                <Icon name="arrow-forward" style={{fontSize: 20, paddingTop: 30}} />
               </ListItem>))}
           </List>
         </Card>
