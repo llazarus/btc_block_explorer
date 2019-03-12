@@ -15,8 +15,8 @@ export default class Home extends React.Component {
     super(props);
 
     this.state = {
-      loading: true,
       loadingError: false,
+      loading: true,
       currencySymbol: undefined,
       currency: {},
       numAddresses: -1,
@@ -89,7 +89,7 @@ export default class Home extends React.Component {
             loading: false,
             loadingError: false,
             // remove later!!!
-            addressNames: ['Adam & Eve', 'Test 2', 'Test 3']
+            addressNames: ['Genesis of Bitcoin', 'US Marshal Auction Coins', 'Test 3']
           });
         }
       } else {

@@ -33,10 +33,15 @@ class TransactionShow extends React.Component  {
     if (tx_hash !== '') {
       const responseTX = await fetch(`https://api.blockcypher.com/v1/btc/main/txs/${tx_hash}`);
       const jsonTX = await responseTX.json();
-      this.setState({
-        tx: jsonTX,
-        loading: false
-      });
+
+      if (jsonTX["block_hash"]) {
+        this.setState({
+          tx: jsonTX,
+          loading: false
+        });
+      } else {
+        this.props.navigation.navigate("Home");
+      }
     }
   }
 
