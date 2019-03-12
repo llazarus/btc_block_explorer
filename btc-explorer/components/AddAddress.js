@@ -73,22 +73,34 @@ class AddAddress extends React.Component  {
 
       const newAddr = [addrName.trim(), this.state.address];
       const allAddrs = await AsyncStorage.getItem('addresses' || []);
-      try {
-        await AsyncStorage.setItem('addresses', allAddrs.push(newAddr));
-        this.props.navigation.navigate('Home');
-      } catch (error) {
-        // do something if error, maybe a toast popup?
-        console.log(error);
+
+      if (allAddrs.length >= 20) {
+        // do something if user is tracking >= 20 addresses
         Toast.show({
-          text: 'Unable to add address!',
+          text: 'Address limit reached! Delete a saved address and try again!',
           buttonText: 'Dismiss',
           type: 'warning',
           duration: 3000,
           position: 'top'
         });
-        this.setState({
-          addressError: true
-        });
+      } else {
+        try {
+          await AsyncStorage.setItem('addresses', allAddrs.push(newAddr));
+          this.props.navigation.navigate('Home');
+        } catch (error) {
+          // do something if error, maybe a toast popup?
+          console.log(error);
+          Toast.show({
+            text: 'Unable to add address!',
+            buttonText: 'Dismiss',
+            type: 'warning',
+            duration: 3000,
+            position: 'top'
+          });
+          this.setState({
+            addressError: true
+          });
+        }
       }
     } else {
       // Do the things for an invalid address
