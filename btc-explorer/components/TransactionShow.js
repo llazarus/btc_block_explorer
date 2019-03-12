@@ -228,7 +228,7 @@ class TransactionShow extends React.Component  {
       <Container>
         <ScrollView>
           <Card>
-            <CardItem bordered> 
+            <CardItem bordered style={{backgroundColor: "rgba(229, 150, 70, 0.9)"}}> 
               <Text numberOfLines={1} ellipsizeMode={"middle"}>
                 TX HASH: {tx.hash}
               </Text>
@@ -238,7 +238,7 @@ class TransactionShow extends React.Component  {
                 BLOCK HASH: {tx.block_hash}
               </Text>
             </CardItem>
-            <CardItem bordered> 
+            <CardItem bordered style={{backgroundColor: "rgba(229, 150, 70, 0.9)"}}> 
               <Text>
                 BLOCK HEIGHT: {commaNumber(tx.block_height)}
               </Text>
@@ -248,7 +248,7 @@ class TransactionShow extends React.Component  {
                 CONFIRMATIONS: {commaNumber(tx.confirmations)}
               </Text>
             </CardItem>
-            <CardItem bordered> 
+            <CardItem bordered style={{backgroundColor: "rgba(229, 150, 70, 0.9)"}}> 
               <Text>
                 SIZE: {commaNumber(tx.size)} bytes
               </Text>
@@ -258,7 +258,7 @@ class TransactionShow extends React.Component  {
                 CONFIRMED: {timeConfirmed} UTC
               </Text>
             </CardItem>
-            <CardItem bordered> 
+            <CardItem bordered style={{backgroundColor: "rgba(229, 150, 70, 0.9)"}}> 
               <Text>
                 {/* Add function to limit 8 sigfigs */}
                 TOTAL INPUT: {commaNumber(satConversion(tx.total) + satConversion(tx.fees))} BTC
@@ -270,7 +270,7 @@ class TransactionShow extends React.Component  {
                 TOTAL OUTPUT: {commaNumber(satConversion(tx.total))} BTC
               </Text>
             </CardItem>
-            <CardItem bordered> 
+            <CardItem bordered style={{backgroundColor: "rgba(229, 150, 70, 0.9)"}}> 
               <Text>
                 {/* Add function to limit 8 sigfigs */}
                 FEES: {commaNumber(satConversion(tx.fees))} BTC
@@ -280,9 +280,12 @@ class TransactionShow extends React.Component  {
 
           {/* INPUT(S) AND OUTPUT(S) CARD */}
           <Card>
-            <CardItem> 
+            <CardItem header style={{alignSelf: "center", borderBottomWidth: 0.5, borderColor: "#000", paddingBottom: 5}}>
+              <Text style={{fontSize: 17, fontWeight: "bold"}}>INPUTS {"\&"} OUTPUTS</Text>
+            </CardItem>
+            <CardItem style={{paddingTop: 15}}> 
               <Body>
-                <Text style={{paddingBottom: 10}}>
+                <Text style={{paddingBottom: 10, fontWeight: "bold"}}>
                   {tx.inputs.length} {pluralize('INPUT', tx.inputs.length)} CONSUMED:
                 </Text>
 
@@ -340,7 +343,7 @@ class TransactionShow extends React.Component  {
 
             <CardItem>
               <Body>                
-                <Text style={{paddingBottom: 10}}>
+                <Text style={{paddingBottom: 10, fontWeight: "bold"}}>
                   {tx.outputs.length} {pluralize('OUTPUT', tx.outputs.length)} CREATED:
                 </Text>
 
