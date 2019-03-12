@@ -40,6 +40,7 @@ class TransactionShow extends React.Component  {
           loading: false
         });
       } else {
+        // This will force API to return 429 when Home is re-rendered if >200 calls made in hour
         this.props.navigation.navigate("Home");
       }
     }
