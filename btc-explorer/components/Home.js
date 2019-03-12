@@ -89,7 +89,7 @@ export default class Home extends React.Component {
             loading: false,
             loadingError: false,
             // remove later!!!
-            addressNames: ['Test 1', 'Test 2', 'Test 3']
+            addressNames: ['Adam & Eve', 'Test 2', 'Test 3']
           });
         }
       } else {

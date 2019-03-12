@@ -1,7 +1,7 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, AsyncStorage } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import { Container, Card, CardItem, Body, List, ListItem, Icon } from 'native-base';
+import { Container, Card, CardItem, Body, List, ListItem, Icon, ActionSheet } from 'native-base';
 const commaNumber = require('comma-number');
 
 class AddressesIndex extends React.Component {
@@ -13,6 +13,21 @@ class AddressesIndex extends React.Component {
     let allTxs = [];
     let unconfirmedTxs = [];
     let numAddresses = [];
+
+    const deleteAddress = async (index) => {
+      let userAddrs = await AsyncStorage.getItem("addresses") || "";
+      if (userAddrs !== "") {
+        try {
+          userAddrs.splice(index, 1);
+          await AsyncStorage.setItem("addresses", userAddrs);
+          this.props.navigation.navigate("Home");
+        } catch {
+          console.log("Error deleting address!");
+        }
+      } else {
+        console.log("No address to delete!")
+      }
+    }
 
     if (this.props.numAddresses > -1) {
       for (let i = 0; i < this.props.numAddresses; i += 1) {
@@ -135,6 +150,19 @@ class AddressesIndex extends React.Component {
                     rate: rate, 
                     currencySymbol: currencySymbol 
                   })
+                }
+                onLongPress={() => {
+                  ActionSheet.show(
+                    {
+                      options: ["Delete", "Cancel"],
+                      cancelButtonIndex: 1,
+                      destructiveButtonIndex: 0,
+                      title: addressNameList[a]
+                    },
+                    buttonIndex => {
+                      buttonIndex === 0 ? deleteAddress(a) : null
+                    }
+                  )}
                 }
               >
                 <Body>
