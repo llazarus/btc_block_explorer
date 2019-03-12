@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, ScrollView, View } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import { Container, Card, CardItem, List, ListItem, Body, Right, Icon, Button } from 'native-base';
+import { Container, Card, CardItem, List, ListItem, Body, Icon, Button } from 'native-base';
 import HeaderLeftToHome from './HeaderLeftToHome';
 const commaNumber = require('comma-number');
 

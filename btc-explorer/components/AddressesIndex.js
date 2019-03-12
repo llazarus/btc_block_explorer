@@ -16,7 +16,7 @@ class AddressesIndex extends React.Component {
 
     const deleteAddress = async (index) => {
       let userAddrs = await AsyncStorage.getItem("addresses") || "";
-      if (userAddrs !== "") {
+      if (userAddrs.length > 0) {
         try {
           userAddrs.splice(index, 1);
           await AsyncStorage.setItem("addresses", userAddrs);
