@@ -77,7 +77,7 @@ class TransactionShow extends React.Component  {
     if (this.state.loading) {
       return (
         <Container style={styles.container}>
-          <Text>Loading BTC Explorer</Text>
+          <Text>Loading Transaction Details . . .</Text>
         </Container>
       );
     }

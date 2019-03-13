@@ -167,9 +167,7 @@ export default class Home extends React.Component {
     } else if (this.state.loading) {
       return (
         <Container style={styles.container}>
-          <Text>
-            Loading Bitcoin Block Explorer . . .
-          </Text>
+          <Text>Loading Bitcoin Block Explorer . . .</Text>
         </Container>
       );
     } else {
