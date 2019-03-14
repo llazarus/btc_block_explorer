@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, ScrollView } from 'react-native';
+import { StyleSheet, Text, ScrollView , View} from 'react-native';
 import { Container, Body, Card, CardItem, Icon } from 'native-base';
 import { withNavigation } from 'react-navigation';
 import { Ionicons } from '@expo/vector-icons';
@@ -88,86 +88,90 @@ class TransactionShow extends React.Component  {
         <Container>
           <ScrollView>
             <Card>
-              <CardItem bordered> 
-                <Body>
-                  <Text numberOfLines={1} ellipsizeMode={"middle"}>
-                    {/* TODO: Truncate wrapping text */}
-                    TX HASH: {tx.hash}
-                  </Text>
-                </Body>
+              <CardItem bordered style={{backgroundColor: "#ff9500"}}> 
+                <Text numberOfLines={1} ellipsizeMode={"middle"} style={{color: "#fff"}}>
+                  {/* TODO: Truncate wrapping text */}
+                  TX HASH: {tx.hash}
+                </Text>
               </CardItem>
               <CardItem bordered> 
-                <Body>
-                  <Text>
-                    SIZE: {commaNumber(tx.size)} bytes
-                  </Text>
-                </Body>
+                <Text>
+                  SIZE: {commaNumber(tx.size)} bytes
+                </Text>
+              </CardItem>
+              <CardItem bordered style={{backgroundColor: "#ff9500"}}> 
+                <Text style={{color: "#fff"}}>
+                  TIME RECEIVED: {timeReceived} UTC
+                </Text>
               </CardItem>
               <CardItem bordered> 
-                <Body>
-                  <Text>
-                    TIME RECEIVED: {timeReceived} UTC
-                  </Text>
-                </Body>
+                <Text>
+                  CONFIRMATIONS: TX UNCONFIRMED ⚠️ 
+                </Text>
+              </CardItem>
+              <CardItem bordered style={{backgroundColor: "#ff9500"}}> 
+                <Text style={{color: "#fff"}}>
+                  TOTAL INPUT: {commaNumber(satConversion(tx.total) + satConversion(tx.fees))} BTC
+                </Text>
               </CardItem>
               <CardItem bordered> 
-                <Body>
-                  <Text>
-                    CONFIRMATIONS: TX UNCONFIRMED ⚠️ 
-                  </Text>
-                </Body>
+                <Text>
+                  TOTAL OUTPUT: {commaNumber(satConversion(tx.total))} BTC
+                </Text>
               </CardItem>
-              <CardItem bordered> 
-                <Body>
-                  <Text>
-                    TOTAL INPUT: {commaNumber(satConversion(tx.total) + satConversion(tx.fees))} BTC
-                  </Text>
-                </Body>
-              </CardItem>
-              <CardItem bordered> 
-                <Body>
-                  <Text>
-                    TOTAL OUTPUT: {commaNumber(satConversion(tx.total))} BTC
-                  </Text>
-                </Body>
-              </CardItem>
-              <CardItem bordered> 
-                <Body>
-                  <Text>
-                    FEES: {commaNumber(satConversion(tx.fees))} BTC
-                  </Text>
-                </Body>
+              <CardItem bordered style={{backgroundColor: "#ff9500"}}> 
+                <Text style={{color: "#fff"}}>
+                  FEES: {commaNumber(satConversion(tx.fees))} BTC
+                </Text>
               </CardItem>
             </Card>
   
             <Card>
-              <CardItem> 
+              <CardItem header style={{alignSelf: "center", borderBottomWidth: 0.5, borderColor: "#000", paddingBottom: 5}}>
+                <Text style={{fontSize: 17, fontWeight: "bold"}}>INPUTS {"\&"} OUTPUTS</Text>
+              </CardItem>
+              <CardItem style={{paddingTop: 15}}> 
                 <Body>
-                  <Text>
+                  <Text style={{paddingBottom: 10, fontWeight: "bold"}}>
                     {tx.inputs.length} {pluralize('INPUT', tx.inputs.length)} CONSUMED:
                   </Text>
   
                   {inputLength.map(i => {
                     if (tx.inputs[0]['addresses'] !== undefined) {
                       return (
-                        <CardItem key={`input-${i}`}>
-                          <Text>{tx.inputs[i]['addresses'][0]}</Text>
+                        <CardItem key={`input-${i}`} style={{backgroundColor: "#e1142b", marginBottom: 5}}>
+                          <Body style={{alignItems: "center"}}>
+                            <Text style={{fontWeight: "bold", color: "#fff"}} numberOfLines={1} ellipsizeMode={"middle"}>
+                              {tx.inputs[i]['addresses'][0]}
+                            </Text>
+                            <Text style={{color: "#fff"}}>
+                            {commaNumber(satConversion(tx.inputs[i]['output_value']))} BTC
+                            </Text>
+                          </Body>
                         </CardItem>
                       );
                     } else if (tx.inputs[0]['output_index'] === -1) {
                       return (
-                        <CardItem key={`input-${i}`}>
-                          <Text>No Input (Newly Generated Coins)</Text>
+                        <CardItem key={`input-${i}`} style={{backgroundColor: "#4399f6", marginBottom: 5}}>
+                          <Body style={{alignItems: "center"}}>
+                            <Text style={{fontWeight: "bold", color: "#fff"}}>No Input (Newly Generated Coins)</Text>
+                          </Body>
                         </CardItem>
                       );
                     } else {
                       return (
-                        <CardItem key={`input-${i}`}>
-                          <Text>
-                            Bech32 (Segwit) Address{'\n'}
-                            (Address Type Not Currently Supported){'\n'}
-                            {commaNumber(satConversion(tx.inputs[i]['output_value']))} BTC
-                          </Text>
+                        <CardItem key={`input-${i}`} style={{backgroundColor: "#e1142b", marginBottom: 5}}>
+                          <Body style={{alignItems: "center"}}>
+                            <Text style={{fontWeight: "bold", color: "#fff"}}>
+                              Bech32 (Segwit) Address
+                            </Text>
+                            <Text style={{color: "#fff"}}>
+                              (Address Type Not Currently Supported)
+                            </Text>
+                            <Text style={{color: "#fff"}}>
+                              {commaNumber(satConversion(tx.inputs[i]['output_value']))} BTC
+                            </Text>
+                          </Body>
                         </CardItem>
                       );
                     }
@@ -176,16 +180,16 @@ class TransactionShow extends React.Component  {
                 </Body>
               </CardItem>
 
-              <CardItem>
-                <Icon type='Entypo' name='dots-two-vertical' />
-              </CardItem>
-              <CardItem>
-                <Icon type='Ionicons' name='ios-arrow-down' />
-              </CardItem>
+              <CardItem style={{justifyContent: "center", paddingBottom: 0, paddingTop: 25}}>
+              <Icon type='Entypo' name='dots-three-vertical' style={{fontSize: 50, marginRight: 8}}/>
+            </CardItem>
+            <CardItem style={{justifyContent: "center", paddingTop: 0, paddingRight: 6}}>
+              <Icon type='Ionicons' name='ios-arrow-down' style={{fontSize: 50}}/>
+            </CardItem>
   
               <CardItem>
                 <Body>                
-                  <Text>
+                  <Text style={{paddingBottom: 10, fontWeight: "bold"}}>
                     {tx.outputs.length} {pluralize('OUTPUT', tx.outputs.length)} CREATED:
                   </Text>
   
@@ -193,30 +197,43 @@ class TransactionShow extends React.Component  {
                     if (tx.outputs[i]['addresses'] === null) {
                       // Unable to decode output address
                       return (
-                        <CardItem key={`output-${i}`}>
-                          <Text>
-                            Unable to decode output address
-                          </Text>
+                        <CardItem key={`output-${i}`} style={{backgroundColor: "#e1142b", marginBottom: 5}}>
+                          <Body style={{alignItems: "center"}}>
+                            <Text style={{fontWeight: "bold", color: "#f79c24"}}>
+                              Unable To Decode Output Address!
+                            </Text>
+                          </Body>
                         </CardItem>
                       ); 
                     } else if (tx.outputs[i]['spent_by'] !== undefined) {
                       // Spent coins
                       return (
-                        <CardItem key={`output-${i}`}>
-                          <Text>
-                            {tx.outputs[i]['addresses'][0]}{'\n'}
-                            {commaNumber(satConversion(tx.outputs[i]['value']))} BTC (SPENT)
-                          </Text>
+                        <CardItem key={`output-${i}`} style={{backgroundColor: "#00b64c", marginBottom: 5, paddingBottom: 9}}>
+                          <Body style={{alignItems: "center"}}>
+                            <Text style={{fontWeight: "bold", color: "#fff"}} numberOfLines={1} ellipsizeMode={"middle"}>
+                              {tx.outputs[i]['addresses'][0]}
+                            </Text>
+                            <View style={{flexDirection: "row"}}>
+                              <Text style={{color: "#fff"}}>
+                                {commaNumber(satConversion(tx.outputs[i]['value']))} BTC (SPENT){" "}
+                              </Text>
+                              <Icon type="Entypo" name="link" style={{fontSize: 14, color: "#fff", marginTop: 2}}/>
+                            </View>
+                          </Body>
                         </CardItem>
                       );
                     } else {
                       // Unspent coins
                       return (
-                        <CardItem key={`output-${i}`}>
-                          <Text>
-                            {tx.outputs[i]['addresses'][0]}{'\n'}
-                            {commaNumber(satConversion(tx.outputs[i]['value']))} BTC (UNSPENT)
-                          </Text>
+                        <CardItem key={`output-${i}`} style={{backgroundColor: "#00b64c", marginBottom: 5}}>
+                          <Body style={{alignItems: "center"}}>
+                            <Text style={{fontWeight: "bold", color: "#fff"}} numberOfLines={1} ellipsizeMode={"middle"}>
+                              {tx.outputs[i]['addresses'][0]}
+                            </Text>
+                            <Text style={{color: "#fff"}}>
+                              {commaNumber(satConversion(tx.outputs[i]['value']))} BTC (UNSPENT)
+                            </Text>
+                          </Body>
                         </CardItem>
                       );
                     }
@@ -234,8 +251,8 @@ class TransactionShow extends React.Component  {
       <Container>
         <ScrollView>
           <Card>
-            <CardItem bordered style={{backgroundColor: "rgba(229, 150, 70, 0.9)"}}> 
-              <Text numberOfLines={1} ellipsizeMode={"middle"}>
+            <CardItem bordered style={{backgroundColor: "#ff9500"}}> 
+              <Text numberOfLines={1} ellipsizeMode={"middle"} style={{color: "#fff"}}>
                 TX HASH: {tx.hash}
               </Text>
             </CardItem>
@@ -244,8 +261,8 @@ class TransactionShow extends React.Component  {
                 BLOCK HASH: {tx.block_hash}
               </Text>
             </CardItem>
-            <CardItem bordered style={{backgroundColor: "rgba(229, 150, 70, 0.9)"}}> 
-              <Text>
+            <CardItem bordered style={{backgroundColor: "#ff9500"}}> 
+              <Text style={{color: "#fff"}}>
                 BLOCK HEIGHT: {commaNumber(tx.block_height)}
               </Text>
             </CardItem>
@@ -254,8 +271,8 @@ class TransactionShow extends React.Component  {
                 CONFIRMATIONS: {commaNumber(tx.confirmations)}
               </Text>
             </CardItem>
-            <CardItem bordered style={{backgroundColor: "rgba(229, 150, 70, 0.9)"}}> 
-              <Text>
+            <CardItem bordered style={{backgroundColor: "#ff9500"}}> 
+              <Text style={{color: "#fff"}}>
                 SIZE: {commaNumber(tx.size)} bytes
               </Text>
             </CardItem>
@@ -264,8 +281,8 @@ class TransactionShow extends React.Component  {
                 CONFIRMED: {timeConfirmed} UTC
               </Text>
             </CardItem>
-            <CardItem bordered style={{backgroundColor: "rgba(229, 150, 70, 0.9)"}}> 
-              <Text>
+            <CardItem bordered style={{backgroundColor: "#ff9500"}}> 
+              <Text style={{color: "#fff"}}>
                 {/* Add function to limit 8 sigfigs */}
                 TOTAL INPUT: {commaNumber(satConversion(tx.total) + satConversion(tx.fees))} BTC
               </Text>
@@ -276,8 +293,8 @@ class TransactionShow extends React.Component  {
                 TOTAL OUTPUT: {commaNumber(satConversion(tx.total))} BTC
               </Text>
             </CardItem>
-            <CardItem bordered style={{backgroundColor: "rgba(229, 150, 70, 0.9)"}}> 
-              <Text>
+            <CardItem bordered style={{backgroundColor: "#ff9500"}}> 
+              <Text style={{color: "#fff"}}>
                 {/* Add function to limit 8 sigfigs */}
                 FEES: {commaNumber(satConversion(tx.fees))} BTC
               </Text>
@@ -311,7 +328,7 @@ class TransactionShow extends React.Component  {
                     );
                   } else if (tx.inputs[0]['output_index'] === -1) {
                     return (
-                      <CardItem key={`input-${i}`} style={{backgroundColor: "#e1142b", marginBottom: 5}}>
+                      <CardItem key={`input-${i}`} style={{backgroundColor: "#4399f6", marginBottom: 5}}>
                         <Body style={{alignItems: "center"}}>
                           <Text style={{fontWeight: "bold", color: "#fff"}}>No Input (Newly Generated Coins)</Text>
                         </Body>
@@ -368,14 +385,17 @@ class TransactionShow extends React.Component  {
                   } else if (tx.outputs[i]['spent_by'] !== undefined) {
                     // Spent coins
                     return (
-                      <CardItem key={`output-${i}`} style={{backgroundColor: "#00b64c", marginBottom: 5}}>
+                      <CardItem key={`output-${i}`} style={{backgroundColor: "#00b64c", marginBottom: 5, paddingBottom: 9}}>
                         <Body style={{alignItems: "center"}}>
                           <Text style={{fontWeight: "bold", color: "#fff"}} numberOfLines={1} ellipsizeMode={"middle"}>
                             {tx.outputs[i]['addresses'][0]}
                           </Text>
-                          <Text style={{color: "#fff"}}>
-                            {commaNumber(satConversion(tx.outputs[i]['value']))} BTC (SPENT)
-                          </Text>
+                          <View style={{flexDirection: "row"}}>
+                            <Text style={{color: "#fff"}}>
+                              {commaNumber(satConversion(tx.outputs[i]['value']))} BTC (SPENT){" "}
+                            </Text>
+                            <Icon type="Entypo" name="link" style={{fontSize: 14, color: "#fff", marginTop: 2}}/>
+                          </View>
                         </Body>
                       </CardItem>
                     );
