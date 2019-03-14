@@ -1,7 +1,7 @@
 import React from 'react';
-import { Text, View, AsyncStorage } from 'react-native';
+import { Text, View, AsyncStorage, Clipboard } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import { Container, Card, CardItem, Body, List, ListItem, Icon, ActionSheet } from 'native-base';
+import { Container, Card, CardItem, Body, List, ListItem, Icon, ActionSheet, Toast } from 'native-base';
 const commaNumber = require('comma-number');
 
 class AddressesIndex extends React.Component {
@@ -27,6 +27,16 @@ class AddressesIndex extends React.Component {
       } else {
         console.log("No address to delete!")
       }
+    }
+
+    const copyAddress = (addressStr) => {
+      Clipboard.setString(addressStr);
+
+      Toast.show({
+        text: 'Address copied to clipboard!',
+        buttonText: 'Dismiss',
+        duration: 3000
+      });
     }
 
     if (this.props.numAddresses > -1) {
@@ -154,13 +164,17 @@ class AddressesIndex extends React.Component {
                 onLongPress={() => {
                   ActionSheet.show(
                     {
-                      options: ["Delete", "Cancel"],
-                      cancelButtonIndex: 1,
-                      destructiveButtonIndex: 0,
+                      options: ["Copy Address", "Delete Address", "Cancel"],
+                      cancelButtonIndex: 2,
+                      destructiveButtonIndex: 1,
                       title: addressNameList[a]
                     },
                     buttonIndex => {
-                      buttonIndex === 0 ? deleteAddress(a) : null
+                      if (buttonIndex === 0) {
+                        copyAddress(addressList[a]);
+                      } else if (buttonIndex === 1) {
+                        deleteAddress(a);
+                      }
                     }
                   )}
                 }
