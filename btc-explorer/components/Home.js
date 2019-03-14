@@ -59,6 +59,8 @@ export default class Home extends React.Component {
       let userCurrency = await AsyncStorage.getItem('currency') || 'USD';
       // get stored addresses or assign default value if none
       let userAddrs = await AsyncStorage.getItem('addresses') || '';
+
+      console.log(userAddrs + "!!!");
   
       const currencyResponse = await fetch(`https://api.coindesk.com/v1/bpi/currentprice/${userCurrency}.json`);
       const jsonCurrency = await currencyResponse.json();

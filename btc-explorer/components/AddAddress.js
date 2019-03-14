@@ -64,19 +64,19 @@ class AddAddress extends React.Component  {
     const addrResponse = await fetch(`https://blockchain.info/rawaddr/${addr}`);
     
     if (addrResponse.status === 200) {
-      console.log("address okay!")
       // Do the things for a valid address
       let addrName = this.state.addressName;
 
+      
       if (addrName === '') {
         addrName = this.state.address;
       }
-
+      
       const newAddr = [addrName.trim(), this.state.address];
       const allAddrs = await AsyncStorage.getItem('addresses' || []);
 
       if (allAddrs.length >= 20) {
-        // do something if user is tracking >= 20 addresses
+        // do something if user is tracking 20 addresses
         Toast.show({
           text: 'Address limit reached! Delete a saved address and try again!',
           buttonText: 'Dismiss',
@@ -85,9 +85,11 @@ class AddAddress extends React.Component  {
           position: 'top'
         });
       } else {
+        console.log("trying to save!");
         try {
           await AsyncStorage.setItem('addresses', allAddrs.push(newAddr));
           this.props.navigation.navigate('Home');
+          console.log("save worked!")
         } catch (error) {
           // do something if error, maybe a toast popup?
           console.log(error);
