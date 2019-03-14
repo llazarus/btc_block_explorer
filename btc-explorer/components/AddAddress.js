@@ -64,6 +64,7 @@ class AddAddress extends React.Component  {
     const addrResponse = await fetch(`https://blockchain.info/rawaddr/${addr}`);
     
     if (addrResponse.status === 200) {
+      console.log("address okay!")
       // Do the things for a valid address
       let addrName = this.state.addressName;
 

@@ -87,7 +87,6 @@ class TransactionShow extends React.Component  {
 
     const copyAddress = (address) => {
       Clipboard.setString(address);
-      console.log(address);
 
       Toast.show({
         text: 'Address copied to clipboard!',
