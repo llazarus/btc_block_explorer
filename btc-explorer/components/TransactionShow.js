@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, ScrollView , View} from 'react-native';
-import { Container, Body, Card, CardItem, Icon } from 'native-base';
+import { StyleSheet, Text, ScrollView , View, Clipboard, Linking } from 'react-native';
+import { Container, Body, Card, CardItem, Icon, ActionSheet, Toast } from 'native-base';
 import { withNavigation } from 'react-navigation';
 import { Ionicons } from '@expo/vector-icons';
 import HeaderButtons, { HeaderButton, Item } from 'react-navigation-header-buttons';
@@ -85,6 +85,21 @@ class TransactionShow extends React.Component  {
       }
     }
 
+    const copyAddress = (address) => {
+      Clipboard.setString(address);
+      console.log(address);
+
+      Toast.show({
+        text: 'Address copied to clipboard!',
+        buttonText: 'Dismiss',
+        duration: 3000
+      });
+    }
+
+    const openTransaction = (txStr) => {
+      Linking.openURL(`https://live.blockcypher.com/btc/tx/${txStr}/`);
+    }
+
     if (this.state.loading) {
       return (
         <Container style={styles.container}>
@@ -152,7 +167,23 @@ class TransactionShow extends React.Component  {
                       return (
                         <CardItem key={`input-${i}`} style={{backgroundColor: "#e1142b", marginBottom: 5}}>
                           <Body style={{alignItems: "center"}}>
-                            <Text style={{fontWeight: "bold", color: "#fff"}} numberOfLines={1} ellipsizeMode={"middle"}>
+                            <Text 
+                              style={{fontWeight: "bold", color: "#fff"}} numberOfLines={1} ellipsizeMode={"middle"}
+
+                              onLongPress={() => {
+                                ActionSheet.show(
+                                  {
+                                    options: ["Copy Address", "Cancel"],
+                                    cancelButtonIndex: 1
+                                  },
+                                  buttonIndex => {
+                                    if (buttonIndex === 0) {
+                                      copyAddress(tx.inputs[i]['addresses'][0]);
+                                    }
+                                  }
+                                )
+                              }}
+                            >
                               {tx.inputs[i]['addresses'][0]}
                             </Text>
                             <Text style={{color: "#fff"}}>
@@ -174,7 +205,7 @@ class TransactionShow extends React.Component  {
                         <CardItem key={`input-${i}`} style={{backgroundColor: "#e1142b", marginBottom: 5}}>
                           <Body style={{alignItems: "center"}}>
                             <Text style={{fontWeight: "bold", color: "#fff"}}>
-                              Bech32 (Segwit) Address
+                              Bech32 Segwit Address
                             </Text>
                             <Text style={{color: "#fff"}}>
                               (Address Type Not Currently Supported)
@@ -210,7 +241,7 @@ class TransactionShow extends React.Component  {
                       return (
                         <CardItem key={`output-${i}`} style={{backgroundColor: "#e1142b", marginBottom: 5}}>
                           <Body style={{alignItems: "center"}}>
-                            <Text style={{fontWeight: "bold", color: "#f79c24"}}>
+                            <Text style={{fontWeight: "bold", color: "#fff"}}>
                               Unable To Decode Output Address!
                             </Text>
                           </Body>
@@ -221,7 +252,25 @@ class TransactionShow extends React.Component  {
                       return (
                         <CardItem key={`output-${i}`} style={{backgroundColor: "#00b64c", marginBottom: 5, paddingBottom: 9}}>
                           <Body style={{alignItems: "center"}}>
-                            <Text style={{fontWeight: "bold", color: "#fff"}} numberOfLines={1} ellipsizeMode={"middle"}>
+                            <Text 
+                              style={{fontWeight: "bold", color: "#fff"}} numberOfLines={1} ellipsizeMode={"middle"}
+
+                              onLongPress={() => {
+                                ActionSheet.show(
+                                  {
+                                    options: ["Copy Address", "Open Transaction In Browser", "Cancel"],
+                                    cancelButtonIndex: 2
+                                  },
+                                  buttonIndex => {
+                                    if (buttonIndex === 0) {
+                                      copyAddress(tx.outputs[i]['addresses'][0]);
+                                    } else if (buttonIndex === 1) {
+                                      openTransaction(tx.outputs[i]['spent_by']);
+                                    }
+                                  }
+                                )
+                              }}
+                            >
                               {tx.outputs[i]['addresses'][0]}
                             </Text>
                             <View style={{flexDirection: "row"}}>
@@ -238,7 +287,23 @@ class TransactionShow extends React.Component  {
                       return (
                         <CardItem key={`output-${i}`} style={{backgroundColor: "#00b64c", marginBottom: 5}}>
                           <Body style={{alignItems: "center"}}>
-                            <Text style={{fontWeight: "bold", color: "#fff"}} numberOfLines={1} ellipsizeMode={"middle"}>
+                            <Text 
+                              style={{fontWeight: "bold", color: "#fff"}} numberOfLines={1} ellipsizeMode={"middle"}
+
+                              onLongPress={() => {
+                                ActionSheet.show(
+                                  {
+                                    options: ["Copy Address", "Cancel"],
+                                    cancelButtonIndex: 1
+                                  },
+                                  buttonIndex => {
+                                    if (buttonIndex === 0) {
+                                      copyAddress(tx.outputs[i]['addresses'][0]);
+                                    }
+                                  }
+                                )
+                              }}
+                            >
                               {tx.outputs[i]['addresses'][0]}
                             </Text>
                             <Text style={{color: "#fff"}}>
@@ -326,9 +391,28 @@ class TransactionShow extends React.Component  {
                 {inputLength.map(i => {
                   if (tx.inputs[0]['addresses'] !== undefined) {
                     return (
-                      <CardItem key={`input-${i}`} style={{backgroundColor: "#e1142b", marginBottom: 5}}>
+                      <CardItem 
+                        key={`input-${i}`} 
+                        style={{backgroundColor: "#e1142b", marginBottom: 5}}
+                      >
                         <Body style={{alignItems: "center"}}>
-                          <Text style={{fontWeight: "bold", color: "#fff"}} numberOfLines={1} ellipsizeMode={"middle"}>
+                          <Text 
+                            style={{fontWeight: "bold", color: "#fff"}} numberOfLines={1} ellipsizeMode={"middle"}
+                            
+                            onLongPress={() => {
+                              ActionSheet.show(
+                                {
+                                  options: ["Copy Address", "Cancel"],
+                                  cancelButtonIndex: 1
+                                },
+                                buttonIndex => {
+                                  if (buttonIndex === 0) {
+                                    copyAddress(tx.inputs[i]['addresses'][0]);
+                                  }
+                                }
+                              )
+                            }}
+                          >
                             {tx.inputs[i]['addresses'][0]}
                           </Text>
                           <Text style={{color: "#fff"}}>
@@ -350,7 +434,7 @@ class TransactionShow extends React.Component  {
                       <CardItem key={`input-${i}`} style={{backgroundColor: "#e1142b", marginBottom: 5}}>
                         <Body style={{alignItems: "center"}}>
                           <Text style={{fontWeight: "bold", color: "#fff"}}>
-                            Bech32 (Segwit) Address
+                            Bech32 Segwit Address
                           </Text>
                           <Text style={{color: "#fff"}}>
                             (Address Type Not Currently Supported)
@@ -387,7 +471,7 @@ class TransactionShow extends React.Component  {
                     return (
                       <CardItem key={`output-${i}`} style={{backgroundColor: "#e1142b", marginBottom: 5}}>
                         <Body style={{alignItems: "center"}}>
-                          <Text style={{fontWeight: "bold", color: "#f79c24"}}>
+                          <Text style={{fontWeight: "bold", color: "#fff"}}>
                             Unable To Decode Output Address!
                           </Text>
                         </Body>
@@ -398,7 +482,25 @@ class TransactionShow extends React.Component  {
                     return (
                       <CardItem key={`output-${i}`} style={{backgroundColor: "#00b64c", marginBottom: 5, paddingBottom: 9}}>
                         <Body style={{alignItems: "center"}}>
-                          <Text style={{fontWeight: "bold", color: "#fff"}} numberOfLines={1} ellipsizeMode={"middle"}>
+                          <Text 
+                            style={{fontWeight: "bold", color: "#fff"}} numberOfLines={1} ellipsizeMode={"middle"}
+
+                            onLongPress={() => {
+                              ActionSheet.show(
+                                {
+                                  options: ["Copy Address", "Open Transaction In Browser", "Cancel"],
+                                  cancelButtonIndex: 2
+                                },
+                                buttonIndex => {
+                                  if (buttonIndex === 0) {
+                                    copyAddress(tx.outputs[i]['addresses'][0]);
+                                  } else if (buttonIndex === 1) {
+                                    openTransaction(tx.outputs[i]['spent_by']);
+                                  }
+                                }
+                              )
+                            }}
+                          >
                             {tx.outputs[i]['addresses'][0]}
                           </Text>
                           <View style={{flexDirection: "row"}}>
@@ -415,7 +517,23 @@ class TransactionShow extends React.Component  {
                     return (
                       <CardItem key={`output-${i}`} style={{backgroundColor: "#00b64c", marginBottom: 5}}>
                         <Body style={{alignItems: "center"}}>
-                          <Text style={{fontWeight: "bold", color: "#fff"}} numberOfLines={1} ellipsizeMode={"middle"}>
+                          <Text 
+                            style={{fontWeight: "bold", color: "#fff"}} numberOfLines={1} ellipsizeMode={"middle"}
+
+                            onLongPress={() => {
+                              ActionSheet.show(
+                                {
+                                  options: ["Copy Address", "Cancel"],
+                                  cancelButtonIndex: 1
+                                },
+                                buttonIndex => {
+                                  if (buttonIndex === 0) {
+                                    copyAddress(tx.outputs[i]['addresses'][0]);
+                                  }
+                                }
+                              )
+                            }}
+                          >
                             {tx.outputs[i]['addresses'][0]}
                           </Text>
                           <Text style={{color: "#fff"}}>
