@@ -74,6 +74,17 @@ class TransactionShow extends React.Component  {
       return sats / 100000000;
     }
 
+    const limitEight = (sats) => {
+      let decimalIndex = sats.indexOf(".");
+      let reducedString = sats.slice(0, decimalIndex + 9);
+
+      if (sats.slice(decimalIndex).length > decimalIndex + 9) {
+        return reducedString;
+      } else {
+        return sats;
+      }
+    }
+
     if (this.state.loading) {
       return (
         <Container style={styles.container}>
@@ -111,7 +122,7 @@ class TransactionShow extends React.Component  {
               </CardItem>
               <CardItem bordered style={{backgroundColor: "#ff9500"}}> 
                 <Text style={{color: "#fff"}}>
-                  TOTAL INPUT: {commaNumber(satConversion(tx.total) + satConversion(tx.fees))} BTC
+                  TOTAL INPUT: {limitEight(commaNumber(satConversion(tx.total) + satConversion(tx.fees)))} BTC
                 </Text>
               </CardItem>
               <CardItem bordered> 
@@ -284,7 +295,7 @@ class TransactionShow extends React.Component  {
             <CardItem bordered style={{backgroundColor: "#ff9500"}}> 
               <Text style={{color: "#fff"}}>
                 {/* Add function to limit 8 sigfigs */}
-                TOTAL INPUT: {commaNumber(satConversion(tx.total) + satConversion(tx.fees))} BTC
+                TOTAL INPUT: {limitEight(commaNumber(satConversion(tx.total) + satConversion(tx.fees)))} BTC
               </Text>
             </CardItem>
             <CardItem bordered> 
