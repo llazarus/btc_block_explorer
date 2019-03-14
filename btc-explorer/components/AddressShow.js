@@ -1,7 +1,7 @@
 import React from 'react';
-import { Text, ScrollView, View } from 'react-native';
+import { Text, ScrollView, View, Clipboard, Linking } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import { Container, Card, CardItem, List, ListItem, Body, Icon, Button } from 'native-base';
+import { Container, Card, CardItem, List, ListItem, Body, Icon, Button, ActionSheet, Toast } from 'native-base';
 import HeaderLeftToHome from './HeaderLeftToHome';
 const commaNumber = require('comma-number');
 
@@ -62,12 +62,46 @@ class AddressShow extends React.Component  {
       }
     }
 
+    const copyTransaction = (txStr) => {
+      Clipboard.setString(txStr);
+
+      Toast.show({
+        text: 'Transaction copied to clipboard!',
+        buttonText: 'Dismiss',
+        duration: 3000
+      });
+    }
+
+    const openTransaction = (txStr) => {
+      Linking.openURL(`https://live.blockcypher.com/btc/tx/${txStr}/`);
+    }
+
     const renderUnconfirmed = (num) => {
       if (num > 0) {
         const unconfirmedTransactionArr = addressInfo.unconfirmed_txrefs;
         for (let i = 0; i < num; i += 1) {
           return (
-            <ListItem key={`unconfirmed-${i}`}>
+            <ListItem 
+              noIndent
+              key={`unconfirmed-${i}`}
+              style={{paddingBottom: 15, paddingTop: 15}}
+              onPress={() => this.props.navigation.push("TransactionShow", { tx_hash: transactionArr[tx]['tx_hash'] })}
+              onLongPress={() => {
+                ActionSheet.show(
+                  {
+                    options: ["Copy Transaction Hash", "Open Transaction In Browser", "Cancel"],
+                    cancelButtonIndex: 2
+                  },
+                  buttonIndex => {
+                    if (buttonIndex === 0) {
+                      copyTransaction(transactionArr[tx]['tx_hash']);
+                    } else if (buttonIndex === 1) {
+                      openTransaction(transactionArr[tx]['tx_hash']);
+                    }
+                  }
+                )}
+              }
+            >
               <Body>
                 <Text>TX UNCONFIRMED ⚠️</Text>
                 <Text numberOfLines={1} ellipsizeMode={"middle"} style={{paddingRight: 15}}>
@@ -159,12 +193,6 @@ class AddressShow extends React.Component  {
               {currencyIcon(currencySymbol)}{commaNumber((rate*satConversion(addressInfo["final_balance"])).toFixed(2))} {currencySymbol}
               </Text>
             </CardItem>
-
-            {/* <CardItem style={{alignSelf: 'center', backgroundColor: "#ff9500", paddingTop: 5}}>
-              <Text style={{fontSize: 12, color: "#fff"}}>
-                1 BTC = {commaNumber(rate)} {currencySymbol}
-              </Text>
-            </CardItem> */}
           </Card>
 
           <Card>
@@ -178,9 +206,23 @@ class AddressShow extends React.Component  {
                   key={`listItem-${tx}`}
                   style={{paddingBottom: 15, paddingTop: 15}}
                   onPress={() => this.props.navigation.push("TransactionShow", { tx_hash: transactionArr[tx]['tx_hash'] })}
+                  onLongPress={() => {
+                    ActionSheet.show(
+                      {
+                        options: ["Copy Transaction Hash", "Open Transaction In Browser", "Cancel"],
+                        cancelButtonIndex: 2
+                      },
+                      buttonIndex => {
+                        if (buttonIndex === 0) {
+                          copyTransaction(transactionArr[tx]['tx_hash']);
+                        } else if (buttonIndex === 1) {
+                          openTransaction(transactionArr[tx]['tx_hash']);
+                        }
+                      }
+                    )}
+                  }
                 >
                   <Body>
-                    {/* TODO: Truncate wrapping text */}
                     <Text numberOfLines={1} ellipsizeMode={"middle"} style={{paddingRight: 15}}>
                       TX HASH: {transactionArr[tx]['tx_hash']}
                     </Text>
