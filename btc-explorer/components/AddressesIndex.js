@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, AsyncStorage, Clipboard } from 'react-native';
+import { Text, View, AsyncStorage, Clipboard, Linking } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import { Container, Card, CardItem, Body, List, ListItem, Icon, ActionSheet, Toast } from 'native-base';
 const commaNumber = require('comma-number');
@@ -116,6 +116,10 @@ class AddressesIndex extends React.Component {
       }
     }
 
+    const openAddress = (addrStr) => {
+      Linking.openURL(`https://live.blockcypher.com/btc/address/${addrStr}/`);
+    }
+
     const renderUnconfirmed = (num)  => {
       if (num !== 0) {
         return (
@@ -183,15 +187,17 @@ class AddressesIndex extends React.Component {
                 onLongPress={() => {
                   ActionSheet.show(
                     {
-                      options: ["Copy Address", "Delete Address", "Cancel"],
-                      cancelButtonIndex: 2,
-                      destructiveButtonIndex: 1,
-                      title: sortedAddressNames [a]
+                      options: ["Copy Address", "Open Address In Browser", "Delete Address", "Cancel"],
+                      cancelButtonIndex: 3,
+                      destructiveButtonIndex: 2,
+                      title: sortedAddressNames[a]
                     },
                     buttonIndex => {
                       if (buttonIndex === 0) {
                         copyAddress(addressList[a]);
                       } else if (buttonIndex === 1) {
+                        openAddress(addressList[a])
+                      } else if (buttonIndex === 2) {
                         deleteAddress(a);
                       }
                     }
