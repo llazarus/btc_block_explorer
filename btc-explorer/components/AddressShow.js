@@ -85,7 +85,7 @@ class AddressShow extends React.Component  {
               noIndent
               key={`unconfirmed-${i}`}
               style={{paddingBottom: 15, paddingTop: 15}}
-              onPress={() => this.props.navigation.push("TransactionShow", { tx_hash: transactionArr[tx]['tx_hash'] })}
+              onPress={() => this.props.navigation.push("TransactionShow", { tx_hash: addressInfo["unconfirmed_txrefs"][i]['tx_hash'] })}
               onLongPress={() => {
                 ActionSheet.show(
                   {
@@ -110,7 +110,7 @@ class AddressShow extends React.Component  {
                 <Text>
                   {satConversion(unconfirmedTransactionArr[i]["value"])} BTC
                 </Text>
-                <Text>RECEIVED: {unconfirmedTransactionArr[i]["tx_received"].slice(0, 19).replace(/[^:-\d]/g, ' ')} UTC</Text>
+                <Text>RECEIVED: {unconfirmedTransactionArr[i]["received"].slice(0, 19).replace(/[^:-\d]/g, ' ')} UTC</Text>
               </Body>
               
               <View style={{flexDirection: "row", alignItems: "center"}}>

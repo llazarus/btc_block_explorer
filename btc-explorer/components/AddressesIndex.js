@@ -16,16 +16,24 @@ class AddressesIndex extends React.Component {
 
     const deleteAddress = async (index) => {
       let userAddrs = await AsyncStorage.getItem("addresses") || "";
-      if (userAddrs.length > 0) {
+
+      const splitAddrString = userAddrs.split(/SPLITADDRSHERE/g).slice(1);
+      let addressArray = [];
+
+      for (let i = 0; i < splitAddrString.length; i += 2) {
+        addressArray.push([splitAddrString[i], splitAddrString[i+1]]);
+      }
+
+      if (addressArray.length > 0) {
         try {
-          userAddrs.splice(index, 1);
-          await AsyncStorage.setItem("addresses", userAddrs);
+          addressArray.splice(index, 1);
+          await AsyncStorage.setItem("addresses", addressArray.join("SPLITADDRSHERE"));
           this.props.navigation.navigate("Home");
         } catch {
           console.log("Error deleting address!");
         }
       } else {
-        console.log("No address to delete!")
+        console.log("No address to delete!");
       }
     }
 
@@ -49,7 +57,7 @@ class AddressesIndex extends React.Component {
         unconfirmedTxs.push(this.props.addresses[i]["unconfirmed_n_tx"]);
         numAddresses.push(i);
       }
-    }
+    } 
 
     let currencySymbol = 'USD';
     if (this.props.currencySymbol) {

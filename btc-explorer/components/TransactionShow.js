@@ -28,13 +28,13 @@ class TransactionShow extends React.Component  {
   }
 
   fetchData = async () => {
-    const tx_hash = this.props.navigation.getParam('tx_hash', '');
+    const tx_hash = await this.props.navigation.getParam('tx_hash', '');
 
     if (tx_hash !== '') {
       const responseTX = await fetch(`https://api.blockcypher.com/v1/btc/main/txs/${tx_hash}`);
       const jsonTX = await responseTX.json();
 
-      if (jsonTX["block_hash"]) {
+      if (jsonTX["hash"]) {
         this.setState({
           tx: jsonTX,
           loading: false
@@ -60,13 +60,11 @@ class TransactionShow extends React.Component  {
     const tx = {...this.state.tx};
     let inputLength = [];
     let outputLength = [];
-    let timeConfirmed = '';
     let timeReceived = '';
     
     if (tx.inputs) {
       inputLength = Array.from({length: tx.inputs.length}, (v, i) => i) || [];
       outputLength = Array.from({length: tx.outputs.length}, (v, i) => i) || [];
-      timeConfirmed = tx.confirmed.slice(0, 19).replace(/[^:-\d]/g, ' ') || '';
       timeReceived = tx.received.slice(0, 19).replace(/[^:-\d]/g, ' ') || '';
     }
 
@@ -126,7 +124,7 @@ class TransactionShow extends React.Component  {
               </CardItem>
               <CardItem bordered style={{backgroundColor: "#ff9500"}}> 
                 <Text style={{color: "#fff"}}>
-                  TIME RECEIVED: {timeReceived} UTC
+                  RECEIVED: {timeReceived} UTC
                 </Text>
               </CardItem>
               <CardItem bordered> 
@@ -353,7 +351,7 @@ class TransactionShow extends React.Component  {
             </CardItem>
             <CardItem bordered> 
               <Text>
-                CONFIRMED: {timeConfirmed} UTC
+                CONFIRMED: {tx.confirmed.slice(0, 19).replace(/[^:-\d]/g, ' ')} UTC
               </Text>
             </CardItem>
             <CardItem bordered style={{backgroundColor: "#ff9500"}}> 
@@ -473,6 +471,11 @@ class TransactionShow extends React.Component  {
                           <Text style={{fontWeight: "bold", color: "#fff"}}>
                             Unable To Decode Output Address!
                           </Text>
+                          {tx.outputs[i]["value"] ? 
+                            <Text style={{color: "#fff"}}>
+                              {commaNumber(satConversion(tx.outputs[i]['value']))} BTC
+                            </Text>
+                          : null }
                         </Body>
                       </CardItem>
                     ); 

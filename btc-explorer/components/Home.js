@@ -58,9 +58,7 @@ export default class Home extends React.Component {
       // get stored currency or assign default value if none
       let userCurrency = await AsyncStorage.getItem('currency') || 'USD';
       // get stored addresses or assign default value if none
-      let userAddrs = await AsyncStorage.getItem('addresses') || '';
-
-      console.log(userAddrs + "!!!");
+      let userAddrs = await AsyncStorage.getItem('addresses') || null;
   
       const currencyResponse = await fetch(`https://api.coindesk.com/v1/bpi/currentprice/${userCurrency}.json`);
       const jsonCurrency = await currencyResponse.json();
@@ -68,15 +66,12 @@ export default class Home extends React.Component {
         currencySymbol: userCurrency,
         currency: jsonCurrency
       });
-  
-      if (userAddrs === '') {
+      
+      if (userAddrs === null) {
         // do the things for people that don't have stored addresses!
         // for test
         const responseAddresses = await fetch('https://api.blockcypher.com/v1/btc/main/addrs/1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa;1Ez69SnzzmePmZX3WpEzMKTrcBF2gpNQ55;1XPTgDRhN8RFnzniWCddobD9iKZatrvH4');
         const jsonAddresses = await responseAddresses.json();
-
-        // TODO remove comment
-        console.log("BlockCypher API Called!")
 
         if (jsonAddresses[0]['error']) {
           // Do something if error getting addresses
@@ -96,32 +91,63 @@ export default class Home extends React.Component {
         }
       } else {
         // Do the things for people that have stored addresses!
-        const addressString = ''
-  
-        for (let i = 0; i < userAddrs.length; i += 1) {
-          this.setState({
-            addressNames: this.state.addressNames.push(userAddrs[i][0])
-          });
-          i === (userAddrs.length - 1) ? addressString += userAddrs[i][1] : addressString += userAddrs[i][1].concat(';');
+        const splitAddrString = userAddrs.split(/SPLITADDRSHERE/g).slice(1);
+        let addressArray = [];
+        let addressString = "";
+        
+        for (let i = 0; i < splitAddrString.length; i += 2) {
+          addressArray.push([splitAddrString[i], splitAddrString[i+1]]);
         }
   
+        for (let i = 0; i < addressArray.length; i += 1) {
+          let addrArr = [];
+          addrArr.push(addressArray[i][0]);
+          
+          this.setState({
+            addressNames: addrArr
+          });
+
+          if (i === addressArray.length - 1) {
+            addressString += addressArray[i][1];
+          } else {
+            addressString += addressArray[i][1].concat(";")
+          }
+        }
+        console.log(addressString + "!!");
+        
         const responseAddresses = await fetch(`https://api.blockcypher.com/v1/btc/main/addrs/${addressString}`);
         const jsonAddresses = await responseAddresses.json();
-  
-        if (jsonAddresses[0]['error']) {
-          // Do something if error getting addresses
-          console.log(jsonAddresses[0]['error']);
-          this.setState({
-            loadingError: true
-          });
+
+        console.log(jsonAddresses.length + "!!!");
+
+        if (jsonAddresses.length) {
+          if (jsonAddresses[0]['error']) {
+            this.setState({
+              loadingError: true
+            });
+          } else {
+            this.setState({
+              numAddresses: jsonAddresses.length,
+              addresses: jsonAddresses,
+              loading: false,
+              loadingError: false
+            });
+          }
         } else {
-          this.setState({
-            numAddresses: jsonAddresses.length,
-            addresses: jsonAddresses,
-            loading: false,
-            loadingError: false
-          });
+          if (jsonAddresses["address"]) {
+            this.setState({
+              numAddresses: 1,
+              addresses: [jsonAddresses],
+              loading: false,
+              loadingError: false
+            });
+          } else {
+            this.setState({
+              loadingError: true
+            });
+          }
         }
+  
       }
 
     } catch {

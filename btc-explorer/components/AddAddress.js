@@ -72,10 +72,13 @@ class AddAddress extends React.Component  {
         addrName = this.state.address;
       }
       
-      const newAddr = [addrName.trim(), this.state.address];
-      const allAddrs = await AsyncStorage.getItem('addresses' || []);
+      const newAddr = `SPLITADDRSHERE${addrName.trim()}SPLITADDRSHERE${this.state.address}`;
+      const allAddrs = await AsyncStorage.getItem('addresses') || '';
 
-      if (allAddrs.length >= 20) {
+
+      const splitAddresses = allAddrs.split(/SPLITADDRSHERE/g);
+      
+      if (splitAddresses.length >= 41) {
         // do something if user is tracking 20 addresses
         Toast.show({
           text: 'Address limit reached! Delete a saved address and try again!',
@@ -85,11 +88,10 @@ class AddAddress extends React.Component  {
           position: 'top'
         });
       } else {
-        console.log("trying to save!");
         try {
-          await AsyncStorage.setItem('addresses', allAddrs.push(newAddr));
+          let newAddrs = allAddrs.concat(newAddr);
+          await AsyncStorage.setItem('addresses', newAddrs);
           this.props.navigation.navigate('Home');
-          console.log("save worked!")
         } catch (error) {
           // do something if error, maybe a toast popup?
           console.log(error);
@@ -150,7 +152,7 @@ class AddAddress extends React.Component  {
             </Item>
             {this.state.addressError === true ? (
               <Item stackedLabel error>
-                <Label>BTC Address (e.g. 1abc1234567890)</Label>
+                <Label>BTC Address (e.g. 1A1zP1eP5Q...mv7DivfNa)</Label>
                   <Input
                     onChangeText={(addrInput) => {
                       this.setState({ address: addrInput })
@@ -161,7 +163,7 @@ class AddAddress extends React.Component  {
               </Item>
             ) : (
               <Item stackedLabel>
-                <Label>BTC Address (e.g. 1abc1234567890)</Label>
+                <Label>BTC Address (e.g. 1A1zP1eP5Q...mv7DivfNa)</Label>
                   <Input
                     onChangeText={(addrInput) => {
                       this.setState({ address: addrInput })
