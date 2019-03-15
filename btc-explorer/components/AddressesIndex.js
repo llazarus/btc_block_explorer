@@ -26,8 +26,9 @@ class AddressesIndex extends React.Component {
 
       if (addressArray.length > 0) {
         try {
-          addressArray.splice(index, 1);
-          await AsyncStorage.setItem("addresses", addressArray.join("SPLITADDRSHERE"));
+          addressArray.splice(index, 1)
+          let newAddresses = addressArray[0].join("SPLITADDRSHERE");
+          await AsyncStorage.setItem("addresses", "SPLITADDRSHERE".concat(newAddresses));
           this.props.navigation.navigate("Home");
         } catch {
           console.log("Error deleting address!");
@@ -57,7 +58,17 @@ class AddressesIndex extends React.Component {
         unconfirmedTxs.push(this.props.addresses[i]["unconfirmed_n_tx"]);
         numAddresses.push(i);
       }
-    } 
+    }
+    
+    let sortedAddressNames = [];
+    for (let i = 0; i < addressList.length; i += 1) {
+      for (let j = 0; j < addressList.length; j += 1) {
+        if (addressList[i] === addressNameList[j][1]) {
+          sortedAddressNames.push(addressNameList[j][0]);
+        }
+      }
+    }
+    console.log(sortedAddressNames);
 
     let currencySymbol = 'USD';
     if (this.props.currencySymbol) {
@@ -175,7 +186,7 @@ class AddressesIndex extends React.Component {
                       options: ["Copy Address", "Delete Address", "Cancel"],
                       cancelButtonIndex: 2,
                       destructiveButtonIndex: 1,
-                      title: addressNameList[a]
+                      title: sortedAddressNames [a]
                     },
                     buttonIndex => {
                       if (buttonIndex === 0) {
@@ -191,14 +202,14 @@ class AddressesIndex extends React.Component {
                   {/* GIVEN ADDRESS NAME HERE!!! */}
                   <View style={{marginBottom: 10, borderColor: "#000", borderBottomWidth: 0.25}}>
                     <Text numberOfLines={1} ellipsizeMode={"middle"} style={{alignSelf: "center", fontSize: 15, fontWeight: "bold", paddingBottom: 10}}>
-                      {addressNameList[a]}
+                      {sortedAddressNames[a]}
                     </Text>
                   </View>
 
 
                   {/* IF GIVEN NAME !== ADDRESS THEN PUT ADDRESS HERE!!! */}
                   {/* TODO: Truncate address so text doesn't wrap */}
-                  {addressNameList[a] !== addressList[a] ? <Text numberOfLines={1} ellipsizeMode={"middle"} style={{paddingRight: 20}}>ADDRESS: {addressList[a]}</Text> : null }
+                  {sortedAddressNames[a] !== addressList[a] ? <Text numberOfLines={1} ellipsizeMode={"middle"} style={{paddingRight: 20}}>ADDRESS: {addressList[a]}</Text> : null }
 
                   <Text>
                     BALANCE: {satConversion(addressBalance[a])} BTC

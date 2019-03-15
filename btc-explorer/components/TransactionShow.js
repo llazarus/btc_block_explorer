@@ -160,7 +160,7 @@ class TransactionShow extends React.Component  {
                   </Text>
   
                   {inputLength.map(i => {
-                    if (tx.inputs[0]['addresses'] !== undefined) {
+                    if (tx.inputs[i]['addresses'] !== undefined) {
                       return (
                         <CardItem key={`input-${i}`} style={{backgroundColor: "#e1142b", marginBottom: 5}}>
                           <Body style={{alignItems: "center"}}>

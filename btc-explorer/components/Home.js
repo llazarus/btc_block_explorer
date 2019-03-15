@@ -98,27 +98,22 @@ export default class Home extends React.Component {
         for (let i = 0; i < splitAddrString.length; i += 2) {
           addressArray.push([splitAddrString[i], splitAddrString[i+1]]);
         }
-  
-        for (let i = 0; i < addressArray.length; i += 1) {
-          let addrArr = [];
-          addrArr.push(addressArray[i][0]);
-          
-          this.setState({
-            addressNames: addrArr
-          });
 
+        for (let i = 0; i < addressArray.length; i += 1) {
           if (i === addressArray.length - 1) {
             addressString += addressArray[i][1];
           } else {
             addressString += addressArray[i][1].concat(";")
           }
         }
-        console.log(addressString + "!!");
+
+        this.setState({
+          addressNames: addressArray
+        });
         
+        console.log(addressString);
         const responseAddresses = await fetch(`https://api.blockcypher.com/v1/btc/main/addrs/${addressString}`);
         const jsonAddresses = await responseAddresses.json();
-
-        console.log(jsonAddresses.length + "!!!");
 
         if (jsonAddresses.length) {
           if (jsonAddresses[0]['error']) {

@@ -17,14 +17,18 @@ class AddressShow extends React.Component  {
   render() {
     const addressInfo = this.props.navigation.getParam('addressInfo', '');
     const addressName = this.props.navigation.getParam('addressName', '');
-    const transactionArr = addressInfo.txrefs;
-    let numTransactions = [];
+    const transactionArr = addressInfo.txrefs || [];
+    const unconfirmedArr = addressInfo.unconfirmed_txrefs || [];
+    let confirmedTX = [];
     const numUnconfirmed = addressInfo.unconfirmed_n_tx;
     const rate = this.props.navigation.getParam('rate', 0); 
     const currencySymbol = this.props.navigation.getParam('currencySymbol', '');
+    const unconfirmedTransactionArr = addressInfo.unconfirmed_txrefs || [];
+    const unconfirmedTX = Array.from(Array(numUnconfirmed).keys());
+
 
     for (let i = 0; i < transactionArr.length; i += 1) {
-      numTransactions.push(i);
+      confirmedTX.push(i);
     }
 
     const satConversion = (sats) => {
@@ -76,55 +80,6 @@ class AddressShow extends React.Component  {
       Linking.openURL(`https://live.blockcypher.com/btc/tx/${txStr}/`);
     }
 
-    const renderUnconfirmed = (num) => {
-      if (num > 0) {
-        const unconfirmedTransactionArr = addressInfo.unconfirmed_txrefs;
-        for (let i = 0; i < num; i += 1) {
-          return (
-            <ListItem 
-              noIndent
-              key={`unconfirmed-${i}`}
-              style={{paddingBottom: 15, paddingTop: 15}}
-              onPress={() => this.props.navigation.push("TransactionShow", { tx_hash: addressInfo["unconfirmed_txrefs"][i]['tx_hash'] })}
-              onLongPress={() => {
-                ActionSheet.show(
-                  {
-                    options: ["Copy Transaction Hash", "Open Transaction In Browser", "Cancel"],
-                    cancelButtonIndex: 2
-                  },
-                  buttonIndex => {
-                    if (buttonIndex === 0) {
-                      copyTransaction(transactionArr[tx]['tx_hash']);
-                    } else if (buttonIndex === 1) {
-                      openTransaction(transactionArr[tx]['tx_hash']);
-                    }
-                  }
-                )}
-              }
-            >
-              <Body>
-                <Text>TX UNCONFIRMED ⚠️</Text>
-                <Text numberOfLines={1} ellipsizeMode={"middle"} style={{paddingRight: 15}}>
-                  TX HASH: {unconfirmedTransactionArr[i]['tx_hash']}
-                </Text>
-                <Text>
-                  {satConversion(unconfirmedTransactionArr[i]["value"])} BTC
-                </Text>
-                <Text>RECEIVED: {unconfirmedTransactionArr[i]["received"].slice(0, 19).replace(/[^:-\d]/g, ' ')} UTC</Text>
-              </Body>
-              
-              <View style={{flexDirection: "row", alignItems: "center"}}>
-                {txFlow(unconfirmedTransactionArr[i]["tx_input_n"], i)}
-                <Icon active name="arrow-forward" style={{fontSize: 20}}/>
-              </View>
-            </ListItem>
-          );
-        }
-      } else {
-        return null;
-      }
-    }
-
     const txFlow = (input, key) => {
       if (input === -1) {
         return (
@@ -162,7 +117,7 @@ class AddressShow extends React.Component  {
                 numberOfLines={1} ellipsizeMode={"middle"}
                 style={{color: "#fff", fontSize: 20, fontWeight: "bold"}}
               >
-                {addressName}
+                {addressName[0]}
               </Text>
             </CardItem>
 
@@ -197,10 +152,48 @@ class AddressShow extends React.Component  {
 
           <Card>
             <List>
+              {numUnconfirmed > 0 ? 
+                unconfirmedTX.map(tx => {
+                  return (<ListItem 
+                    noIndent
+                    key={`unconfirmed-${tx}`}
+                    style={{paddingBottom: 15, paddingTop: 15}}
+                    onPress={() => this.props.navigation.push("TransactionShow", { tx_hash: addressInfo["unconfirmed_txrefs"][tx]['tx_hash'] })}
+                    onLongPress={() => {
+                      ActionSheet.show(
+                        {
+                          options: ["Copy Transaction Hash", "Open Transaction In Browser", "Cancel"],
+                          cancelButtonIndex: 2
+                        },
+                        buttonIndex => {
+                          if (buttonIndex === 0) {
+                            copyTransaction(unconfirmedArr[tx]['tx_hash']);
+                          } else if (buttonIndex === 1) {
+                            openTransaction(unconfirmedArr[tx]['tx_hash']);
+                          }
+                        }
+                      )}
+                    }
+                  >
+                    <Body>
+                      <Text>TX UNCONFIRMED ⚠️</Text>
+                      <Text numberOfLines={1} ellipsizeMode={"middle"} style={{paddingRight: 15}}>
+                        TX HASH: {unconfirmedTransactionArr[tx]['tx_hash']}
+                      </Text>
+                      <Text>
+                        {satConversion(unconfirmedTransactionArr[tx]["value"])} BTC
+                      </Text>
+                      <Text>RECEIVED: {unconfirmedTransactionArr[tx]["received"].slice(0, 19).replace(/[^:-\d]/g, ' ')} UTC</Text>
+                    </Body>
+                    
+                    <View style={{flexDirection: "row", alignItems: "center"}}>
+                      {txFlow(unconfirmedTransactionArr[tx]["tx_input_n"], tx)}
+                      <Icon active name="arrow-forward" style={{fontSize: 20}}/>
+                    </View>
+                  </ListItem>);
+                }) : null }
 
-              {renderUnconfirmed(numUnconfirmed)}
-
-              {numTransactions.map(tx => (
+              {confirmedTX.map(tx => (
                 <ListItem 
                   noIndent
                   key={`listItem-${tx}`}
