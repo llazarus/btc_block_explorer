@@ -58,7 +58,7 @@ export default class Home extends React.Component {
       // get stored currency or assign default value if none
       let userCurrency = await AsyncStorage.getItem('currency') || 'USD';
       // get stored addresses or assign default value if none
-      let userAddrs = await AsyncStorage.getItem('addresses') || null;
+      let userAddrs = await AsyncStorage.getItem('addresses') || "";
   
       const currencyResponse = await fetch(`https://api.coindesk.com/v1/bpi/currentprice/${userCurrency}.json`);
       const jsonCurrency = await currencyResponse.json();
@@ -67,7 +67,7 @@ export default class Home extends React.Component {
         currency: jsonCurrency
       });
       
-      if (userAddrs === null) {
+      if (userAddrs === "") {
         // do the things for people that don't have stored addresses!
         // for test
         const responseAddresses = await fetch('https://api.blockcypher.com/v1/btc/main/addrs/1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa;1Ez69SnzzmePmZX3WpEzMKTrcBF2gpNQ55;1XPTgDRhN8RFnzniWCddobD9iKZatrvH4');
@@ -86,7 +86,7 @@ export default class Home extends React.Component {
             loading: false,
             loadingError: false,
             // remove later!!!
-            addressNames: ['Genesis of Bitcoin', 'US Marshal Auction Coins', 'Test 3']
+            addressNames: [['Genesis of Bitcoin', '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa'], ['US Marshal Auction Coins', '1Ez69SnzzmePmZX3WpEzMKTrcBF2gpNQ55'], ['Test 3', '1XPTgDRhN8RFnzniWCddobD9iKZatrvH4']]
           });
         }
       } else {
@@ -111,16 +111,21 @@ export default class Home extends React.Component {
           addressNames: addressArray
         });
         
-        console.log(addressString);
         const responseAddresses = await fetch(`https://api.blockcypher.com/v1/btc/main/addrs/${addressString}`);
         const jsonAddresses = await responseAddresses.json();
 
         if (jsonAddresses.length) {
-          if (jsonAddresses[0]['error']) {
-            this.setState({
-              loadingError: true
-            });
-          } else {
+          console.log(jsonAddresses.length);
+          for (let i = 0; i < jsonAddresses.length; i += 1) {
+            if (jsonAddresses[i]['error'] !== undefined) {
+              console.log(jsonAddresses[i]['error']); 
+              this.setState({
+                loadingError: true
+              });
+            } 
+          }
+          if (this.state.loadingError === false) {
+            console.log("no errors!");
             this.setState({
               numAddresses: jsonAddresses.length,
               addresses: jsonAddresses,

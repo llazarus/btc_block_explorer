@@ -27,9 +27,14 @@ class AddressesIndex extends React.Component {
       if (addressArray.length > 0) {
         try {
           addressArray.splice(index, 1)
-          let newAddresses = addressArray[0].join("SPLITADDRSHERE");
-          await AsyncStorage.setItem("addresses", "SPLITADDRSHERE".concat(newAddresses));
-          this.props.navigation.navigate("Home");
+          if (addressArray.length > 0) {
+            let newAddresses = addressArray[0].join("SPLITADDRSHERE");
+            await AsyncStorage.setItem("addresses", "SPLITADDRSHERE".concat(newAddresses));
+            this.props.navigation.navigate('Home', {update: true});
+          } else {
+            await AsyncStorage.setItem("addresses", "");
+            this.props.navigation.navigate('Home', {update: true});
+          }
         } catch {
           console.log("Error deleting address!");
         }
@@ -54,21 +59,24 @@ class AddressesIndex extends React.Component {
         addressList.push(this.props.addresses[i]["address"]);
         addressNameList.push(this.props.addressNames[i]);
         addressBalance.push(this.props.addresses[i]["final_balance"]);
-        allTxs.push(this.props.addresses[i]["n_tx"]);
+        allTxs.push(this.props.addresses[i]["final_n_tx"]);
         unconfirmedTxs.push(this.props.addresses[i]["unconfirmed_n_tx"]);
         numAddresses.push(i);
       }
     }
     
     let sortedAddressNames = [];
-    for (let i = 0; i < addressList.length; i += 1) {
-      for (let j = 0; j < addressList.length; j += 1) {
-        if (addressList[i] === addressNameList[j][1]) {
-          sortedAddressNames.push(addressNameList[j][0]);
+    if (addressNameList[1] === undefined) {
+      sortedAddressNames.push(addressNameList[0][0]);
+    } else {
+      for (let i = 0; i < addressList.length; i += 1) {
+        for (let j = 0; j < addressNameList.length; j += 1) {
+          if (addressList[i] === addressNameList[j][1]) {
+            sortedAddressNames.push(addressNameList[j][0]);
+          }
         }
       }
     }
-    console.log(sortedAddressNames);
 
     let currencySymbol = 'USD';
     if (this.props.currencySymbol) {

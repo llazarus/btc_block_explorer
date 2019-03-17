@@ -77,7 +77,6 @@ class AddAddress extends React.Component  {
 
 
       const splitAddresses = allAddrs.split(/SPLITADDRSHERE/g);
-      console.log(splitAddresses);
       
       if (splitAddresses.length >= 41) {
         // do something if user is tracking 20 addresses
