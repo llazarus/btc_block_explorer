@@ -42,10 +42,11 @@ class AddressesIndex extends React.Component {
         }
       } else {
         await AsyncStorage.setItem("addresses", "");
-            this.props.navigation.navigate({
-              routeName: "Home",
-              key: 0
-            });
+        
+        this.props.navigation.navigate({
+          routeName: "Home",
+          key: 0
+        });
       }
     }
 
