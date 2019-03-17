@@ -14,32 +14,38 @@ class AddressesIndex extends React.Component {
     let unconfirmedTxs = [];
     let numAddresses = [];
 
-    const deleteAddress = async (index) => {
+    const deleteAddress = async (addressName) => {
       let userAddrs = await AsyncStorage.getItem("addresses") || "";
-
       const splitAddrString = userAddrs.split(/SPLITADDRSHERE/g).slice(1);
       let addressArray = [];
 
       for (let i = 0; i < splitAddrString.length; i += 2) {
         addressArray.push([splitAddrString[i], splitAddrString[i+1]]);
       }
-
+      
       if (addressArray.length > 0) {
         try {
-          addressArray.splice(index, 1)
-          if (addressArray.length > 0) {
-            let newAddresses = addressArray[0].join("SPLITADDRSHERE");
-            await AsyncStorage.setItem("addresses", "SPLITADDRSHERE".concat(newAddresses));
-            this.props.navigation.navigate('Home', {update: true});
-          } else {
+          let filteredArr = addressArray.filter(address => address[1] !== addressName);
+          let flattenedArr = [].concat.apply([], filteredArr);
+          let joinedArr = flattenedArr.join("SPLITADDRSHERE");
+
+          joinedArr.length ? 
+            await AsyncStorage.setItem("addresses", "SPLITADDRSHERE".concat(joinedArr)) :
             await AsyncStorage.setItem("addresses", "");
-            this.props.navigation.navigate('Home', {update: true});
-          }
+
+          this.props.navigation.navigate({
+            routeName: "Home",
+            key: addressArray.length
+          });
         } catch {
           console.log("Error deleting address!");
         }
       } else {
-        console.log("No address to delete!");
+        await AsyncStorage.setItem("addresses", "");
+            this.props.navigation.navigate({
+              routeName: "Home",
+              key: 0
+            });
       }
     }
 
@@ -206,7 +212,7 @@ class AddressesIndex extends React.Component {
                       } else if (buttonIndex === 1) {
                         openAddress(addressList[a])
                       } else if (buttonIndex === 2) {
-                        deleteAddress(a);
+                        deleteAddress(addressList[a]);
                       }
                     }
                   )}

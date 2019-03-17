@@ -86,7 +86,7 @@ export default class Home extends React.Component {
             loading: false,
             loadingError: false,
             // remove later!!!
-            addressNames: [['Genesis of Bitcoin', '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa'], ['US Marshal Auction Coins', '1Ez69SnzzmePmZX3WpEzMKTrcBF2gpNQ55'], ['Test 3', '1XPTgDRhN8RFnzniWCddobD9iKZatrvH4']]
+            addressNames: [['Genesis of Bitcoin', '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa'], ['US Marshal Auction Coins', '1Ez69SnzzmePmZX3WpEzMKTrcBF2gpNQ55'], ['Laszlo’s Pizza Exchange', '1XPTgDRhN8RFnzniWCddobD9iKZatrvH4']]
           });
         }
       } else {
@@ -115,7 +115,6 @@ export default class Home extends React.Component {
         const jsonAddresses = await responseAddresses.json();
 
         if (jsonAddresses.length) {
-          console.log(jsonAddresses.length);
           for (let i = 0; i < jsonAddresses.length; i += 1) {
             if (jsonAddresses[i]['error'] !== undefined) {
               console.log(jsonAddresses[i]['error']); 
@@ -125,7 +124,6 @@ export default class Home extends React.Component {
             } 
           }
           if (this.state.loadingError === false) {
-            console.log("no errors!");
             this.setState({
               numAddresses: jsonAddresses.length,
               addresses: jsonAddresses,
