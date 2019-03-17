@@ -78,8 +78,8 @@ class AddAddress extends React.Component  {
 
       const splitAddresses = allAddrs.split(/SPLITADDRSHERE/g);
       
-      if (splitAddresses.length >= 41) {
-        // do something if user is tracking 20 addresses
+      if (splitAddresses.length >= 7) {
+        // do something if user is tracking 3 addresses
         Toast.show({
           text: 'Address limit reached! Delete a saved address and try again!',
           buttonText: 'Dismiss',
