@@ -60,11 +60,13 @@ class QrCode extends React.Component {
               </Text> }
             <Text
               adjustsFontSizeToFit={true} 
-              numberOfLines={1} 
+              numberOfLines={2} 
               style={{
-                alignSelf: "center", 
+                alignSelf: "center",
+                textAlign: "center", 
                 fontSize: 16, 
-                fontWeight: "bold"
+                fontWeight: "bold",
+                paddingHorizontal: 10
               }}
             >
               {strValue}

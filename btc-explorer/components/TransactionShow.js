@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, ScrollView , View, Clipboard, Linking } from 'react-native';
-import { Container, Body, Card, CardItem, Icon, ActionSheet, Toast } from 'native-base';
+import { Container, Body, Card, CardItem, Icon, ActionSheet, Toast, Button } from 'native-base';
 import { withNavigation } from 'react-navigation';
 import { Ionicons } from '@expo/vector-icons';
 import HeaderButtons, { HeaderButton, Item } from 'react-navigation-header-buttons';
@@ -53,6 +53,15 @@ class TransactionShow extends React.Component  {
       <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
         <Item title="back" iconName="ios-arrow-back" onPress={() => navigation.navigate('AddressShow')} />
       </HeaderButtons>
+    ),
+    headerRight: (
+      <Button transparent>
+        <Icon title="add" type="MaterialCommunityIcons" name='qrcode' style={{color: "#000", fontSize: 30}} onPress={() => navigation.navigate("QrCode", {
+          type: "Transaction",
+          value: navigation.getParam("tx_hash"),
+          name: navigation.getParam("tx_hash")
+        })} />
+      </Button>
     )
   });
 
