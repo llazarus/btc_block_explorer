@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, AsyncStorage, Clipboard, Linking } from 'react-native';
+import { Text, View, AsyncStorage, Clipboard, Linking, StyleSheet } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import {
   Container,
@@ -161,41 +161,35 @@ class AddressesIndex extends React.Component {
     return (
       <Container>
         {/* Price info card */}
-        <Card style={{ backgroundColor: '#ff9500' }}>
+        <Card style={styles.bgColor}>
           <CardItem
-            style={{
-              alignSelf: 'center',
+            style={[styles.bgColor, styles.selfCenter, {
               paddingBottom: 2,
-              backgroundColor: '#ff9500',
-            }}
+            }]}
           >
-            <Text style={{ color: '#fff', fontSize: 17, fontWeight: 'bold' }}>
+            <Text style={styles.titleOne}>
               SUM BALANCE - ALL ADDRESSES
             </Text>
           </CardItem>
 
           <CardItem
-            style={{
-              alignSelf: 'center',
+            style={[styles.bgColor, styles.selfCenter, {
               paddingBottom: 5,
-              backgroundColor: '#ff9500',
               borderBottomWidth: 1,
               borderColor: '#fff',
-            }}
+            }]}
           >
-            <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#fff' }}>
+            <Text style={[styles.boldText, styles.fontTwenty, { color: '#fff' }]}>
               {commaNumber(satConversion(sumBtc))} BTC
             </Text>
           </CardItem>
 
           <CardItem
-            style={{
-              alignSelf: 'center',
-              backgroundColor: '#ff9500',
+            style={[styles.bgColor, styles.selfCenter, {
               paddingTop: 5,
-            }}
+            }]}
           >
-            <Text style={{ fontSize: 17, fontWeight: 'bold', color: '#fff' }}>
+            <Text style={styles.titleOne}>
               {currencyIcon(currencySymbol)}
               {commaNumber((rate * satConversion(sumBtc)).toFixed(2))}{' '}
               {currencySymbol}
@@ -203,25 +197,21 @@ class AddressesIndex extends React.Component {
           </CardItem>
 
           <View
-            style={{
-              alignSelf: 'center',
+            style={[styles.bgColor, styles.selfCenter, {
               paddingTop: 5,
-              backgroundColor: '#ff9500',
-            }}
+            }]}
           >
-            <Text style={{ fontSize: 12, color: '#fff' }}>
+            <Text style={styles.subText}>
               LAST UPDATED: {updatedAt.toUpperCase()}
             </Text>
           </View>
 
           <View
-            style={{
-              alignSelf: 'center',
+            style={[styles.bgColor, styles.selfCenter, {
               paddingBottom: 10,
-              backgroundColor: '#ff9500',
-            }}
+            }]}
           >
-            <Text style={{ fontSize: 12, color: '#fff' }}>
+            <Text style={styles.subText}>
               1 BTC = {currencyIcon(currencySymbol)}
               {commaNumber(rate)} {currencySymbol}
             </Text>
@@ -240,7 +230,7 @@ class AddressesIndex extends React.Component {
                 onPress={() =>
                   this.props.navigation.push('AddressShow', {
                     addressInfo: this.props.addresses[a],
-                    addressName: addressNameList[a],
+                    addressName: sortedAddressNames[a],
                     rate,
                     currencySymbol,
                   })
@@ -282,12 +272,10 @@ class AddressesIndex extends React.Component {
                     <Text
                       numberOfLines={1}
                       ellipsizeMode="middle"
-                      style={{
-                        alignSelf: 'center',
+                      style={[styles.selfCenter, styles.boldText, {
                         fontSize: 15,
-                        fontWeight: 'bold',
                         paddingBottom: 10,
-                      }}
+                      }]}
                     >
                       {sortedAddressNames[a]}
                     </Text>
@@ -315,7 +303,7 @@ class AddressesIndex extends React.Component {
 
                 <Icon
                   name="arrow-forward"
-                  style={{ fontSize: 20, paddingTop: 30 }}
+                  style={[styles.fontTwenty, { paddingTop: 30 }]}
                 />
               </ListItem>
             ))}
@@ -326,5 +314,29 @@ class AddressesIndex extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  bgColor: {
+    backgroundColor: '#ff9500',
+  },
+  selfCenter: {
+    alignSelf: 'center',
+  },
+  titleOne: {
+    color: '#fff',
+    fontSize: 17,
+    fontWeight: 'bold',
+  },
+  subText: {
+    color: '#fff',
+    fontSize: 12,
+  },
+  boldText: {
+    fontWeight: 'bold',
+  },
+  fontTwenty: {
+    fontSize: 20
+  }
+});
 
 export default withNavigation(AddressesIndex);

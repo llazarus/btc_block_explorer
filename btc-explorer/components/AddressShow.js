@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, ScrollView, View, Clipboard, Linking } from 'react-native';
+import { Text, ScrollView, View, Clipboard, Linking, StyleSheet } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import {
   Container,
@@ -33,7 +33,7 @@ class AddressShow extends React.Component {
             navigation.navigate('QrCode', {
               type: 'Address',
               value: navigation.getParam('addressInfo').address,
-              name: navigation.getParam('addressName')[0],
+              name: navigation.getParam('addressName'),
             })
           }
         />
@@ -115,11 +115,9 @@ class AddressShow extends React.Component {
             key={`txFlow-${key}`}
           >
             <Text
-              style={{
+              style={[styles.whiteFontBold, {
                 paddingHorizontal: 16,
-                color: '#fff',
-                fontWeight: 'bold',
-              }}
+              }]}
             >
               IN
             </Text>
@@ -135,7 +133,7 @@ class AddressShow extends React.Component {
           key={`txFlow-${key}`}
         >
           <Text
-            style={{ paddingHorizontal: 8, color: '#fff', fontWeight: 'bold' }}
+            style={[styles.whiteFontBold, { paddingHorizontal: 8 }]}
           >
             OUT
           </Text>
@@ -148,33 +146,29 @@ class AddressShow extends React.Component {
         <ScrollView>
           <Card style={{ backgroundColor: '#ff9500' }}>
             <CardItem
-              style={{
-                alignSelf: 'center',
-                backgroundColor: '#ff9500',
+              style={[styles.selfCenterOrange, {
                 paddingBottom: 0,
-              }}
+              }]}
             >
               <Text
                 numberOfLines={1}
                 ellipsizeMode="middle"
-                style={{ color: '#fff', fontSize: 20, fontWeight: 'bold' }}
+                style={[styles.whiteFontBold, { fontSize: 20 }]}
               >
-                {addressName[0]}
+                {addressName}
               </Text>
             </CardItem>
 
-            {addressName[0] !== addressInfo.address ? (
+            {addressName !== addressInfo.address ? (
               <CardItem
-                style={{
-                  alignSelf: 'center',
-                  backgroundColor: '#ff9500',
+                style={[styles.selfCenterOrange, {
                   paddingTop: 5,
-                }}
+                }]}
               >
                 <Text
                   numberOfLines={1}
                   ellipsizeMode="middle"
-                  style={{ color: '#fff', fontSize: 11, fontWeight: 'bold' }}
+                  style={[styles.whiteFontBold, { fontSize: 11 }]}
                 >
                   {addressInfo.address}
                 </Text>
@@ -182,42 +176,36 @@ class AddressShow extends React.Component {
             ) : null}
 
             <CardItem
-              style={{
-                alignSelf: 'center',
+              style={[styles.selfCenterOrange, {
                 paddingBottom: 0,
                 paddingTop: 6,
-                backgroundColor: '#ff9500',
-              }}
+              }]}
             >
-              <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>
+              <Text style={[styles.whiteFontBold, { fontSize: 18 }]}>
                 ADDRESS BALANCE
               </Text>
             </CardItem>
 
             <CardItem
-              style={{
-                alignSelf: 'center',
+              style={[styles.selfCenterOrange, {
                 paddingTop: 4,
                 paddingBottom: 4,
-                backgroundColor: '#ff9500',
                 borderBottomWidth: 1,
                 borderColor: '#fff',
-              }}
+              }]}
             >
-              <Text style={{ fontSize: 15, fontWeight: 'bold', color: '#fff' }}>
+              <Text style={[styles.whiteFontBold, { fontSize: 15 }]}>
                 {commaNumber(satConversion(addressInfo.final_balance))} BTC
               </Text>
             </CardItem>
 
             <CardItem
-              style={{
-                alignSelf: 'center',
-                backgroundColor: '#ff9500',
+              style={[styles.selfCenterOrange, {
                 paddingTop: 4,
                 paddingBottom: 15,
-              }}
+              }]}
             >
-              <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#fff' }}>
+              <Text style={[styles.whiteFontBold, { fontSize: 14 }]}>
                 {currencyIcon(currencySymbol)}
                 {commaNumber(
                   (rate * satConversion(addressInfo.final_balance)).toFixed(2)
@@ -234,7 +222,7 @@ class AddressShow extends React.Component {
                     <ListItem
                       noIndent
                       key={`unconfirmed-${tx}`}
-                      style={{ paddingBottom: 15, paddingTop: 15 }}
+                      style={styles.itemPadding}
                       onPress={() =>
                         this.props.navigation.push('TransactionShow', {
                           tx_hash: addressInfo.unconfirmed_txrefs[tx].tx_hash,
@@ -300,7 +288,7 @@ class AddressShow extends React.Component {
                 <ListItem
                   noIndent
                   key={`listItem-${tx}`}
-                  style={{ paddingBottom: 15, paddingTop: 15 }}
+                  style={styles.itemPadding}
                   onPress={() =>
                     this.props.navigation.push('TransactionShow', {
                       tx_hash: transactionArr[tx].tx_hash,
@@ -364,5 +352,20 @@ class AddressShow extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  whiteFontBold: {
+    color: '#fff',
+    fontWeight: 'bold'
+  },
+  selfCenterOrange: {
+    alignSelf: 'center',
+    backgroundColor: '#ff9500',
+  },
+  itemPadding: {
+    paddingBottom: 15, 
+    paddingTop: 15,
+  }
+});
 
 export default withNavigation(AddressShow);

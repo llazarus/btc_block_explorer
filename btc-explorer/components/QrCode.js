@@ -7,7 +7,7 @@ import HeaderButtons, {
   Item,
 } from 'react-navigation-header-buttons';
 import { Container, Content, Body } from 'native-base';
-import { Text, View, Dimensions } from 'react-native';
+import { Text, View, Dimensions, StyleSheet } from 'react-native';
 
 const IoniconsHeaderButton = args => (
   <HeaderButton {...args} IconComponent={Ionicons} color="#000" iconSize={30} />
@@ -42,26 +42,16 @@ class QrCode extends React.Component {
     return (
       <Container>
         <Content>
-          <View style={{ marginVertical: 30 }}>
+          <View style={styles.marginVertical}>
             {type === 'Address' ? (
               <Text
-                style={{
-                  alignSelf: 'center',
-                  fontSize: 18,
-                  fontWeight: 'bold',
-                  marginBottom: 5,
-                }}
+                style={[styles.selfCenterBold, styles.fontMarginOne]}
               >
                 Address:
               </Text>
             ) : (
               <Text
-                style={{
-                  alignSelf: 'center',
-                  fontSize: 18,
-                  fontWeight: 'bold',
-                  marginBottom: 5,
-                }}
+                style={[styles.selfCenterBold, styles.fontMarginOne]}
               >
                 Transaction Hash:
               </Text>
@@ -69,13 +59,10 @@ class QrCode extends React.Component {
             <Text
               adjustsFontSizeToFit
               numberOfLines={2}
-              style={{
-                alignSelf: 'center',
+              style={[styles.selfCenterBold, styles.paddingHorizontal, {
                 textAlign: 'center',
                 fontSize: 16,
-                fontWeight: 'bold',
-                paddingHorizontal: 15,
-              }}
+              }]}
             >
               {strValue}
             </Text>
@@ -97,15 +84,11 @@ class QrCode extends React.Component {
             <Text
               adjustsFontSizeToFit
               numberOfLines={1}
-              style={{
-                alignSelf: 'center',
+              style={[styles.selfCenterBold, styles.paddingHorizontal, styles.marginVertical, {
                 fontSize: 24,
-                fontWeight: 'bold',
-                marginVertical: 30,
-                paddingHorizontal: 15,
-              }}
+              }]}
             >
-              {name[0]}
+              {name}
             </Text>
           ) : null}
         </Content>
@@ -113,5 +96,22 @@ class QrCode extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  selfCenterBold: {
+    alignSelf: 'center',
+    fontWeight: 'bold',
+  },
+  fontMarginOne: {
+    fontSize: 18,
+    marginBottom: 5,
+  },
+  paddingHorizontal: {
+    paddingHorizontal: 15,
+  },
+  marginVertical: {
+    marginVertical: 30,
+  },
+});
 
 export default withNavigation(QrCode);

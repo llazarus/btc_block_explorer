@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, StyleSheet } from 'react-native';
 import {
   Container,
   Content,
@@ -39,7 +39,7 @@ class Settings extends React.Component {
                 <Text>Currency</Text>
               </Left>
               <Right>
-                <Icon name="arrow-forward" style={{ color: '#000' }} />
+                <Icon name="arrow-forward" style={styles.fontColor} />
               </Right>
             </ListItem>
 
@@ -52,7 +52,7 @@ class Settings extends React.Component {
                 <Text>Review This App</Text>
               </Left>
               <Right>
-                <Icon name="arrow-forward" style={{ color: '#000' }} />
+                <Icon name="arrow-forward" style={styles.fontColor} />
               </Right>
             </ListItem>
             <ListItem noIndent>
@@ -60,7 +60,7 @@ class Settings extends React.Component {
                 <Text>Privacy Policy</Text>
               </Left>
               <Right>
-                <Icon name="arrow-forward" style={{ color: '#000' }} />
+                <Icon name="arrow-forward" style={styles.fontColor} />
               </Right>
             </ListItem>
           </List>
@@ -69,5 +69,11 @@ class Settings extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  fontColor: {
+    color: '#000',
+  },
+});
 
 export default withNavigation(Settings);

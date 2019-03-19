@@ -156,11 +156,11 @@ class TransactionShow extends React.Component {
         <Container>
           <ScrollView>
             <Card>
-              <CardItem bordered style={{ backgroundColor: '#ff9500' }}>
+              <CardItem bordered style={styles.bgOrange}>
                 <Text
                   numberOfLines={1}
                   ellipsizeMode="middle"
-                  style={{ color: '#fff' }}
+                  style={styles.whiteFont}
                 >
                   {/* TODO: Truncate wrapping text */}
                   TX HASH: {tx.hash}
@@ -169,16 +169,16 @@ class TransactionShow extends React.Component {
               <CardItem bordered>
                 <Text>SIZE: {commaNumber(tx.size)} bytes</Text>
               </CardItem>
-              <CardItem bordered style={{ backgroundColor: '#ff9500' }}>
-                <Text style={{ color: '#fff' }}>
+              <CardItem bordered style={styles.bgOrange}>
+                <Text style={styles.whiteFont}>
                   RECEIVED: {timeReceived} UTC
                 </Text>
               </CardItem>
               <CardItem bordered>
                 <Text>CONFIRMATIONS: TX UNCONFIRMED ⚠️</Text>
               </CardItem>
-              <CardItem bordered style={{ backgroundColor: '#ff9500' }}>
-                <Text style={{ color: '#fff' }}>
+              <CardItem bordered style={styles.bgOrange}>
+                <Text style={styles.whiteFont}>
                   TOTAL INPUT:{' '}
                   {limitEight(
                     commaNumber(
@@ -193,8 +193,8 @@ class TransactionShow extends React.Component {
                   TOTAL OUTPUT: {commaNumber(satConversion(tx.total))} BTC
                 </Text>
               </CardItem>
-              <CardItem bordered style={{ backgroundColor: '#ff9500' }}>
-                <Text style={{ color: '#fff' }}>
+              <CardItem bordered style={styles.bgOrange}>
+                <Text style={styles.whiteFont}>
                   FEES: {commaNumber(satConversion(tx.fees))} BTC
                 </Text>
               </CardItem>
@@ -203,12 +203,7 @@ class TransactionShow extends React.Component {
             <Card>
               <CardItem
                 header
-                style={{
-                  alignSelf: 'center',
-                  borderBottomWidth: 0.5,
-                  borderColor: '#000',
-                  paddingBottom: 5,
-                }}
+                style={styles.cardItemThree}
               >
                 <Text style={{ fontSize: 17, fontWeight: 'bold' }}>
                   INPUTS {'&'} OUTPUTS
@@ -216,7 +211,7 @@ class TransactionShow extends React.Component {
               </CardItem>
               <CardItem style={{ paddingTop: 15 }}>
                 <Body>
-                  <Text style={{ paddingBottom: 10, fontWeight: 'bold' }}>
+                  <Text style={styles.paddingFontOne}>
                     {tx.inputs.length} {pluralize('INPUT', tx.inputs.length)}{' '}
                     CONSUMED:
                   </Text>
@@ -226,14 +221,11 @@ class TransactionShow extends React.Component {
                       return (
                         <CardItem
                           key={`input-${i}`}
-                          style={{
-                            backgroundColor: '#e1142b',
-                            marginBottom: 5,
-                          }}
+                          style={styles.bgDanger}
                         >
-                          <Body style={{ alignItems: 'center' }}>
+                          <Body style={styles.alignCenter}>
                             <Text
-                              style={{ fontWeight: 'bold', color: '#fff' }}
+                              style={styles.whiteFontBold}
                               numberOfLines={1}
                               ellipsizeMode="middle"
                               onLongPress={() => {
@@ -252,7 +244,7 @@ class TransactionShow extends React.Component {
                             >
                               {tx.inputs[i].addresses[0]}
                             </Text>
-                            <Text style={{ color: '#fff' }}>
+                            <Text style={styles.whiteFont}>
                               {commaNumber(
                                 satConversion(tx.inputs[i].output_value)
                               )}{' '}
@@ -266,13 +258,10 @@ class TransactionShow extends React.Component {
                       return (
                         <CardItem
                           key={`input-${i}`}
-                          style={{
-                            backgroundColor: '#4399f6',
-                            marginBottom: 5,
-                          }}
+                          style={styles.bgNewCoins}
                         >
-                          <Body style={{ alignItems: 'center' }}>
-                            <Text style={{ fontWeight: 'bold', color: '#fff' }}>
+                          <Body style={styles.alignCenter}>
+                            <Text style={styles.whiteFontBold}>
                               No Input (Newly Generated Coins)
                             </Text>
                           </Body>
@@ -282,16 +271,16 @@ class TransactionShow extends React.Component {
                     return (
                       <CardItem
                         key={`input-${i}`}
-                        style={{ backgroundColor: '#e1142b', marginBottom: 5 }}
+                        style={styles.bgDanger}
                       >
-                        <Body style={{ alignItems: 'center' }}>
-                          <Text style={{ fontWeight: 'bold', color: '#fff' }}>
+                        <Body style={styles.alignCenter}>
+                          <Text style={styles.whiteFontBold}>
                             Bech32 Segwit Address
                           </Text>
-                          <Text style={{ color: '#fff' }}>
+                          <Text style={styles.whiteFont}>
                             (Address Type Not Currently Supported)
                           </Text>
-                          <Text style={{ color: '#fff' }}>
+                          <Text style={styles.whiteFont}>
                             {commaNumber(
                               satConversion(tx.inputs[i].output_value)
                             )}{' '}
@@ -305,24 +294,16 @@ class TransactionShow extends React.Component {
               </CardItem>
 
               <CardItem
-                style={{
-                  justifyContent: 'center',
-                  paddingBottom: 0,
-                  paddingTop: 25,
-                }}
+                style={styles.cardItemOne}
               >
                 <Icon
                   type="Entypo"
                   name="dots-three-vertical"
-                  style={{ fontSize: 50, marginRight: 8 }}
+                  style={styles.iconStyle}
                 />
               </CardItem>
               <CardItem
-                style={{
-                  justifyContent: 'center',
-                  paddingTop: 0,
-                  paddingRight: 6,
-                }}
+                style={styles.cardItemTwo}
               >
                 <Icon
                   type="Ionicons"
@@ -333,7 +314,7 @@ class TransactionShow extends React.Component {
 
               <CardItem>
                 <Body>
-                  <Text style={{ paddingBottom: 10, fontWeight: 'bold' }}>
+                  <Text style={styles.paddingFontOne}>
                     {tx.outputs.length} {pluralize('OUTPUT', tx.outputs.length)}{' '}
                     CREATED:
                   </Text>
@@ -344,13 +325,10 @@ class TransactionShow extends React.Component {
                       return (
                         <CardItem
                           key={`output-${i}`}
-                          style={{
-                            backgroundColor: '#e1142b',
-                            marginBottom: 5,
-                          }}
+                          style={styles.bgDanger}
                         >
-                          <Body style={{ alignItems: 'center' }}>
-                            <Text style={{ fontWeight: 'bold', color: '#fff' }}>
+                          <Body style={styles.alignCenter}>
+                            <Text style={styles.whiteFontBold}>
                               Unable To Decode Output Address!
                             </Text>
                           </Body>
@@ -362,15 +340,13 @@ class TransactionShow extends React.Component {
                       return (
                         <CardItem
                           key={`output-${i}`}
-                          style={{
-                            backgroundColor: '#00b64c',
-                            marginBottom: 5,
+                          style={[styles.bgSuccess, {
                             paddingBottom: 9,
-                          }}
+                          }]}
                         >
-                          <Body style={{ alignItems: 'center' }}>
+                          <Body style={styles.alignCenter}>
                             <Text
-                              style={{ fontWeight: 'bold', color: '#fff' }}
+                              style={styles.whiteFontBold}
                               numberOfLines={1}
                               ellipsizeMode="middle"
                               onLongPress={() => {
@@ -378,7 +354,7 @@ class TransactionShow extends React.Component {
                                   {
                                     options: [
                                       'Copy Address',
-                                      'Open Transaction In Browser',
+                                      'Open Spend Transaction In Browser',
                                       'Cancel',
                                     ],
                                     cancelButtonIndex: 2,
@@ -396,7 +372,7 @@ class TransactionShow extends React.Component {
                               {tx.outputs[i].addresses[0]}
                             </Text>
                             <View style={{ flexDirection: 'row' }}>
-                              <Text style={{ color: '#fff' }}>
+                              <Text style={styles.whiteFont}>
                                 {commaNumber(
                                   satConversion(tx.outputs[i].value)
                                 )}{' '}
@@ -405,11 +381,10 @@ class TransactionShow extends React.Component {
                               <Icon
                                 type="Entypo"
                                 name="link"
-                                style={{
+                                style={[styles.whiteFont, {
                                   fontSize: 14,
-                                  color: '#fff',
                                   marginTop: 2,
-                                }}
+                                }]}
                               />
                             </View>
                           </Body>
@@ -420,11 +395,11 @@ class TransactionShow extends React.Component {
                     return (
                       <CardItem
                         key={`output-${i}`}
-                        style={{ backgroundColor: '#00b64c', marginBottom: 5 }}
+                        style={styles.bgSuccess}
                       >
-                        <Body style={{ alignItems: 'center' }}>
+                        <Body style={styles.alignCenter}>
                           <Text
-                            style={{ fontWeight: 'bold', color: '#fff' }}
+                            style={styles.whiteFontBold}
                             numberOfLines={1}
                             ellipsizeMode="middle"
                             onLongPress={() => {
@@ -443,7 +418,7 @@ class TransactionShow extends React.Component {
                           >
                             {tx.outputs[i].addresses[0]}
                           </Text>
-                          <Text style={{ color: '#fff' }}>
+                          <Text style={styles.whiteFont}>
                             {commaNumber(satConversion(tx.outputs[i].value))}{' '}
                             BTC (UNSPENT)
                           </Text>
@@ -463,11 +438,11 @@ class TransactionShow extends React.Component {
       <Container>
         <ScrollView>
           <Card>
-            <CardItem bordered style={{ backgroundColor: '#ff9500' }}>
+            <CardItem bordered style={styles.bgOrange}>
               <Text
                 numberOfLines={1}
                 ellipsizeMode="middle"
-                style={{ color: '#fff' }}
+                style={styles.whiteFont}
               >
                 TX HASH: {tx.hash}
               </Text>
@@ -477,16 +452,16 @@ class TransactionShow extends React.Component {
                 BLOCK HASH: {tx.block_hash}
               </Text>
             </CardItem>
-            <CardItem bordered style={{ backgroundColor: '#ff9500' }}>
-              <Text style={{ color: '#fff' }}>
+            <CardItem bordered style={styles.bgOrange}>
+              <Text style={styles.whiteFont}>
                 BLOCK HEIGHT: {commaNumber(tx.block_height)}
               </Text>
             </CardItem>
             <CardItem bordered>
               <Text>CONFIRMATIONS: {commaNumber(tx.confirmations)}</Text>
             </CardItem>
-            <CardItem bordered style={{ backgroundColor: '#ff9500' }}>
-              <Text style={{ color: '#fff' }}>
+            <CardItem bordered style={styles.bgOrange}>
+              <Text style={styles.whiteFont}>
                 SIZE: {commaNumber(tx.size)} bytes
               </Text>
             </CardItem>
@@ -496,8 +471,8 @@ class TransactionShow extends React.Component {
                 UTC
               </Text>
             </CardItem>
-            <CardItem bordered style={{ backgroundColor: '#ff9500' }}>
-              <Text style={{ color: '#fff' }}>
+            <CardItem bordered style={styles.bgOrange}>
+              <Text style={styles.whiteFont}>
                 {/* Add function to limit 8 sigfigs */}
                 TOTAL INPUT:{' '}
                 {limitEight(
@@ -512,8 +487,8 @@ class TransactionShow extends React.Component {
                 TOTAL OUTPUT: {commaNumber(satConversion(tx.total))} BTC
               </Text>
             </CardItem>
-            <CardItem bordered style={{ backgroundColor: '#ff9500' }}>
-              <Text style={{ color: '#fff' }}>
+            <CardItem bordered style={styles.bgOrange}>
+              <Text style={styles.whiteFont}>
                 {/* Add function to limit 8 sigfigs */}
                 FEES: {commaNumber(satConversion(tx.fees))} BTC
               </Text>
@@ -524,12 +499,7 @@ class TransactionShow extends React.Component {
           <Card>
             <CardItem
               header
-              style={{
-                alignSelf: 'center',
-                borderBottomWidth: 0.5,
-                borderColor: '#000',
-                paddingBottom: 5,
-              }}
+              style={styles.cardItemThree}
             >
               <Text style={{ fontSize: 17, fontWeight: 'bold' }}>
                 INPUTS {'&'} OUTPUTS
@@ -537,7 +507,7 @@ class TransactionShow extends React.Component {
             </CardItem>
             <CardItem style={{ paddingTop: 15 }}>
               <Body>
-                <Text style={{ paddingBottom: 10, fontWeight: 'bold' }}>
+                <Text style={styles.paddingFontOne}>
                   {tx.inputs.length} {pluralize('INPUT', tx.inputs.length)}{' '}
                   CONSUMED:
                 </Text>
@@ -547,11 +517,11 @@ class TransactionShow extends React.Component {
                     return (
                       <CardItem
                         key={`input-${i}`}
-                        style={{ backgroundColor: '#e1142b', marginBottom: 5 }}
+                        style={styles.bgDanger}
                       >
-                        <Body style={{ alignItems: 'center' }}>
+                        <Body style={styles.alignCenter}>
                           <Text
-                            style={{ fontWeight: 'bold', color: '#fff' }}
+                            style={styles.whiteFontBold}
                             numberOfLines={1}
                             ellipsizeMode="middle"
                             onLongPress={() => {
@@ -570,7 +540,7 @@ class TransactionShow extends React.Component {
                           >
                             {tx.inputs[i].addresses[0]}
                           </Text>
-                          <Text style={{ color: '#fff' }}>
+                          <Text style={styles.whiteFont}>
                             {commaNumber(
                               satConversion(tx.inputs[i].output_value)
                             )}{' '}
@@ -584,10 +554,10 @@ class TransactionShow extends React.Component {
                     return (
                       <CardItem
                         key={`input-${i}`}
-                        style={{ backgroundColor: '#4399f6', marginBottom: 5 }}
+                        style={styles.bgNewCoins}
                       >
-                        <Body style={{ alignItems: 'center' }}>
-                          <Text style={{ fontWeight: 'bold', color: '#fff' }}>
+                        <Body style={styles.alignCenter}>
+                          <Text style={styles.whiteFontBold}>
                             No Input (Newly Generated Coins)
                           </Text>
                         </Body>
@@ -597,16 +567,16 @@ class TransactionShow extends React.Component {
                   return (
                     <CardItem
                       key={`input-${i}`}
-                      style={{ backgroundColor: '#e1142b', marginBottom: 5 }}
+                      style={styles.bgDanger}
                     >
-                      <Body style={{ alignItems: 'center' }}>
-                        <Text style={{ fontWeight: 'bold', color: '#fff' }}>
+                      <Body style={styles.alignCenter}>
+                        <Text style={styles.whiteFontBold}>
                           Bech32 Segwit Address
                         </Text>
-                        <Text style={{ color: '#fff' }}>
+                        <Text style={styles.whiteFont}>
                           (Address Type Not Currently Supported)
                         </Text>
-                        <Text style={{ color: '#fff' }}>
+                        <Text style={styles.whiteFont}>
                           {commaNumber(
                             satConversion(tx.inputs[i].output_value)
                           )}{' '}
@@ -621,24 +591,16 @@ class TransactionShow extends React.Component {
 
             {/* DOWN ARROW DIVIDER. TEST ON DIFFERENT SCREEN SIZES TO MAKE SURE ICONS CENTERED RELATIVE TO ONE ANOTHER */}
             <CardItem
-              style={{
-                justifyContent: 'center',
-                paddingBottom: 0,
-                paddingTop: 25,
-              }}
+              style={styles.cardItemOne}
             >
               <Icon
                 type="Entypo"
                 name="dots-three-vertical"
-                style={{ fontSize: 50, marginRight: 8 }}
+                style={styles.iconStyle}
               />
             </CardItem>
             <CardItem
-              style={{
-                justifyContent: 'center',
-                paddingTop: 0,
-                paddingRight: 6,
-              }}
+              style={styles.cardItemTwo}
             >
               <Icon
                 type="Ionicons"
@@ -649,7 +611,7 @@ class TransactionShow extends React.Component {
 
             <CardItem>
               <Body>
-                <Text style={{ paddingBottom: 10, fontWeight: 'bold' }}>
+                <Text style={styles.paddingFontOne}>
                   {tx.outputs.length} {pluralize('OUTPUT', tx.outputs.length)}{' '}
                   CREATED:
                 </Text>
@@ -662,12 +624,12 @@ class TransactionShow extends React.Component {
                         key={`output-${i}`}
                         style={{ backgroundColor: '#f79c24', marginBottom: 5 }}
                       >
-                        <Body style={{ alignItems: 'center' }}>
-                          <Text style={{ fontWeight: 'bold', color: '#fff' }}>
+                        <Body style={styles.alignCenter}>
+                          <Text style={styles.whiteFontBold}>
                             Unable To Decode Output Address!
                           </Text>
                           {tx.outputs[i].value ? (
-                            <Text style={{ color: '#fff' }}>
+                            <Text style={styles.whiteFont}>
                               {commaNumber(satConversion(tx.outputs[i].value))}{' '}
                               BTC
                             </Text>
@@ -681,15 +643,13 @@ class TransactionShow extends React.Component {
                     return (
                       <CardItem
                         key={`output-${i}`}
-                        style={{
-                          backgroundColor: '#00b64c',
-                          marginBottom: 5,
+                        style={[styles.bgSuccess, {
                           paddingBottom: 9,
-                        }}
+                        }]}
                       >
-                        <Body style={{ alignItems: 'center' }}>
+                        <Body style={styles.alignCenter}>
                           <Text
-                            style={{ fontWeight: 'bold', color: '#fff' }}
+                            style={styles.whiteFontBold}
                             numberOfLines={1}
                             ellipsizeMode="middle"
                             onLongPress={() => {
@@ -697,7 +657,7 @@ class TransactionShow extends React.Component {
                                 {
                                   options: [
                                     'Copy Address',
-                                    'Open Transaction In Browser',
+                                    'Open Spend Transaction In Browser',
                                     'Cancel',
                                   ],
                                   cancelButtonIndex: 2,
@@ -715,18 +675,17 @@ class TransactionShow extends React.Component {
                             {tx.outputs[i].addresses[0]}
                           </Text>
                           <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ color: '#fff' }}>
+                            <Text style={styles.whiteFont}>
                               {commaNumber(satConversion(tx.outputs[i].value))}{' '}
                               BTC (SPENT){' '}
                             </Text>
                             <Icon
                               type="Entypo"
                               name="link"
-                              style={{
+                              style={[styles.whiteFont, {
                                 fontSize: 14,
-                                color: '#fff',
                                 marginTop: 2,
-                              }}
+                              }]}
                             />
                           </View>
                         </Body>
@@ -737,11 +696,11 @@ class TransactionShow extends React.Component {
                   return (
                     <CardItem
                       key={`output-${i}`}
-                      style={{ backgroundColor: '#00b64c', marginBottom: 5 }}
+                      style={styles.bgSuccess}
                     >
-                      <Body style={{ alignItems: 'center' }}>
+                      <Body style={styles.alignCenter}>
                         <Text
-                          style={{ fontWeight: 'bold', color: '#fff' }}
+                          style={styles.whiteFontBold}
                           numberOfLines={1}
                           ellipsizeMode="middle"
                           onLongPress={() => {
@@ -760,7 +719,7 @@ class TransactionShow extends React.Component {
                         >
                           {tx.outputs[i].addresses[0]}
                         </Text>
-                        <Text style={{ color: '#fff' }}>
+                        <Text style={styles.whiteFont}>
                           {commaNumber(satConversion(tx.outputs[i].value))} BTC
                           (UNSPENT)
                         </Text>
@@ -783,6 +742,55 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  whiteFont: {
+    color: '#fff',
+  },
+  whiteFontBold: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  bgOrange: {
+    backgroundColor: '#ff9500',
+  },
+  paddingFontOne: {
+    paddingBottom: 10, 
+    fontWeight: 'bold',
+  },
+  iconStyle: {
+    fontSize: 50, 
+    marginRight: 8,
+  },
+  cardItemOne: {
+    justifyContent: 'center',
+    paddingBottom: 0,
+    paddingTop: 25,
+  },
+  cardItemTwo: {
+    justifyContent: 'center',
+    paddingTop: 0,
+    paddingRight: 6,
+  },
+  cardItemThree: {
+    alignSelf: 'center',
+    borderBottomWidth: 0.5,
+    borderColor: '#000',
+    paddingBottom: 5,
+  },
+  bgSuccess: {
+    backgroundColor: '#00b64c',
+    marginBottom: 5,
+  },
+  bgDanger: {
+    backgroundColor: '#e1142b', 
+    marginBottom: 5
+  },
+  bgNewCoins: {
+    backgroundColor: '#4399f6',
+    marginBottom: 5, 
+  },
+  alignCenter: {
+    alignItems: 'center',
   },
 });
 
