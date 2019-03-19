@@ -74,7 +74,7 @@ class QrCode extends React.Component {
                 textAlign: 'center',
                 fontSize: 16,
                 fontWeight: 'bold',
-                paddingHorizontal: 10,
+                paddingHorizontal: 15,
               }}
             >
               {strValue}
@@ -102,6 +102,7 @@ class QrCode extends React.Component {
                 fontSize: 24,
                 fontWeight: 'bold',
                 marginVertical: 30,
+                paddingHorizontal: 15,
               }}
             >
               {name[0]}

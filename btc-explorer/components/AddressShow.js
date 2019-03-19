@@ -33,7 +33,7 @@ class AddressShow extends React.Component {
             navigation.navigate('QrCode', {
               type: 'Address',
               value: navigation.getParam('addressInfo').address,
-              name: navigation.getParam('addressName'),
+              name: navigation.getParam('addressName')[0],
             })
           }
         />
