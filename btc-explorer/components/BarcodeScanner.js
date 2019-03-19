@@ -56,9 +56,9 @@ class BarcodeScanner extends React.Component {
         <View style={styles.maskOutter}>
           <View style={[{ flex: maskRowHeight  }, styles.maskRow, styles.maskFrame]} />
           <View style={[{ flex: 30 }, styles.maskCenter]}>
-          <View style={[{ width: maskColWidth }, styles.maskFrame]} />
-          <View style={styles.maskInner} />
-          <View style={[{ width: maskColWidth }, styles.maskFrame]} />
+            <View style={[{ width: maskColWidth }, styles.maskFrame]} />
+            <View style={styles.maskInner} />
+            <View style={[{ width: maskColWidth }, styles.maskFrame]} />
           </View>
           <View style={[{ flex: maskRowHeight }, styles.maskRow, styles.maskFrame]} />
         </View>
@@ -68,7 +68,7 @@ class BarcodeScanner extends React.Component {
     );
   }
 
-  handleBarCodeScanned = ({ type, data }) => {
+  handleBarCodeScanned = ({ data }) => {
     this.setState({
       showCamera: false
     });
