@@ -30,7 +30,7 @@ class Settings extends React.Component  {
                 <Text>Currency</Text>
               </Left>
               <Right>
-                <Icon name="arrow-forward" />
+                <Icon name="arrow-forward" style={{color: "#000"}}/>
               </Right>
             </ListItem>
 
@@ -43,7 +43,7 @@ class Settings extends React.Component  {
                 <Text>Review This App</Text>
               </Left>
               <Right>
-                <Icon name="arrow-forward" />
+                <Icon name="arrow-forward" style={{color: "#000"}}/>
               </Right>
             </ListItem>
             <ListItem noIndent>
@@ -51,7 +51,7 @@ class Settings extends React.Component  {
                 <Text>Privacy Policy</Text>
               </Left>
               <Right>
-                <Icon name="arrow-forward" />
+                <Icon name="arrow-forward" style={{color: "#000"}}/>
               </Right>
             </ListItem>
           </List>

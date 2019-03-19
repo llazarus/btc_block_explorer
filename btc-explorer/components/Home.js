@@ -93,59 +93,117 @@ export default class Home extends React.Component {
         // Do the things for people that have stored addresses!
         const splitAddrString = userAddrs.split(/SPLITADDRSHERE/g).slice(1);
         let addressArray = [];
-        let addressString = "";
+        let addressString1 = "";
+        let addressString2 = "";
         
         for (let i = 0; i < splitAddrString.length; i += 2) {
           addressArray.push([splitAddrString[i], splitAddrString[i+1]]);
         }
 
-        for (let i = 0; i < addressArray.length; i += 1) {
-          if (i === addressArray.length - 1) {
-            addressString += addressArray[i][1];
-          } else {
-            addressString += addressArray[i][1].concat(";")
-          }
-        }
-
         this.setState({
           addressNames: addressArray
         });
-        
-        const responseAddresses = await fetch(`https://api.blockcypher.com/v1/btc/main/addrs/${addressString}`);
-        const jsonAddresses = await responseAddresses.json();
 
-        if (jsonAddresses.length) {
-          for (let i = 0; i < jsonAddresses.length; i += 1) {
-            if (jsonAddresses[i]['error'] !== undefined) {
-              console.log(jsonAddresses[i]['error']); 
+        // If user has fewer than 4 addresses saved!
+        if (addressArray.length < 4) {
+          for (let i = 0; i < addressArray.length; i += 1) {
+            if (i === addressArray.length - 1) {
+              addressString1 += addressArray[i][1];
+            } else {
+              addressString1 += addressArray[i][1].concat(";")
+            }
+          }
+  
+          const responseAddresses = await fetch(`https://api.blockcypher.com/v1/btc/main/addrs/${addressString1}`);
+          const jsonAddresses = await responseAddresses.json();
+  
+          if (jsonAddresses.length) {
+            for (let i = 0; i < jsonAddresses.length; i += 1) {
+              if (jsonAddresses[i]['error'] !== undefined) {
+                console.log(jsonAddresses[i]['error']); 
+                this.setState({
+                  loadingError: true
+                });
+              } 
+            }
+            if (this.state.loadingError === false) {
+              this.setState({
+                numAddresses: jsonAddresses.length,
+                addresses: jsonAddresses,
+                loading: false,
+                loadingError: false
+              });
+            }
+          } else {
+            if (jsonAddresses["address"]) {
+              this.setState({
+                numAddresses: 1,
+                addresses: [jsonAddresses],
+                loading: false,
+                loadingError: false
+              });
+            } else {
               this.setState({
                 loadingError: true
               });
-            } 
-          }
-          if (this.state.loadingError === false) {
-            this.setState({
-              numAddresses: jsonAddresses.length,
-              addresses: jsonAddresses,
-              loading: false,
-              loadingError: false
-            });
-          }
-        } else {
-          if (jsonAddresses["address"]) {
-            this.setState({
-              numAddresses: 1,
-              addresses: [jsonAddresses],
-              loading: false,
-              loadingError: false
-            });
-          } else {
-            this.setState({
-              loadingError: true
-            });
+            }
           }
         }
+        // If user has more than 3 addresses saved! 
+        else {
+          for (let i = 0; i < addressArray.length; i += 1) {
+            if (i < 2) {
+              addressString1 += addressArray[i][1].concat(";");
+            } else if (i === 2) {
+              addressString1 += addressArray[i][1];
+            } else if (i !== addressArray.length - 1 && i < 5) {
+              addressString2 += addressArray[i][1];
+            } else {
+              addressString2 += addressArray[i][1]
+            }
+          }
+     
+          const responseAddresses1 = await fetch(`https://api.blockcypher.com/v1/btc/main/addrs/${addressString1}`);
+          const jsonAddresses1 = await responseAddresses1.json();
+
+          await new Promise(resolve => setTimeout(resolve, 1100));
+
+          const responseAddresses2 = await fetch(`https://api.blockcypher.com/v1/btc/main/addrs/${addressString2}`);
+          const jsonAddresses2 = await responseAddresses2.json();
+          const jsonAddresses = jsonAddresses1.concat(jsonAddresses2);
   
+          if (jsonAddresses.length) {
+            for (let i = 0; i < jsonAddresses.length; i += 1) {
+              if (jsonAddresses[i]['error'] !== undefined) {
+                console.log(jsonAddresses[i]['error']); 
+                this.setState({
+                  loadingError: true
+                });
+              } 
+            }
+            if (this.state.loadingError === false) {
+              this.setState({
+                numAddresses: jsonAddresses.length,
+                addresses: jsonAddresses,
+                loading: false,
+                loadingError: false
+              });
+            }
+          } else {
+            if (jsonAddresses["address"]) {
+              this.setState({
+                numAddresses: 1,
+                addresses: [jsonAddresses],
+                loading: false,
+                loadingError: false
+              });
+            } else {
+              this.setState({
+                loadingError: true
+              });
+            }
+          }
+        }
       }
 
     } catch {
