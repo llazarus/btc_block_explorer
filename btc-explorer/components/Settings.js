@@ -1,20 +1,26 @@
 import React from 'react';
-import { Text } from 'react-native';
-import { Container, Content, List, ListItem, Icon, Right, Left } from 'native-base';
+import { Text, StyleSheet } from 'react-native';
+import {
+  Container,
+  Content,
+  List,
+  ListItem,
+  Icon,
+  Right,
+  Left,
+} from 'native-base';
 import { withNavigation } from 'react-navigation';
 
 import HeaderLeftToHome from './HeaderLeftToHome';
 
-class Settings extends React.Component  {
+class Settings extends React.Component {
   constructor(props) {
     super(props);
   }
 
   static navigationOptions = {
     title: 'Settings',
-    headerLeft: (
-      <HeaderLeftToHome/>
-    )
+    headerLeft: <HeaderLeftToHome />,
   };
 
   render() {
@@ -22,19 +28,22 @@ class Settings extends React.Component  {
       <Container>
         <Content>
           <List>
-            <ListItem itemDivider style={{borderBottomWidth: 0.5}}>
+            <ListItem itemDivider style={{ borderBottomWidth: 0.5 }}>
               <Text>OPTIONS</Text>
             </ListItem>
-            <ListItem onPress={() => this.props.navigation.push("CurrencyList")} noIndent>
+            <ListItem
+              onPress={() => this.props.navigation.push('CurrencyList')}
+              noIndent
+            >
               <Left>
                 <Text>Currency</Text>
               </Left>
               <Right>
-                <Icon name="arrow-forward" />
+                <Icon name="arrow-forward" style={styles.fontColor} />
               </Right>
             </ListItem>
 
-            <ListItem itemDivider style={{borderBottomWidth: 0.5}}>
+            <ListItem itemDivider style={{ borderBottomWidth: 0.5 }}>
               <Text>BITCOIN BLOCK EXPLORER</Text>
             </ListItem>
             <ListItem noIndent>
@@ -43,7 +52,7 @@ class Settings extends React.Component  {
                 <Text>Review This App</Text>
               </Left>
               <Right>
-                <Icon name="arrow-forward" />
+                <Icon name="arrow-forward" style={styles.fontColor} />
               </Right>
             </ListItem>
             <ListItem noIndent>
@@ -51,7 +60,7 @@ class Settings extends React.Component  {
                 <Text>Privacy Policy</Text>
               </Left>
               <Right>
-                <Icon name="arrow-forward" />
+                <Icon name="arrow-forward" style={styles.fontColor} />
               </Right>
             </ListItem>
           </List>
@@ -60,5 +69,11 @@ class Settings extends React.Component  {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  fontColor: {
+    color: '#000',
+  },
+});
 
 export default withNavigation(Settings);

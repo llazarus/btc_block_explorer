@@ -7,19 +7,21 @@ import AddAddress from './AddAddress';
 import BarcodeScanner from './BarcodeScanner';
 import AddressShow from './AddressShow';
 import TransactionShow from './TransactionShow';
+import QrCode from './QrCode';
 
 const AppStackNavigator = createStackNavigator(
   {
-    Home: Home,
-    Settings: Settings,
-    CurrencyList: CurrencyList,
-    AddAddress: AddAddress,
-    BarcodeScanner: BarcodeScanner,
-    AddressShow: AddressShow,
-    TransactionShow: TransactionShow
+    Home,
+    Settings,
+    CurrencyList,
+    AddAddress,
+    BarcodeScanner,
+    AddressShow,
+    TransactionShow,
+    QrCode,
   },
   {
-    initialRouteName: "Home"
+    initialRouteName: 'Home',
   }
 );
 

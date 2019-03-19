@@ -1,43 +1,103 @@
 import React from 'react';
-import { Text, View, AsyncStorage } from 'react-native';
+import { Text, View, AsyncStorage, Clipboard, Linking, StyleSheet } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import { Container, Card, CardItem, Body, List, ListItem, Icon, ActionSheet } from 'native-base';
+import {
+  Container,
+  Card,
+  CardItem,
+  Body,
+  List,
+  ListItem,
+  Icon,
+  ActionSheet,
+  Toast,
+} from 'native-base';
+
 const commaNumber = require('comma-number');
 
 class AddressesIndex extends React.Component {
   render() {
     let sumBtc = 0;
-    let addressList = [];
-    let addressNameList = [];
-    let addressBalance = [];
-    let allTxs = [];
-    let unconfirmedTxs = [];
-    let numAddresses = [];
+    const addressList = [];
+    const addressNameList = [];
+    const addressBalance = [];
+    const allTxs = [];
+    const unconfirmedTxs = [];
+    const numAddresses = [];
 
-    const deleteAddress = async (index) => {
-      let userAddrs = await AsyncStorage.getItem("addresses") || "";
-      if (userAddrs.length > 0) {
+    const deleteAddress = async addressName => {
+      const userAddrs = (await AsyncStorage.getItem('addresses')) || '';
+      const splitAddrString = userAddrs.split(/SPLITADDRSHERE/g).slice(1);
+      const addressArray = [];
+
+      for (let i = 0; i < splitAddrString.length; i += 2) {
+        addressArray.push([splitAddrString[i], splitAddrString[i + 1]]);
+      }
+
+      if (addressArray.length > 0) {
         try {
-          userAddrs.splice(index, 1);
-          await AsyncStorage.setItem("addresses", userAddrs);
-          this.props.navigation.navigate("Home");
+          const filteredArr = addressArray.filter(
+            address => address[1] !== addressName
+          );
+          const flattenedArr = [].concat.apply([], filteredArr);
+          const joinedArr = flattenedArr.join('SPLITADDRSHERE');
+
+          joinedArr.length
+            ? await AsyncStorage.setItem(
+                'addresses',
+                'SPLITADDRSHERE'.concat(joinedArr)
+              )
+            : await AsyncStorage.setItem('addresses', '');
+
+          this.props.navigation.navigate({
+            routeName: 'Home',
+            key: addressArray.length,
+          });
         } catch {
-          console.log("Error deleting address!");
+          console.log('Error deleting address!');
         }
       } else {
-        console.log("No address to delete!")
+        await AsyncStorage.setItem('addresses', '');
+
+        this.props.navigation.navigate({
+          routeName: 'Home',
+          key: 0,
+        });
       }
-    }
+    };
+
+    const copyAddress = addressStr => {
+      Clipboard.setString(addressStr);
+
+      Toast.show({
+        text: 'Address copied to clipboard!',
+        buttonText: 'Dismiss',
+        duration: 3000,
+      });
+    };
 
     if (this.props.numAddresses > -1) {
       for (let i = 0; i < this.props.numAddresses; i += 1) {
-        sumBtc += this.props.addresses[i]["final_balance"];
-        addressList.push(this.props.addresses[i]["address"]);
+        sumBtc += this.props.addresses[i].final_balance;
+        addressList.push(this.props.addresses[i].address);
         addressNameList.push(this.props.addressNames[i]);
-        addressBalance.push(this.props.addresses[i]["final_balance"]);
-        allTxs.push(this.props.addresses[i]["n_tx"]);
-        unconfirmedTxs.push(this.props.addresses[i]["unconfirmed_n_tx"]);
+        addressBalance.push(this.props.addresses[i].final_balance);
+        allTxs.push(this.props.addresses[i].final_n_tx);
+        unconfirmedTxs.push(this.props.addresses[i].unconfirmed_n_tx);
         numAddresses.push(i);
+      }
+    }
+
+    const sortedAddressNames = [];
+    if (addressNameList[1] === undefined) {
+      sortedAddressNames.push(addressNameList[0][0]);
+    } else {
+      for (let i = 0; i < addressList.length; i += 1) {
+        for (let j = 0; j < addressNameList.length; j += 1) {
+          if (addressList[i] === addressNameList[j][1]) {
+            sortedAddressNames.push(addressNameList[j][0]);
+          }
+        }
       }
     }
 
@@ -48,91 +108,114 @@ class AddressesIndex extends React.Component {
     let rate = '';
     let updatedAt = '';
     if (this.props.currency.bpi) {
-      rate = this.props.currency["bpi"][currencySymbol]["rate_float"].toFixed(2);
-      updatedAt = this.props.currency["time"]["updated"];
+      rate = this.props.currency.bpi[currencySymbol].rate_float.toFixed(2);
+      updatedAt = this.props.currency.time.updated;
     }
 
-    const satConversion = (sats) => {
-      return sats / 100000000;
-    }
+    const satConversion = sats => sats / 100000000;
 
-    const currencyIcon = (currencyName) => {
+    const currencyIcon = currencyName => {
       switch (currencyName) {
-        case "TWD":
-          return "NT$"
-        case "KRW":
-          return "₩"
-        case "THB":
-          return "฿"
-        case "PLN":
-          return "zł"
-        case "RUB":
-          return "₽"
-        case "EUR":
-          return "€"
-        case "BRL":
-          return "R$"
-        case "GBP":
-          return "£"
-        case "JPY":
-        case "CNY":
-          return "¥"
-        case "DKK":
-        case "SEK": 
-        case "ISK":
-        case "CHF":
-          return ""
+        case 'TWD':
+          return 'NT$';
+        case 'KRW':
+          return '₩';
+        case 'THB':
+          return '฿';
+        case 'PLN':
+          return 'zł';
+        case 'RUB':
+          return '₽';
+        case 'EUR':
+          return '€';
+        case 'BRL':
+          return 'R$';
+        case 'GBP':
+          return '£';
+        case 'JPY':
+        case 'CNY':
+          return '¥';
+        case 'DKK':
+        case 'SEK':
+        case 'ISK':
+        case 'CHF':
+          return '';
         default:
-          return "$"
+          return '$';
       }
-    }
+    };
 
-    const renderUnconfirmed = (num)  => {
+    const openAddress = addrStr => {
+      Linking.openURL(`https://live.blockcypher.com/btc/address/${addrStr}/`);
+    };
+
+    const renderUnconfirmed = num => {
       if (num !== 0) {
         return (
-          <Text
-            key={`unconfirmed-tx-${num}`}
-          >
-            | {num} UNCONFIRMED ⚠️
-          </Text>);
-      } else {
-        return (
-          <Text
-            key={`unconfirmed-tx-${num}`}
-          >
-            | NONE UNCONFIRMED
-          </Text>);
+          <Text key={`unconfirmed-tx-${num}`}>| {num} UNCONFIRMED ⚠️</Text>
+        );
       }
-    }
-    
+      return <Text key={`unconfirmed-tx-${num}`}>| NONE UNCONFIRMED</Text>;
+    };
+
     return (
       <Container>
-      {/* Price info card */}
-        <Card style={{backgroundColor: "#ff9500"}}>
-          <CardItem style={{alignSelf: "center", paddingBottom: 2, backgroundColor: "#ff9500"}}>
-            <Text style={{color: "#fff", fontSize: 17, fontWeight: "bold"}}>SUM BALANCE - ALL ADDRESSES</Text>
+        {/* Price info card */}
+        <Card style={styles.bgColor}>
+          <CardItem
+            style={[styles.bgColor, styles.selfCenter, {
+              paddingBottom: 2,
+            }]}
+          >
+            <Text style={styles.titleOne}>
+              SUM BALANCE - ALL ADDRESSES
+            </Text>
           </CardItem>
 
-          <CardItem style={{alignSelf: 'center', paddingBottom: 5, backgroundColor: "#ff9500", borderBottomWidth: 1, borderColor: "#fff"}}>
-            <Text style={{fontSize: 20, fontWeight: "bold", color: "#fff"}}>
+          <CardItem
+            style={[styles.bgColor, styles.selfCenter, {
+              paddingBottom: 5,
+              borderBottomWidth: 1,
+              borderColor: '#fff',
+            }]}
+          >
+            <Text style={[styles.boldText, styles.fontTwenty, { color: '#fff' }]}>
               {commaNumber(satConversion(sumBtc))} BTC
             </Text>
           </CardItem>
 
-          <CardItem style={{alignSelf: "center", backgroundColor: "#ff9500", paddingTop: 5}}>
-            <Text style={{fontSize: 17, fontWeight: "bold", color: "#fff"}}>
-              {currencyIcon(currencySymbol)}{commaNumber((rate*satConversion(sumBtc)).toFixed(2))} {currencySymbol}
+          <CardItem
+            style={[styles.bgColor, styles.selfCenter, {
+              paddingTop: 5,
+            }]}
+          >
+            <Text style={styles.titleOne}>
+              {currencyIcon(currencySymbol)}
+              {commaNumber((rate * satConversion(sumBtc)).toFixed(2))}{' '}
+              {currencySymbol}
             </Text>
           </CardItem>
 
-          <View style={{alignSelf: 'center', paddingTop: 5, backgroundColor: "#ff9500"}}>
-            <Text style={{fontSize: 12, color: "#fff"}}>LAST UPDATED: {updatedAt.toUpperCase()}</Text>
+          <View
+            style={[styles.bgColor, styles.selfCenter, {
+              paddingTop: 5,
+            }]}
+          >
+            <Text style={styles.subText}>
+              LAST UPDATED: {updatedAt.toUpperCase()}
+            </Text>
           </View>
 
-          <View style={{alignSelf: 'center', paddingBottom: 10, backgroundColor: "#ff9500"}}>
-            <Text style={{fontSize: 12, color: "#fff"}}>1 BTC = {currencyIcon(currencySymbol)}{commaNumber(rate)} {currencySymbol}</Text>
+          <View
+            style={[styles.bgColor, styles.selfCenter, {
+              paddingBottom: 10,
+            }]}
+          >
+            <Text style={styles.subText}>
+              1 BTC = {currencyIcon(currencySymbol)}
+              {commaNumber(rate)} {currencySymbol}
+            </Text>
           </View>
-
         </Card>
         {/*  */}
 
@@ -144,52 +227,86 @@ class AddressesIndex extends React.Component {
                 noIndent
                 iconRight
                 key={`listItem-${a}`}
-                onPress={() => this.props.navigation.push("AddressShow", 
-                  { addressInfo: this.props.addresses[a],
-                    addressName: addressNameList[a], 
-                    rate: rate, 
-                    currencySymbol: currencySymbol 
+                onPress={() =>
+                  this.props.navigation.push('AddressShow', {
+                    addressInfo: this.props.addresses[a],
+                    addressName: sortedAddressNames[a],
+                    rate,
+                    currencySymbol,
                   })
                 }
                 onLongPress={() => {
                   ActionSheet.show(
                     {
-                      options: ["Delete", "Cancel"],
-                      cancelButtonIndex: 1,
-                      destructiveButtonIndex: 0,
-                      title: addressNameList[a]
+                      options: [
+                        'Copy Address',
+                        'Open Address In Browser',
+                        'Delete Address',
+                        'Cancel',
+                      ],
+                      cancelButtonIndex: 3,
+                      destructiveButtonIndex: 2,
+                      title: sortedAddressNames[a],
                     },
                     buttonIndex => {
-                      buttonIndex === 0 ? deleteAddress(a) : null
+                      if (buttonIndex === 0) {
+                        copyAddress(addressList[a]);
+                      } else if (buttonIndex === 1) {
+                        openAddress(addressList[a]);
+                      } else if (buttonIndex === 2) {
+                        deleteAddress(addressList[a]);
+                      }
                     }
-                  )}
-                }
+                  );
+                }}
               >
                 <Body>
                   {/* GIVEN ADDRESS NAME HERE!!! */}
-                  <View style={{marginBottom: 10, borderColor: "#000", borderBottomWidth: 0.25}}>
-                    <Text numberOfLines={1} ellipsizeMode={"middle"} style={{alignSelf: "center", fontSize: 15, fontWeight: "bold", paddingBottom: 10}}>
-                      {addressNameList[a]}
+                  <View
+                    style={{
+                      marginBottom: 10,
+                      borderColor: '#000',
+                      borderBottomWidth: 0.25,
+                    }}
+                  >
+                    <Text
+                      numberOfLines={1}
+                      ellipsizeMode="middle"
+                      style={[styles.selfCenter, styles.boldText, {
+                        fontSize: 15,
+                        paddingBottom: 10,
+                      }]}
+                    >
+                      {sortedAddressNames[a]}
                     </Text>
                   </View>
 
-
                   {/* IF GIVEN NAME !== ADDRESS THEN PUT ADDRESS HERE!!! */}
                   {/* TODO: Truncate address so text doesn't wrap */}
-                  {addressNameList[a] !== addressList[a] ? <Text numberOfLines={1} ellipsizeMode={"middle"} style={{paddingRight: 20}}>ADDRESS: {addressList[a]}</Text> : null }
+                  {sortedAddressNames[a] !== addressList[a] ? (
+                    <Text
+                      numberOfLines={1}
+                      ellipsizeMode="middle"
+                      style={{ paddingRight: 20 }}
+                    >
+                      ADDRESS: {addressList[a]}
+                    </Text>
+                  ) : null}
 
-                  <Text>
-                    BALANCE: {satConversion(addressBalance[a])} BTC
-                  </Text>
-                  
-                  
-                  <Text style={{marginBottom: 5}}>
-                    TRANSACTIONS: {commaNumber(allTxs[a])} {renderUnconfirmed(unconfirmedTxs[a])}
+                  <Text>BALANCE: {satConversion(addressBalance[a])} BTC</Text>
+
+                  <Text style={{ marginBottom: 5 }}>
+                    TRANSACTIONS: {commaNumber(allTxs[a])}{' '}
+                    {renderUnconfirmed(unconfirmedTxs[a])}
                   </Text>
                 </Body>
-                
-                <Icon name="arrow-forward" style={{fontSize: 20, paddingTop: 30}} />
-              </ListItem>))}
+
+                <Icon
+                  name="arrow-forward"
+                  style={[styles.fontTwenty, { paddingTop: 30 }]}
+                />
+              </ListItem>
+            ))}
           </List>
         </Card>
         {/*  */}
@@ -197,5 +314,29 @@ class AddressesIndex extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  bgColor: {
+    backgroundColor: '#ff9500',
+  },
+  selfCenter: {
+    alignSelf: 'center',
+  },
+  titleOne: {
+    color: '#fff',
+    fontSize: 17,
+    fontWeight: 'bold',
+  },
+  subText: {
+    color: '#fff',
+    fontSize: 12,
+  },
+  boldText: {
+    fontWeight: 'bold',
+  },
+  fontTwenty: {
+    fontSize: 20
+  }
+});
 
 export default withNavigation(AddressesIndex);
