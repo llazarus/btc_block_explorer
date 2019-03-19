@@ -7,12 +7,21 @@ const commaNumber = require('comma-number');
 
 class AddressShow extends React.Component  {
   // TODO: consider adding a button to headerRight that shows a QR Code generated from address hash
-  static navigationOptions = {
-    title: 'Address Activity',
+  static navigationOptions = ({ navigation} ) => ({
+    headerTitle: 'Address Activity',
     headerLeft: (
       <HeaderLeftToHome/>
+    ),
+    headerRight: (
+      <Button transparent>
+        <Icon title="add" type="MaterialCommunityIcons" name='qrcode' style={{color: "#000", fontSize: 30}} onPress={() => navigation.navigate("QrCode", {
+          type: "Address",
+          value: navigation.getParam("addressInfo").address,
+          name: navigation.getParam("addressName")
+        })} />
+      </Button>
     )
-  };
+  });
 
   render() {
     const addressInfo = this.props.navigation.getParam('addressInfo', '');

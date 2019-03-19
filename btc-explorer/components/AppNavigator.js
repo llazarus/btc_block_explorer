@@ -7,6 +7,7 @@ import AddAddress from './AddAddress';
 import BarcodeScanner from './BarcodeScanner';
 import AddressShow from './AddressShow';
 import TransactionShow from './TransactionShow';
+import QrCode from "./QrCode";
 
 const AppStackNavigator = createStackNavigator(
   {
@@ -16,7 +17,8 @@ const AppStackNavigator = createStackNavigator(
     AddAddress: AddAddress,
     BarcodeScanner: BarcodeScanner,
     AddressShow: AddressShow,
-    TransactionShow: TransactionShow
+    TransactionShow: TransactionShow,
+    QrCode: QrCode
   },
   {
     initialRouteName: "Home"
