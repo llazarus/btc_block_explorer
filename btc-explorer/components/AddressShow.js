@@ -163,7 +163,7 @@ class AddressShow extends React.Component {
               </Text>
             </CardItem>
 
-            {addressName !== addressInfo.address ? (
+            {addressName[0] !== addressInfo.address ? (
               <CardItem
                 style={{
                   alignSelf: 'center',
