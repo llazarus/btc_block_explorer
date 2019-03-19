@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, ScrollView , View, Clipboard, Linking } from 'react-native';
+import { StyleSheet, Text, ScrollView , View, Clipboard, Linking, Image } from 'react-native';
 import { Container, Body, Card, CardItem, Icon, ActionSheet, Toast, Button } from 'native-base';
 import { withNavigation } from 'react-navigation';
 import { Ionicons } from '@expo/vector-icons';
@@ -109,7 +109,8 @@ class TransactionShow extends React.Component  {
     if (this.state.loading) {
       return (
         <Container style={styles.container}>
-          <Text>Loading Transaction Details . . .</Text>
+          <Text style={{fontSize: 16}}>Loading Transaction Details . . .</Text>
+          <Image source={require("../assets/loader.gif")} />
         </Container>
       );
     }
@@ -475,7 +476,7 @@ class TransactionShow extends React.Component  {
                   if (tx.outputs[i]['addresses'] === null) {
                     // Unable to decode output address
                     return (
-                      <CardItem key={`output-${i}`} style={{backgroundColor: "#e1142b", marginBottom: 5}}>
+                      <CardItem key={`output-${i}`} style={{backgroundColor: "#f79c24", marginBottom: 5}}>
                         <Body style={{alignItems: "center"}}>
                           <Text style={{fontWeight: "bold", color: "#fff"}}>
                             Unable To Decode Output Address!

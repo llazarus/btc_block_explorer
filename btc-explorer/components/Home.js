@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, AsyncStorage, ScrollView, RefreshControl } from 'react-native';
+import { StyleSheet, Text, AsyncStorage, ScrollView, RefreshControl, Image } from 'react-native';
 import { Container, Icon } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 import HeaderButtons, { HeaderButton, Item } from 'react-navigation-header-buttons';
@@ -170,6 +170,7 @@ export default class Home extends React.Component {
 
           const responseAddresses2 = await fetch(`https://api.blockcypher.com/v1/btc/main/addrs/${addressString2}`);
           const jsonAddresses2 = await responseAddresses2.json();
+
           const jsonAddresses = jsonAddresses1.concat(jsonAddresses2);
   
           if (jsonAddresses.length) {
@@ -251,7 +252,8 @@ export default class Home extends React.Component {
     } else if (this.state.loading) {
       return (
         <Container style={styles.container}>
-          <Text>Loading Bitcoin Block Explorer . . .</Text>
+          <Text style={{fontSize: 16}}>Loading Bitcoin Block Explorer . . .</Text>
+          <Image source={require("../assets/loader.gif")} />
         </Container>
       );
     } else {
