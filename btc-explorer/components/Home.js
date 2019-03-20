@@ -7,7 +7,7 @@ import {
   RefreshControl,
   Image,
 } from 'react-native';
-import { Container, Icon } from 'native-base';
+import { Container, Icon, Toast  } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 import HeaderButtons, {
   HeaderButton,
@@ -62,7 +62,7 @@ export default class Home extends React.Component {
 
   componentDidMount() {
     this.fetchData();
-
+    
     this.willFocusListener = this.props.navigation.addListener(
       'willFocus',
       () => {
@@ -96,8 +96,8 @@ export default class Home extends React.Component {
         const jsonAddresses = await responseAddresses.json();
 
         if (jsonAddresses[0].error) {
-          // Do something if error getting addresses
           console.log(jsonAddresses[0].error);
+          // Do something if error getting addresses
           this.setState({
             loadingError: true,
           });
@@ -107,7 +107,6 @@ export default class Home extends React.Component {
             addresses: jsonAddresses,
             loading: false,
             loadingError: false,
-            // remove later!!!
             addressNames: [
               ['Genesis of Bitcoin', '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa'],
               [
@@ -116,6 +115,17 @@ export default class Home extends React.Component {
               ],
               ['Laszlo’s Pizza Exchange', '1XPTgDRhN8RFnzniWCddobD9iKZatrvH4'],
             ],
+          });
+
+          Toast.show({
+            text: 'Tap the "✚" icon to add\n your first address!',
+            textStyle: {
+              fontSize: 14,
+              textAlign: 'center',
+              fontWeight: 'bold',
+            },
+            buttonText: 'Dismiss',
+            duration: 8000
           });
         }
       } else {
@@ -269,7 +279,7 @@ export default class Home extends React.Component {
               />
             }
           >
-            <Text style={{ textAlign: 'center' }}>
+            <Text style={{ textAlign: 'center', fontSize: 16, marginHorizontal: 15 }}>
               Error retrieving data, swipe down to refresh!{'\n\n\n'}
               <Icon
                 type="MaterialCommunityIcons"
@@ -295,26 +305,28 @@ export default class Home extends React.Component {
         </Container>
       );
     }
-    return (
-      <Container>
-        <ScrollView
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={this._onRefresh}
+    else {
+      return (
+        <Container>
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh}
+              />
+            }
+            >
+            <AddressesIndex
+              addresses={addresses}
+              addressNames={this.state.addressNames}
+              numAddresses={this.state.numAddresses}
+              currency={currency}
+              currencySymbol={this.state.currencySymbol}
             />
-          }
-        >
-          <AddressesIndex
-            addresses={addresses}
-            addressNames={this.state.addressNames}
-            numAddresses={this.state.numAddresses}
-            currency={currency}
-            currencySymbol={this.state.currencySymbol}
-          />
-        </ScrollView>
-      </Container>
-    );
+          </ScrollView>
+        </Container>
+      );
+    }
   }
 }
 
