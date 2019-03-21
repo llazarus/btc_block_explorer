@@ -223,7 +223,7 @@ class AddAddress extends React.Component {
               }}
             >
               <Text style={{ paddingHorizontal: 125, color: '#fff' }}>
-                Done
+                Save Address
               </Text>
             </Button>
           ) : (
@@ -237,7 +237,7 @@ class AddAddress extends React.Component {
               }}
             >
               <Text style={{ paddingHorizontal: 125, color: '#ccc' }}>
-                Done
+                Save Address
               </Text>
             </Button>
           )}
