@@ -14,12 +14,6 @@ const IoniconsHeaderButton = args => (
 );
 
 class QrCode extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {};
-  }
-
   static navigationOptions = ({ navigation }) => ({
     headerTitle: `${navigation.getParam('type', '')} QR Code`,
     headerLeft: (
@@ -33,6 +27,12 @@ class QrCode extends React.Component {
     ),
   });
 
+  constructor(props) {
+    super(props);
+
+    this.state = {};
+  }
+
   render() {
     const type = this.props.navigation.getParam('type', '');
     const strValue = this.props.navigation.getParam('value', '');
@@ -44,32 +44,31 @@ class QrCode extends React.Component {
         <Content>
           <View style={styles.marginVertical}>
             {type === 'Address' ? (
-              <Text
-                style={[styles.selfCenterBold, styles.fontMarginOne]}
-              >
+              <Text style={[styles.selfCenterBold, styles.fontMarginOne]}>
                 Address:
               </Text>
             ) : (
-              <Text
-                style={[styles.selfCenterBold, styles.fontMarginOne]}
-              >
+              <Text style={[styles.selfCenterBold, styles.fontMarginOne]}>
                 Transaction Hash:
               </Text>
             )}
             <Text
               adjustsFontSizeToFit
               numberOfLines={2}
-              style={[styles.selfCenterBold, styles.paddingHorizontal, {
-                textAlign: 'center',
-                fontSize: 16,
-              }]}
+              style={[
+                styles.selfCenterBold,
+                styles.paddingHorizontal,
+                {
+                  textAlign: 'center',
+                  fontSize: 16,
+                },
+              ]}
             >
               {strValue}
             </Text>
           </View>
           <Body
             style={{
-              borderColor: '#000',
               marginVertical: 10,
             }}
           >
@@ -84,9 +83,14 @@ class QrCode extends React.Component {
             <Text
               adjustsFontSizeToFit
               numberOfLines={1}
-              style={[styles.selfCenterBold, styles.paddingHorizontal, styles.marginVertical, {
-                fontSize: 24,
-              }]}
+              style={[
+                styles.selfCenterBold,
+                styles.paddingHorizontal,
+                styles.marginVertical,
+                {
+                  fontSize: 24,
+                },
+              ]}
             >
               {name}
             </Text>

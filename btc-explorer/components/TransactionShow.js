@@ -7,6 +7,7 @@ import {
   Clipboard,
   Linking,
   Image,
+  Platform,
 } from 'react-native';
 import {
   Container,
@@ -28,11 +29,31 @@ import HeaderButtons, {
 const pluralize = require('pluralize');
 const commaNumber = require('comma-number');
 
+let platformPadding = 0;
+if (Platform.OS === 'android') {
+  platformPadding = 13;
+} else {
+  platformPadding = 0;
+}
+
 const IoniconsHeaderButton = args => (
   <HeaderButton {...args} IconComponent={Ionicons} color="#000" iconSize={30} />
 );
 
 class TransactionShow extends React.Component {
+  static navigationOptions = ({ navigation }) => ({
+    title: 'Currency',
+    headerLeft: (
+      <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
+        <Item
+          title="back"
+          iconName="ios-arrow-back"
+          onPress={() => navigation.navigate('Settings')}
+        />
+      </HeaderButtons>
+    ),
+  });
+
   constructor(props) {
     super(props);
 
@@ -49,11 +70,11 @@ class TransactionShow extends React.Component {
   }
 
   fetchData = async () => {
-    const tx_hash = await this.props.navigation.getParam('tx_hash', '');
+    const txHash = await this.props.navigation.getParam('tx_hash', '');
 
-    if (tx_hash !== '') {
+    if (txHash !== '') {
       const responseTX = await fetch(
-        `https://api.blockcypher.com/v1/btc/main/txs/${tx_hash}`
+        `https://api.blockcypher.com/v1/btc/main/txs/${txHash}`
       );
       const jsonTX = await responseTX.json();
 
@@ -68,37 +89,6 @@ class TransactionShow extends React.Component {
       }
     }
   };
-
-  // TODO: consider adding a button to headerRight that shows a QR Code generated from tx hash
-  static navigationOptions = ({ navigation }) => ({
-    title: 'Transaction Details',
-    headerLeft: (
-      <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
-        <Item
-          title="back"
-          iconName="ios-arrow-back"
-          onPress={() => navigation.navigate('AddressShow')}
-        />
-      </HeaderButtons>
-    ),
-    headerRight: (
-      <Button transparent>
-        <Icon
-          title="add"
-          type="MaterialCommunityIcons"
-          name="qrcode"
-          style={{ color: '#000', fontSize: 30 }}
-          onPress={() =>
-            navigation.navigate('QrCode', {
-              type: 'Transaction',
-              value: navigation.getParam('tx_hash'),
-              name: navigation.getParam('tx_hash'),
-            })
-          }
-        />
-      </Button>
-    ),
-  });
 
   render() {
     const tx = { ...this.state.tx };
@@ -201,10 +191,7 @@ class TransactionShow extends React.Component {
             </Card>
 
             <Card>
-              <CardItem
-                header
-                style={styles.cardItemThree}
-              >
+              <CardItem header style={styles.cardItemThree}>
                 <Text style={{ fontSize: 17, fontWeight: 'bold' }}>
                   INPUTS {'&'} OUTPUTS
                 </Text>
@@ -219,10 +206,7 @@ class TransactionShow extends React.Component {
                   {inputLength.map(i => {
                     if (tx.inputs[i].addresses !== undefined) {
                       return (
-                        <CardItem
-                          key={`input-${i}`}
-                          style={styles.bgDanger}
-                        >
+                        <CardItem key={`input-${i}`} style={styles.bgDanger}>
                           <Body style={styles.alignCenter}>
                             <Text
                               style={styles.whiteFontBold}
@@ -256,10 +240,7 @@ class TransactionShow extends React.Component {
                     }
                     if (tx.inputs[0].output_index === -1) {
                       return (
-                        <CardItem
-                          key={`input-${i}`}
-                          style={styles.bgNewCoins}
-                        >
+                        <CardItem key={`input-${i}`} style={styles.bgNewCoins}>
                           <Body style={styles.alignCenter}>
                             <Text style={styles.whiteFontBold}>
                               No Input (Newly Generated Coins)
@@ -269,10 +250,7 @@ class TransactionShow extends React.Component {
                       );
                     }
                     return (
-                      <CardItem
-                        key={`input-${i}`}
-                        style={styles.bgDanger}
-                      >
+                      <CardItem key={`input-${i}`} style={styles.bgDanger}>
                         <Body style={styles.alignCenter}>
                           <Text style={styles.whiteFontBold}>
                             Bech32 Segwit Address
@@ -293,18 +271,14 @@ class TransactionShow extends React.Component {
                 </Body>
               </CardItem>
 
-              <CardItem
-                style={styles.cardItemOne}
-              >
+              <CardItem style={styles.cardItemOne}>
                 <Icon
                   type="Entypo"
                   name="dots-three-vertical"
                   style={styles.iconStyle}
                 />
               </CardItem>
-              <CardItem
-                style={styles.cardItemTwo}
-              >
+              <CardItem style={styles.cardItemTwo}>
                 <Icon
                   type="Ionicons"
                   name="ios-arrow-down"
@@ -323,10 +297,7 @@ class TransactionShow extends React.Component {
                     if (tx.outputs[i].addresses === null) {
                       // Unable to decode output address
                       return (
-                        <CardItem
-                          key={`output-${i}`}
-                          style={styles.bgDanger}
-                        >
+                        <CardItem key={`output-${i}`} style={styles.bgDanger}>
                           <Body style={styles.alignCenter}>
                             <Text style={styles.whiteFontBold}>
                               Unable To Decode Output Address!
@@ -340,9 +311,12 @@ class TransactionShow extends React.Component {
                       return (
                         <CardItem
                           key={`output-${i}`}
-                          style={[styles.bgSuccess, {
-                            paddingBottom: 9,
-                          }]}
+                          style={[
+                            styles.bgSuccess,
+                            {
+                              paddingBottom: 9,
+                            },
+                          ]}
                         >
                           <Body style={styles.alignCenter}>
                             <Text
@@ -381,10 +355,13 @@ class TransactionShow extends React.Component {
                               <Icon
                                 type="Entypo"
                                 name="link"
-                                style={[styles.whiteFont, {
-                                  fontSize: 14,
-                                  marginTop: 2,
-                                }]}
+                                style={[
+                                  styles.whiteFont,
+                                  {
+                                    fontSize: 14,
+                                    marginTop: 2,
+                                  },
+                                ]}
                               />
                             </View>
                           </Body>
@@ -393,10 +370,7 @@ class TransactionShow extends React.Component {
                     }
                     // Unspent coins
                     return (
-                      <CardItem
-                        key={`output-${i}`}
-                        style={styles.bgSuccess}
-                      >
+                      <CardItem key={`output-${i}`} style={styles.bgSuccess}>
                         <Body style={styles.alignCenter}>
                           <Text
                             style={styles.whiteFontBold}
@@ -497,10 +471,7 @@ class TransactionShow extends React.Component {
 
           {/* INPUT(S) AND OUTPUT(S) CARD */}
           <Card>
-            <CardItem
-              header
-              style={styles.cardItemThree}
-            >
+            <CardItem header style={styles.cardItemThree}>
               <Text style={{ fontSize: 17, fontWeight: 'bold' }}>
                 INPUTS {'&'} OUTPUTS
               </Text>
@@ -515,10 +486,7 @@ class TransactionShow extends React.Component {
                 {inputLength.map(i => {
                   if (tx.inputs[0].addresses !== undefined) {
                     return (
-                      <CardItem
-                        key={`input-${i}`}
-                        style={styles.bgDanger}
-                      >
+                      <CardItem key={`input-${i}`} style={styles.bgDanger}>
                         <Body style={styles.alignCenter}>
                           <Text
                             style={styles.whiteFontBold}
@@ -552,10 +520,7 @@ class TransactionShow extends React.Component {
                   }
                   if (tx.inputs[0].output_index === -1) {
                     return (
-                      <CardItem
-                        key={`input-${i}`}
-                        style={styles.bgNewCoins}
-                      >
+                      <CardItem key={`input-${i}`} style={styles.bgNewCoins}>
                         <Body style={styles.alignCenter}>
                           <Text style={styles.whiteFontBold}>
                             No Input (Newly Generated Coins)
@@ -565,10 +530,7 @@ class TransactionShow extends React.Component {
                     );
                   }
                   return (
-                    <CardItem
-                      key={`input-${i}`}
-                      style={styles.bgDanger}
-                    >
+                    <CardItem key={`input-${i}`} style={styles.bgDanger}>
                       <Body style={styles.alignCenter}>
                         <Text style={styles.whiteFontBold}>
                           Bech32 Segwit Address
@@ -590,18 +552,14 @@ class TransactionShow extends React.Component {
             </CardItem>
 
             {/* DOWN ARROW DIVIDER. TEST ON DIFFERENT SCREEN SIZES TO MAKE SURE ICONS CENTERED RELATIVE TO ONE ANOTHER */}
-            <CardItem
-              style={styles.cardItemOne}
-            >
+            <CardItem style={styles.cardItemOne}>
               <Icon
                 type="Entypo"
                 name="dots-three-vertical"
                 style={styles.iconStyle}
               />
             </CardItem>
-            <CardItem
-              style={styles.cardItemTwo}
-            >
+            <CardItem style={styles.cardItemTwo}>
               <Icon
                 type="Ionicons"
                 name="ios-arrow-down"
@@ -643,9 +601,12 @@ class TransactionShow extends React.Component {
                     return (
                       <CardItem
                         key={`output-${i}`}
-                        style={[styles.bgSuccess, {
-                          paddingBottom: 9,
-                        }]}
+                        style={[
+                          styles.bgSuccess,
+                          {
+                            paddingBottom: 9,
+                          },
+                        ]}
                       >
                         <Body style={styles.alignCenter}>
                           <Text
@@ -682,10 +643,13 @@ class TransactionShow extends React.Component {
                             <Icon
                               type="Entypo"
                               name="link"
-                              style={[styles.whiteFont, {
-                                fontSize: 14,
-                                marginTop: 2,
-                              }]}
+                              style={[
+                                styles.whiteFont,
+                                {
+                                  fontSize: 14,
+                                  marginTop: 2,
+                                },
+                              ]}
                             />
                           </View>
                         </Body>
@@ -694,10 +658,7 @@ class TransactionShow extends React.Component {
                   }
                   // Unspent coins
                   return (
-                    <CardItem
-                      key={`output-${i}`}
-                      style={styles.bgSuccess}
-                    >
+                    <CardItem key={`output-${i}`} style={styles.bgSuccess}>
                       <Body style={styles.alignCenter}>
                         <Text
                           style={styles.whiteFontBold}
@@ -754,11 +715,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#ff9500',
   },
   paddingFontOne: {
-    paddingBottom: 10, 
+    paddingBottom: 10,
     fontWeight: 'bold',
   },
   iconStyle: {
-    fontSize: 50, 
+    fontSize: 50,
     marginRight: 8,
   },
   cardItemOne: {
@@ -782,12 +743,12 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   bgDanger: {
-    backgroundColor: '#e1142b', 
-    marginBottom: 5
+    backgroundColor: '#e1142b',
+    marginBottom: 5,
   },
   bgNewCoins: {
     backgroundColor: '#4399f6',
-    marginBottom: 5, 
+    marginBottom: 5,
   },
   alignCenter: {
     alignItems: 'center',

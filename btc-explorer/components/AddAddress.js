@@ -16,6 +16,11 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import HeaderLeftToHome from './HeaderLeftToHome';
 
 class AddAddress extends React.Component {
+  static navigationOptions = {
+    title: 'Add Address',
+    headerLeft: <HeaderLeftToHome />,
+  };
+
   constructor(props) {
     super(props);
 
@@ -27,6 +32,12 @@ class AddAddress extends React.Component {
     };
     this.possibleAddr = this.possibleAddr.bind(this);
     this.confirmAddr = this.confirmAddr.bind(this);
+  }
+
+  componentDidMount() {
+    if (this.state.address.length > 24) {
+      this.possibleAddr(this.state.address);
+    }
   }
 
   possibleAddr = addr => {
@@ -133,17 +144,6 @@ class AddAddress extends React.Component {
         addressError: true,
       });
     }
-  };
-
-  componentDidMount() {
-    if (this.state.address.length > 24) {
-      this.possibleAddr(this.state.address);
-    }
-  }
-
-  static navigationOptions = {
-    title: 'Add Address',
-    headerLeft: <HeaderLeftToHome />,
   };
 
   render() {

@@ -24,8 +24,13 @@ const AppStackNavigator = createStackNavigator(
     PrivacyPolicy,
     HowTo,
   },
+  { headerLayoutPreset: 'center' },
   {
     initialRouteName: 'Home',
+    defaultNavigationOptions: {
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
   }
 );
 

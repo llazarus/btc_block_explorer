@@ -3,20 +3,36 @@ import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import { BarCodeScanner, Permissions } from 'expo';
 import { withNavigation } from 'react-navigation';
 import { Ionicons } from '@expo/vector-icons';
-import HeaderButtons, { HeaderButton, Item } from 'react-navigation-header-buttons';
+import HeaderButtons, {
+  HeaderButton,
+  Item,
+} from 'react-navigation-header-buttons';
 
 const IoniconsHeaderButton = args => (
   <HeaderButton {...args} IconComponent={Ionicons} color="#000" iconSize={30} />
 );
 
 class BarcodeScanner extends React.Component {
+  static navigationOptions = ({ navigation }) => ({
+    title: 'Scan Address QR Code',
+    headerLeft: (
+      <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
+        <Item
+          title="back"
+          iconName="ios-arrow-back"
+          onPress={() => navigation.navigate('AddAddress')}
+        />
+      </HeaderButtons>
+    ),
+  });
+
   constructor(props) {
     super(props);
 
     this.state = {
       hasCameraPermission: null,
-      showCamera: true
-    }
+      showCamera: true,
+    };
   }
 
   async componentDidMount() {
@@ -24,14 +40,15 @@ class BarcodeScanner extends React.Component {
     this.setState({ hasCameraPermission: status === 'granted' });
   }
 
-  static navigationOptions = ({ navigation }) => ({
-    title: 'Scan Address QR Code',
-    headerLeft: (
-      <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
-        <Item title="back" iconName="ios-arrow-back" onPress={() => navigation.navigate('AddAddress')} />
-      </HeaderButtons>
-    )
-  });
+  handleBarCodeScanned = ({ data }) => {
+    this.setState({
+      showCamera: false,
+    });
+    this.props.navigation.push('AddAddress', {
+      addressName: this.props.navigation.getParam('addressName', ''),
+      address: data,
+    });
+  };
 
   render() {
     const { hasCameraPermission } = this.state;
@@ -47,32 +64,37 @@ class BarcodeScanner extends React.Component {
     }
     return (
       <View style={styles.container}>
-        {this.state.showCamera ? 
-        <BarCodeScanner
-          onBarCodeScanned={this.handleBarCodeScanned}
-          barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
-          style={StyleSheet.absoluteFill}
-        >
-        <View style={styles.maskOutter}>
-          <View style={[{ flex: maskRowHeight  }, styles.maskRow, styles.maskFrame]} />
-          <View style={[{ flex: 30 }, styles.maskCenter]}>
-            <View style={[{ width: maskColWidth }, styles.maskFrame]} />
-            <View style={styles.maskInner} />
-            <View style={[{ width: maskColWidth }, styles.maskFrame]} />
-          </View>
-          <View style={[{ flex: maskRowHeight }, styles.maskRow, styles.maskFrame]} />
-        </View>
-        </BarCodeScanner>
-        : null}
+        {this.state.showCamera ? (
+          <BarCodeScanner
+            onBarCodeScanned={this.handleBarCodeScanned}
+            barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
+            style={StyleSheet.absoluteFill}
+          >
+            <View style={styles.maskOutter}>
+              <View
+                style={[
+                  { flex: maskRowHeight },
+                  styles.maskRow,
+                  styles.maskFrame,
+                ]}
+              />
+              <View style={[{ flex: 30 }, styles.maskCenter]}>
+                <View style={[{ width: maskColWidth }, styles.maskFrame]} />
+                <View style={styles.maskInner} />
+                <View style={[{ width: maskColWidth }, styles.maskFrame]} />
+              </View>
+              <View
+                style={[
+                  { flex: maskRowHeight },
+                  styles.maskRow,
+                  styles.maskFrame,
+                ]}
+              />
+            </View>
+          </BarCodeScanner>
+        ) : null}
       </View>
     );
-  }
-
-  handleBarCodeScanned = ({ data }) => {
-    this.setState({
-      showCamera: false
-    });
-    this.props.navigation.push("AddAddress", { addressName: this.props.navigation.getParam('addressName', ''), address: data })
   }
 }
 

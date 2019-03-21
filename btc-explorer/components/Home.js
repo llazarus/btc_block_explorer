@@ -7,7 +7,7 @@ import {
   RefreshControl,
   Image,
 } from 'react-native';
-import { Container, Icon, Toast  } from 'native-base';
+import { Container, Icon, Toast } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 import HeaderButtons, {
   HeaderButton,
@@ -21,23 +21,6 @@ const IoniconsHeaderButton = args => (
 );
 
 export default class Home extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loadingError: false,
-      loading: true,
-      currencySymbol: undefined,
-      currency: {},
-      numAddresses: -1,
-      addresses: {},
-      addressNames: [],
-      refreshing: false,
-    };
-
-    this.fetchData = this.fetchData.bind(this);
-  }
-
   static navigationOptions = ({ navigation }) => ({
     headerTitle: 'Bitcoin Block Explorer',
     headerLeft: (
@@ -60,9 +43,25 @@ export default class Home extends React.Component {
     ),
   });
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loadingError: false,
+      loading: true,
+      currencySymbol: undefined,
+      currency: {},
+      numAddresses: -1,
+      addresses: {},
+      addressNames: [],
+      refreshing: false,
+    };
+
+    this.fetchData = this.fetchData.bind(this);
+  }
+
   componentDidMount() {
     this.fetchData();
-    
     this.willFocusListener = this.props.navigation.addListener(
       'willFocus',
       () => {
@@ -108,12 +107,13 @@ export default class Home extends React.Component {
             loading: false,
             loadingError: false,
             addressNames: [
-              ['Bitcoin Genesis Address', '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa']
+              ['Bitcoin Genesis Address', '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa'],
             ],
           });
 
           Toast.show({
-            text: 'Welcome to BTC Block Explorer! Tap the icons in the header to add your first address or change your currency settings!\n\nThe current app version allows you to save up to 6 addresses and refresh each data point at a limit of 200 times per hour.',
+            text:
+              'Welcome to BTC Block Explorer! Tap the icons in the header to add your first address or change your currency settings!\n\nThe current app version allows you to save up to 6 addresses and refresh each data point at a limit of 200 times per hour.',
             textStyle: {
               fontSize: 14,
               textAlign: 'center',
@@ -272,7 +272,13 @@ export default class Home extends React.Component {
               />
             }
           >
-            <Text style={{ textAlign: 'center', fontSize: 16, marginHorizontal: 15 }}>
+            <Text
+              style={{
+                textAlign: 'center',
+                fontSize: 16,
+                marginHorizontal: 15,
+              }}
+            >
               Error retrieving data, swipe down to refresh!{'\n\n\n'}
               <Icon
                 type="MaterialCommunityIcons"
@@ -298,28 +304,26 @@ export default class Home extends React.Component {
         </Container>
       );
     }
-    else {
-      return (
-        <Container>
-          <ScrollView
-            refreshControl={
-              <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this._onRefresh}
-              />
-            }
-            >
-            <AddressesIndex
-              addresses={addresses}
-              addressNames={this.state.addressNames}
-              numAddresses={this.state.numAddresses}
-              currency={currency}
-              currencySymbol={this.state.currencySymbol}
+    return (
+      <Container>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh}
             />
-          </ScrollView>
-        </Container>
-      );
-    }
+          }
+        >
+          <AddressesIndex
+            addresses={addresses}
+            addressNames={this.state.addressNames}
+            numAddresses={this.state.numAddresses}
+            currency={currency}
+            currencySymbol={this.state.currencySymbol}
+          />
+        </ScrollView>
+      </Container>
+    );
   }
 }
 
