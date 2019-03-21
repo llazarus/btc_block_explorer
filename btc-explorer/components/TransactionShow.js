@@ -42,17 +42,34 @@ const IoniconsHeaderButton = args => (
 
 class TransactionShow extends React.Component {
   static navigationOptions = ({ navigation }) => ({
-    title: 'Currency',
+    title: 'Transaction Details',
     headerLeft: (
       <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
         <Item
           title="back"
           iconName="ios-arrow-back"
-          onPress={() => navigation.navigate('Settings')}
+          onPress={() => navigation.navigate('AddressShow')}
         />
       </HeaderButtons>
     ),
-  });
+    headerRight: (
+      <Button transparent>
+        <Icon
+          title="add"
+          type="MaterialCommunityIcons"
+          name="qrcode"
+          style={{ color: '#000', fontSize: 30 }}
+          onPress={() =>
+            navigation.navigate('QrCode', {
+              type: 'Transaction',
+              value: navigation.getParam('tx_hash'),
+              name: navigation.getParam('tx_hash'),
+            })
+          }
+        />
+      </Button>
+    ),
+});
 
   constructor(props) {
     super(props);

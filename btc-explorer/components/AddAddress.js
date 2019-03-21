@@ -57,7 +57,7 @@ class AddAddress extends React.Component {
       if (
         addr.length < 36 &&
         addr.search(/[0OIl]/) === -1 &&
-        addr.search(/\W\D/) === -1
+        addr.search(/[^a-zA-Z0-9]/) === -1
       ) {
         this.setState({
           addressPossible: true,
