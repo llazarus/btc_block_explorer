@@ -49,7 +49,7 @@ class Settings extends React.Component {
         <Text
           style={styles.textStyleTwo}
         >
-          Powered by
+          Powered By
         </Text>
         <Text
           style={styles.textStyleTwo}

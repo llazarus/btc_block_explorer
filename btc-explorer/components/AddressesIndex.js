@@ -182,7 +182,6 @@ class AddressesIndex extends React.Component {
       return <Text key={`unconfirmed-tx-${num}`}>| NONE UNCONFIRMED</Text>;
     };
 
-    console.log(this.state.loading+ "!!!");
     if (this.state.loading) {
       return (
         <Container style={styles.container}>
