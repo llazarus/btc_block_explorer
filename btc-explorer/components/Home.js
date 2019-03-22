@@ -7,7 +7,7 @@ import {
   RefreshControl,
   Image,
 } from 'react-native';
-import { Container, Icon } from 'native-base';
+import { Container, Icon, Toast } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 import HeaderButtons, {
   HeaderButton,
@@ -21,23 +21,6 @@ const IoniconsHeaderButton = args => (
 );
 
 export default class Home extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loadingError: false,
-      loading: true,
-      currencySymbol: undefined,
-      currency: {},
-      numAddresses: -1,
-      addresses: {},
-      addressNames: [],
-      refreshing: false,
-    };
-
-    this.fetchData = this.fetchData.bind(this);
-  }
-
   static navigationOptions = ({ navigation }) => ({
     headerTitle: 'Bitcoin Block Explorer',
     headerLeft: (
@@ -60,9 +43,25 @@ export default class Home extends React.Component {
     ),
   });
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loadingError: false,
+      loading: true,
+      currencySymbol: undefined,
+      currency: {},
+      numAddresses: -1,
+      addresses: {},
+      addressNames: [],
+      refreshing: false,
+    };
+
+    this.fetchData = this.fetchData.bind(this);
+  }
+
   componentDidMount() {
     this.fetchData();
-
     this.willFocusListener = this.props.navigation.addListener(
       'willFocus',
       () => {
@@ -91,31 +90,35 @@ export default class Home extends React.Component {
         // do the things for people that don't have stored addresses!
         // for test
         const responseAddresses = await fetch(
-          'https://api.blockcypher.com/v1/btc/main/addrs/1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa;1Ez69SnzzmePmZX3WpEzMKTrcBF2gpNQ55;1XPTgDRhN8RFnzniWCddobD9iKZatrvH4'
+          'https://api.blockcypher.com/v1/btc/main/addrs/1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa'
         );
         const jsonAddresses = await responseAddresses.json();
 
-        if (jsonAddresses[0].error) {
+        if (jsonAddresses.error) {
+          console.log(jsonAddresses.error);
           // Do something if error getting addresses
-          console.log(jsonAddresses[0].error);
           this.setState({
             loadingError: true,
           });
         } else {
           this.setState({
-            numAddresses: jsonAddresses.length,
-            addresses: jsonAddresses,
+            numAddresses: 1,
+            addresses: [jsonAddresses],
             loading: false,
             loadingError: false,
-            // remove later!!!
             addressNames: [
-              ['Genesis of Bitcoin', '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa'],
-              [
-                'US Marshal Auction Coins',
-                '1Ez69SnzzmePmZX3WpEzMKTrcBF2gpNQ55',
-              ],
-              ['Laszlo’s Pizza Exchange', '1XPTgDRhN8RFnzniWCddobD9iKZatrvH4'],
+              ['Bitcoin Genesis Address', '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa'],
             ],
+          });
+
+          Toast.show({
+            text:
+              'Welcome to BTC Block Explorer! Tap the icons in the header to add your first address or change your currency settings!\n\nThe current app version allows you to save up to 6 addresses and refresh each data point at a limit of 200 times per hour.',
+            textStyle: {
+              fontSize: 14,
+              textAlign: 'center',
+            },
+            duration: 8000,
           });
         }
       } else {
@@ -269,7 +272,13 @@ export default class Home extends React.Component {
               />
             }
           >
-            <Text style={{ textAlign: 'center' }}>
+            <Text
+              style={{
+                textAlign: 'center',
+                fontSize: 16,
+                marginHorizontal: 15,
+              }}
+            >
               Error retrieving data, swipe down to refresh!{'\n\n\n'}
               <Icon
                 type="MaterialCommunityIcons"

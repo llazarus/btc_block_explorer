@@ -8,6 +8,8 @@ import BarcodeScanner from './BarcodeScanner';
 import AddressShow from './AddressShow';
 import TransactionShow from './TransactionShow';
 import QrCode from './QrCode';
+import PrivacyPolicy from './PrivacyPolicy';
+import HowTo from './HowTo';
 
 const AppStackNavigator = createStackNavigator(
   {
@@ -19,9 +21,16 @@ const AppStackNavigator = createStackNavigator(
     AddressShow,
     TransactionShow,
     QrCode,
+    PrivacyPolicy,
+    HowTo,
   },
+  { headerLayoutPreset: 'center' },
   {
     initialRouteName: 'Home',
+    defaultNavigationOptions: {
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
   }
 );
 

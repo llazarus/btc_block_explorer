@@ -21,6 +21,19 @@ const IoniconsHeaderButton = args => (
 );
 
 class CurrencyList extends React.Component {
+  static navigationOptions = ({ navigation }) => ({
+    title: 'Currency',
+    headerLeft: (
+      <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
+        <Item
+          title="back"
+          iconName="ios-arrow-back"
+          onPress={() => navigation.navigate('Settings')}
+        />
+      </HeaderButtons>
+    ),
+  });
+
   constructor(props) {
     super(props);
 
@@ -90,19 +103,6 @@ class CurrencyList extends React.Component {
       });
     }
   };
-
-  static navigationOptions = ({ navigation }) => ({
-    title: 'Currency',
-    headerLeft: (
-      <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
-        <Item
-          title="back"
-          iconName="ios-arrow-back"
-          onPress={() => navigation.navigate('Settings')}
-        />
-      </HeaderButtons>
-    ),
-  });
 
   render() {
     const { allCurrencies } = this.state;

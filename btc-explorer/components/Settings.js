@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, View, Platform } from 'react-native';
 import {
   Container,
   Content,
@@ -14,13 +14,47 @@ import { withNavigation } from 'react-navigation';
 import HeaderLeftToHome from './HeaderLeftToHome';
 
 class Settings extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   static navigationOptions = {
     title: 'Settings',
     headerLeft: <HeaderLeftToHome />,
+  };
+
+  constructor(props) {
+    super(props);
+
+    this.poweredBy = this.poweredBy.bind(this);
+  }
+
+  poweredBy = () => {
+    if (Platform.OS === 'ios') {
+      return (
+        <View
+          style={{ alignItems: 'center', marginTop: 30, marginHorizontal: 20 }}
+        >
+          <Text
+            style={{ fontWeight: 'bold', fontSize: 15, marginBottom: 3 }}
+            numberOfLines={1}
+            adjustsFontSizeToFit
+          >
+            Powered by BlockCypher, CoinDesk, and Blockchain.info
+          </Text>
+          <Text style={{ fontSize: 12 }}>BTC Block Explorer v1.0.0</Text>
+        </View>
+      );
+    }
+    return (
+      <View
+        style={{ alignItems: 'center', marginTop: 30, marginHorizontal: 20 }}
+      >
+        <Text
+          style={{ fontWeight: 'bold', fontSize: 13, marginBottom: 3 }}
+          numberOfLines={1}
+        >
+          Powered by BlockCypher, CoinDesk, and Blockchain.info
+        </Text>
+        <Text style={{ fontSize: 11 }}>BTC Block Explorer v1.1.0</Text>
+      </View>
+    );
   };
 
   render() {
@@ -55,7 +89,21 @@ class Settings extends React.Component {
                 <Icon name="arrow-forward" style={styles.fontColor} />
               </Right>
             </ListItem>
-            <ListItem noIndent>
+            <ListItem
+              onPress={() => this.props.navigation.push('HowTo')}
+              noIndent
+            >
+              <Left>
+                <Text>Using This App</Text>
+              </Left>
+              <Right>
+                <Icon name="arrow-forward" style={styles.fontColor} />
+              </Right>
+            </ListItem>
+            <ListItem
+              onPress={() => this.props.navigation.push('PrivacyPolicy')}
+              noIndent
+            >
               <Left>
                 <Text>Privacy Policy</Text>
               </Left>
@@ -64,6 +112,7 @@ class Settings extends React.Component {
               </Right>
             </ListItem>
           </List>
+          {this.poweredBy()}
         </Content>
       </Container>
     );

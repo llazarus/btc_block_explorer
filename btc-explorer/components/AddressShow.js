@@ -1,5 +1,13 @@
 import React from 'react';
-import { Text, ScrollView, View, Clipboard, Linking, StyleSheet } from 'react-native';
+import {
+  Text,
+  ScrollView,
+  View,
+  Clipboard,
+  Linking,
+  StyleSheet,
+  Platform,
+} from 'react-native';
 import { withNavigation } from 'react-navigation';
 import {
   Container,
@@ -17,6 +25,13 @@ import HeaderLeftToHome from './HeaderLeftToHome';
 
 const commaNumber = require('comma-number');
 
+let platformPadding = 0;
+if (Platform.OS === 'android') {
+  platformPadding = 13;
+} else {
+  platformPadding = 0;
+}
+
 class AddressShow extends React.Component {
   // TODO: consider adding a button to headerRight that shows a QR Code generated from address hash
   static navigationOptions = ({ navigation }) => ({
@@ -28,7 +43,7 @@ class AddressShow extends React.Component {
           title="add"
           type="MaterialCommunityIcons"
           name="qrcode"
-          style={{ color: '#000', fontSize: 30 }}
+          style={{ color: '#000', fontSize: 30, paddingTop: platformPadding }}
           onPress={() =>
             navigation.navigate('QrCode', {
               type: 'Address',
@@ -115,9 +130,12 @@ class AddressShow extends React.Component {
             key={`txFlow-${key}`}
           >
             <Text
-              style={[styles.whiteFontBold, {
-                paddingHorizontal: 16,
-              }]}
+              style={[
+                styles.whiteFontBold,
+                {
+                  paddingHorizontal: 16,
+                },
+              ]}
             >
               IN
             </Text>
@@ -132,9 +150,7 @@ class AddressShow extends React.Component {
           style={{ marginRight: 15, backgroundColor: '#e1142b' }}
           key={`txFlow-${key}`}
         >
-          <Text
-            style={[styles.whiteFontBold, { paddingHorizontal: 8 }]}
-          >
+          <Text style={[styles.whiteFontBold, { paddingHorizontal: 8 }]}>
             OUT
           </Text>
         </Button>
@@ -146,9 +162,12 @@ class AddressShow extends React.Component {
         <ScrollView>
           <Card style={{ backgroundColor: '#ff9500' }}>
             <CardItem
-              style={[styles.selfCenterOrange, {
-                paddingBottom: 0,
-              }]}
+              style={[
+                styles.selfCenterOrange,
+                {
+                  paddingBottom: 0,
+                },
+              ]}
             >
               <Text
                 numberOfLines={1}
@@ -161,9 +180,12 @@ class AddressShow extends React.Component {
 
             {addressName !== addressInfo.address ? (
               <CardItem
-                style={[styles.selfCenterOrange, {
-                  paddingTop: 5,
-                }]}
+                style={[
+                  styles.selfCenterOrange,
+                  {
+                    paddingTop: 5,
+                  },
+                ]}
               >
                 <Text
                   numberOfLines={1}
@@ -176,10 +198,13 @@ class AddressShow extends React.Component {
             ) : null}
 
             <CardItem
-              style={[styles.selfCenterOrange, {
-                paddingBottom: 0,
-                paddingTop: 6,
-              }]}
+              style={[
+                styles.selfCenterOrange,
+                {
+                  paddingBottom: 0,
+                  paddingTop: 6,
+                },
+              ]}
             >
               <Text style={[styles.whiteFontBold, { fontSize: 18 }]}>
                 ADDRESS BALANCE
@@ -187,12 +212,15 @@ class AddressShow extends React.Component {
             </CardItem>
 
             <CardItem
-              style={[styles.selfCenterOrange, {
-                paddingTop: 4,
-                paddingBottom: 4,
-                borderBottomWidth: 1,
-                borderColor: '#fff',
-              }]}
+              style={[
+                styles.selfCenterOrange,
+                {
+                  paddingTop: 4,
+                  paddingBottom: 4,
+                  borderBottomWidth: 1,
+                  borderColor: '#fff',
+                },
+              ]}
             >
               <Text style={[styles.whiteFontBold, { fontSize: 15 }]}>
                 {commaNumber(satConversion(addressInfo.final_balance))} BTC
@@ -200,10 +228,13 @@ class AddressShow extends React.Component {
             </CardItem>
 
             <CardItem
-              style={[styles.selfCenterOrange, {
-                paddingTop: 4,
-                paddingBottom: 15,
-              }]}
+              style={[
+                styles.selfCenterOrange,
+                {
+                  paddingTop: 4,
+                  paddingBottom: 15,
+                },
+              ]}
             >
               <Text style={[styles.whiteFontBold, { fontSize: 14 }]}>
                 {currencyIcon(currencySymbol)}
@@ -356,16 +387,16 @@ class AddressShow extends React.Component {
 const styles = StyleSheet.create({
   whiteFontBold: {
     color: '#fff',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   selfCenterOrange: {
     alignSelf: 'center',
     backgroundColor: '#ff9500',
   },
   itemPadding: {
-    paddingBottom: 15, 
+    paddingBottom: 15,
     paddingTop: 15,
-  }
+  },
 });
 
 export default withNavigation(AddressShow);
