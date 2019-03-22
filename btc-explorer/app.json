@@ -27,9 +27,11 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.llapplications.btcblockexplorer"
     },
-    "android" : {
+    "android": {
       "package": "com.llapplications.btcblockexplorer",
-      "permissions": ["CAMERA"]
+      "permissions": [
+        "CAMERA"
+      ]
     },
     "androidStatusBar": {
       "barStyle": "dark-content",

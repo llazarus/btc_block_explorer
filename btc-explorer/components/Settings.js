@@ -29,10 +29,10 @@ class Settings extends React.Component {
     if (Platform.OS === 'ios') {
       return (
         <View
-          style={{ alignItems: 'center', marginTop: 30, marginHorizontal: 20 }}
+          style={styles.textStyleOne}
         >
           <Text
-            style={{ fontWeight: 'bold', fontSize: 15, marginBottom: 3 }}
+            style={styles.textStyleTwo}
             numberOfLines={1}
             adjustsFontSizeToFit
           >
@@ -44,13 +44,17 @@ class Settings extends React.Component {
     }
     return (
       <View
-        style={{ alignItems: 'center', marginTop: 30, marginHorizontal: 20 }}
+        style={styles.textStyleOne}
       >
         <Text
-          style={{ fontWeight: 'bold', fontSize: 13, marginBottom: 3 }}
-          numberOfLines={1}
+          style={styles.textStyleTwo}
         >
-          Powered by BlockCypher, CoinDesk, and Blockchain.info
+          Powered by
+        </Text>
+        <Text
+          style={styles.textStyleTwo}
+        >
+          BlockCypher, CoinDesk, and Blockchain.info
         </Text>
         <Text style={{ fontSize: 11 }}>BTC Block Explorer v1.0.0</Text>
       </View>
@@ -123,6 +127,15 @@ const styles = StyleSheet.create({
   fontColor: {
     color: '#000',
   },
+  textStyleOne: {
+    alignItems: 'center',
+    marginTop: 30,
+    marginHorizontal: 20,
+  },
+  textStyleTwo: {
+    fontWeight: 'bold', 
+    fontSize: 15, marginBottom: 3,
+  },  
 });
 
 export default withNavigation(Settings);

@@ -13,6 +13,7 @@ import HeaderButtons, {
   HeaderButton,
   Item,
 } from 'react-navigation-header-buttons';
+import { AppLoading } from 'expo';
 
 import AddressesIndex from './AddressesIndex';
 
@@ -296,12 +297,7 @@ export default class Home extends React.Component {
     }
     if (this.state.loading) {
       return (
-        <Container style={styles.container}>
-          <Text style={{ fontSize: 16 }}>
-            Loading Bitcoin Block Explorer . . .
-          </Text>
-          <Image source={require('../assets/loader.gif')} />
-        </Container>
+        <AppLoading />
       );
     }
     return (

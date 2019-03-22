@@ -6,8 +6,9 @@ import {
   Clipboard,
   Linking,
   StyleSheet,
+  Image,
 } from 'react-native';
-import { withNavigation } from 'react-navigation';
+import { withNavigation, NavigationEvents } from 'react-navigation';
 import {
   Container,
   Card,
@@ -23,6 +24,22 @@ import {
 const commaNumber = require('comma-number');
 
 class AddressesIndex extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loading: false,
+    };
+
+    this.handleAddrPress = this.handleAddrPress.bind(this);
+  }
+
+  handleAddrPress = () => {
+    this.setState({
+      loading: true,
+    });
+  }
+
   render() {
     let sumBtc = 0;
     const addressList = [];
@@ -165,6 +182,20 @@ class AddressesIndex extends React.Component {
       return <Text key={`unconfirmed-tx-${num}`}>| NONE UNCONFIRMED</Text>;
     };
 
+    console.log(this.state.loading+ "!!!");
+    if (this.state.loading) {
+      return (
+        <Container style={styles.container}>
+          <NavigationEvents
+            onWillFocus={() => this.setState({ loading: false })}
+          />
+          <Text style={{ fontSize: 16 }}>
+            Loading Address Activity . . .
+          </Text>
+          <Image source={require('../assets/loader.gif')} />
+        </Container>
+      );  
+    }
     return (
       <Container>
         {/* Price info card */}
@@ -244,14 +275,19 @@ class AddressesIndex extends React.Component {
                 noIndent
                 iconRight
                 key={`listItem-${a}`}
-                onPress={() =>
-                  this.props.navigation.push('AddressShow', {
-                    addressInfo: this.props.addresses[a],
-                    addressName: sortedAddressNames[a],
-                    rate,
-                    currencySymbol,
-                  })
-                }
+                onPress={() => {
+                  setTimeout(() => {
+                    this.handleAddrPress();
+                  }, 10);
+                  setTimeout(() => {
+                    this.props.navigation.push('AddressShow', {
+                      addressInfo: this.props.addresses[a],
+                      addressName: sortedAddressNames[a],
+                      rate,
+                      currencySymbol,
+                    });
+                  }, 100);
+                }}
                 onLongPress={() => {
                   ActionSheet.show(
                     {
@@ -337,6 +373,12 @@ class AddressesIndex extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   bgColor: {
     backgroundColor: '#ff9500',
   },

@@ -31,7 +31,9 @@ export default class App extends React.Component {
     if (this.state.loading) {
       return (
         <Root>
-          <AppLoading />
+          <AppLoading 
+            autoHideSplash={false}
+          />
         </Root>
       );
     }

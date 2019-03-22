@@ -58,7 +58,7 @@ class TransactionShow extends React.Component {
           title="add"
           type="MaterialCommunityIcons"
           name="qrcode"
-          style={{ color: '#000', fontSize: 30 }}
+          style={{ color: '#000', fontSize: 30, paddingTop: platformPadding }}
           onPress={() =>
             navigation.navigate('QrCode', {
               type: 'Transaction',
