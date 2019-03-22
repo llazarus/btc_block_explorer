@@ -52,7 +52,7 @@ class Settings extends React.Component {
         >
           Powered by BlockCypher, CoinDesk, and Blockchain.info
         </Text>
-        <Text style={{ fontSize: 11 }}>BTC Block Explorer v1.1.0</Text>
+        <Text style={{ fontSize: 11 }}>BTC Block Explorer v1.0.0</Text>
       </View>
     );
   };

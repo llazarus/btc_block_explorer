@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "BTC Block Explorer",
-    "description": "A safe, simple tool for observing Bitcoin addresses and their activity",
+    "description": "A safe, simple tool for observing Bitcoin addresses and their activity.",
     "slug": "btc-block-explorer",
     "privacy": "public",
     "sdkVersion": "32.0.0",
@@ -24,13 +24,18 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.llapplications.btcblockexplorer"
+    },
+    "android" : {
+      "package": "com.llapplications.btcblockexplorer",
+      "permissions": ["CAMERA"]
     },
     "androidStatusBar": {
       "barStyle": "dark-content",
       "backgroundColor": "#ffffff"
     },
-    "githubUrl" : "https://github.com/llazarus/btc_block_explorer",
+    "githubUrl": "https://github.com/llazarus/btc_block_explorer",
     "primaryColor": "#ffffff"
   }
 }
