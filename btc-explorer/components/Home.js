@@ -189,8 +189,8 @@ export default class Home extends React.Component {
               addressString1 += addressArray[i][1].concat(';');
             } else if (i === 2) {
               addressString1 += addressArray[i][1];
-            } else if (i !== addressArray.length - 1 && i < 5) {
-              addressString2 += addressArray[i][1];
+            } else if (i !== addressArray.length - 1) {
+              addressString2 += addressArray[i][1].concat(';');
             } else {
               addressString2 += addressArray[i][1];
             }
@@ -227,23 +227,11 @@ export default class Home extends React.Component {
                 loadingError: false,
               });
             }
-          } else if (jsonAddresses.address) {
-            this.setState({
-              numAddresses: 1,
-              addresses: [jsonAddresses],
-              loading: false,
-              loadingError: false,
-            });
-          } else {
-            this.setState({
-              loadingError: true,
-            });
-          }
+          } 
         }
       }
     } catch {
       console.log('3rd party API offline 😡');
-      // Maybe have a different state, ie serverError, to differentiate from a loading error or request exception
       this.setState({
         loadingError: true,
       });
@@ -322,12 +310,3 @@ export default class Home extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

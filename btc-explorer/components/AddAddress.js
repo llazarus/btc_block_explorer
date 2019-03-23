@@ -102,8 +102,8 @@ class AddAddress extends React.Component {
 
       const splitAddresses = allAddrs.split(/SPLITADDRSHERE/g);
 
-      if (splitAddresses.length >= 13) {
-        // do something if user is tracking 6 addresses
+      if (splitAddresses.length >= 11) {
+        // do something if user is tracking 5 addresses
         Toast.show({
           text: 'Address limit reached! Delete a saved address and try again!',
           buttonText: 'Dismiss',
@@ -115,7 +115,10 @@ class AddAddress extends React.Component {
         try {
           const newAddrs = allAddrs.concat(newAddr);
           await AsyncStorage.setItem('addresses', newAddrs);
-          this.props.navigation.navigate('Home');
+          this.props.navigation.navigate({
+            routeName: 'Home',
+            key: newAddrs.length,
+          });
         } catch (error) {
           // do something if error, maybe a toast popup?
           console.log(error);

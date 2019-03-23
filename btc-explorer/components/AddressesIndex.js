@@ -6,6 +6,7 @@ import {
   Clipboard,
   Linking,
   StyleSheet,
+  ScrollView,
   Image,
 } from 'react-native';
 import { withNavigation, NavigationEvents } from 'react-navigation';
@@ -197,175 +198,178 @@ class AddressesIndex extends React.Component {
     }
     return (
       <Container>
-        {/* Price info card */}
-        <Card style={styles.bgColor}>
-          <CardItem
-            style={[styles.bgColor, styles.selfCenter, {
-              paddingBottom: 2,
-            }]}
-          >
-            <Text style={styles.titleOne}>SUM BALANCE - ALL ADDRESSES</Text>
-          </CardItem>
+        <ScrollView>
 
-          <CardItem
-            style={[styles.bgColor, styles.selfCenter, {
-                paddingBottom: 5,
-                borderBottomWidth: 1,
-                borderColor: '#fff',
-              },
-            ]}
-          >
-            <Text
-              style={[styles.boldText, styles.fontTwenty, { color: '#fff' }]}
+          {/* Price info card */}
+          <Card style={styles.bgColor}>
+            <CardItem
+              style={[styles.bgColor, styles.selfCenter, {
+                paddingBottom: 2,
+              }]}
             >
-              {commaNumber(satConversion(sumBtc))} BTC
-            </Text>
-          </CardItem>
+              <Text style={styles.titleOne}>SUM BALANCE - ALL ADDRESSES</Text>
+            </CardItem>
 
-          <CardItem
-            style={[styles.bgColor, styles.selfCenter, {
-                paddingTop: 5,
-              },
-            ]}
-          >
-            <Text style={styles.titleOne}>
-              {currencyIcon(currencySymbol)}
-              {commaNumber((rate * satConversion(sumBtc)).toFixed(2))}{' '}
-              {currencySymbol}
-            </Text>
-          </CardItem>
-
-          <View
-            style={[
-              styles.bgColor,
-              styles.selfCenter,
-              {
-                paddingTop: 5,
-              },
-            ]}
-          >
-            <Text style={styles.subText}>
-              LAST UPDATED: {updatedAt.toUpperCase()}
-            </Text>
-          </View>
-
-          <View
-            style={[
-              styles.bgColor,
-              styles.selfCenter,
-              {
-                paddingBottom: 10,
-              },
-            ]}
-          >
-            <Text style={styles.subText}>
-              1 BTC = {currencyIcon(currencySymbol)}
-              {commaNumber(rate)} {currencySymbol}
-            </Text>
-          </View>
-        </Card>
-        {/*  */}
-
-        {/* Address(es) info card */}
-        <Card>
-          <List>
-            {numAddresses.map(a => (
-              <ListItem
-                noIndent
-                iconRight
-                key={`listItem-${a}`}
-                onPress={() => {
-                  setTimeout(() => {
-                    this.handleAddrPress();
-                  }, 10);
-                  setTimeout(() => {
-                    this.props.navigation.push('AddressShow', {
-                      addressInfo: this.props.addresses[a],
-                      addressName: sortedAddressNames[a],
-                      rate,
-                      currencySymbol,
-                    });
-                  }, 100);
-                }}
-                onLongPress={() => {
-                  ActionSheet.show(
-                    {
-                      options: [
-                        'Copy Address',
-                        'Open Address In Browser',
-                        'Delete Address',
-                        'Cancel',
-                      ],
-                      cancelButtonIndex: 3,
-                      destructiveButtonIndex: 2,
-                      title: sortedAddressNames[a],
-                    },
-                    buttonIndex => {
-                      if (buttonIndex === 0) {
-                        copyAddress(addressList[a]);
-                      } else if (buttonIndex === 1) {
-                        openAddress(addressList[a]);
-                      } else if (buttonIndex === 2) {
-                        deleteAddress(addressList[a]);
-                      }
-                    }
-                  );
-                }}
+            <CardItem
+              style={[styles.bgColor, styles.selfCenter, {
+                  paddingBottom: 5,
+                  borderBottomWidth: 1,
+                  borderColor: '#fff',
+                },
+              ]}
+            >
+              <Text
+                style={[styles.boldText, styles.fontTwenty, { color: '#fff' }]}
               >
-                <Body>
-                  {/* GIVEN ADDRESS NAME HERE!!! */}
-                  <View
-                    style={{
-                      marginBottom: 10,
-                      borderColor: '#000',
-                      borderBottomWidth: 0.25,
-                    }}
-                  >
-                    <Text
-                      numberOfLines={1}
-                      ellipsizeMode="middle"
-                      style={[
-                        styles.selfCenter,
-                        styles.boldText,
-                        {
-                          fontSize: 15,
-                          paddingBottom: 10,
-                        },
-                      ]}
+                {commaNumber(satConversion(sumBtc))} BTC
+              </Text>
+            </CardItem>
+
+            <CardItem
+              style={[styles.bgColor, styles.selfCenter, {
+                  paddingTop: 5,
+                },
+              ]}
+            >
+              <Text style={styles.titleOne}>
+                {currencyIcon(currencySymbol)}
+                {commaNumber((rate * satConversion(sumBtc)).toFixed(2))}{' '}
+                {currencySymbol}
+              </Text>
+            </CardItem>
+
+            <View
+              style={[
+                styles.bgColor,
+                styles.selfCenter,
+                {
+                  paddingTop: 5,
+                },
+              ]}
+            >
+              <Text style={styles.subText}>
+                LAST UPDATED: {updatedAt.toUpperCase()}
+              </Text>
+            </View>
+
+            <View
+              style={[
+                styles.bgColor,
+                styles.selfCenter,
+                {
+                  paddingBottom: 10,
+                },
+              ]}
+            >
+              <Text style={styles.subText}>
+                1 BTC = {currencyIcon(currencySymbol)}
+                {commaNumber(rate)} {currencySymbol}
+              </Text>
+            </View>
+          </Card>
+          {/*  */}
+
+          {/* Address(es) info card */}
+          <Card>
+            <List>
+              {numAddresses.map(a => (
+                <ListItem
+                  noIndent
+                  iconRight
+                  key={`listItem-${a}`}
+                  onPress={() => {
+                    setTimeout(() => {
+                      this.handleAddrPress();
+                    }, 10);
+                    setTimeout(() => {
+                      this.props.navigation.push('AddressShow', {
+                        addressInfo: this.props.addresses[a],
+                        addressName: sortedAddressNames[a],
+                        rate,
+                        currencySymbol,
+                      });
+                    }, 100);
+                  }}
+                  onLongPress={() => {
+                    ActionSheet.show(
+                      {
+                        options: [
+                          'Copy Address',
+                          'Open Address In Browser',
+                          'Delete Address',
+                          'Cancel',
+                        ],
+                        cancelButtonIndex: 3,
+                        destructiveButtonIndex: 2,
+                        title: sortedAddressNames[a],
+                      },
+                      buttonIndex => {
+                        if (buttonIndex === 0) {
+                          copyAddress(addressList[a]);
+                        } else if (buttonIndex === 1) {
+                          openAddress(addressList[a]);
+                        } else if (buttonIndex === 2) {
+                          deleteAddress(addressList[a]);
+                        }
+                      }
+                    );
+                  }}
+                >
+                  <Body>
+                    {/* GIVEN ADDRESS NAME HERE!!! */}
+                    <View
+                      style={{
+                        marginBottom: 10,
+                        borderColor: '#000',
+                        borderBottomWidth: 0.25,
+                      }}
                     >
-                      {sortedAddressNames[a]}
+                      <Text
+                        numberOfLines={1}
+                        ellipsizeMode="middle"
+                        style={[
+                          styles.selfCenter,
+                          styles.boldText,
+                          {
+                            fontSize: 15,
+                            paddingBottom: 10,
+                          },
+                        ]}
+                      >
+                        {sortedAddressNames[a]}
+                      </Text>
+                    </View>
+
+                    {/* IF GIVEN NAME !== ADDRESS THEN PUT ADDRESS HERE!!! */}
+                    {/* TODO: Truncate address so text doesn't wrap */}
+                    {sortedAddressNames[a] !== addressList[a] ? (
+                      <Text
+                        numberOfLines={1}
+                        ellipsizeMode="middle"
+                        style={{ paddingRight: 20 }}
+                      >
+                        ADDRESS: {addressList[a]}
+                      </Text>
+                    ) : null}
+
+                    <Text>BALANCE: {satConversion(addressBalance[a])} BTC</Text>
+
+                    <Text style={{ marginBottom: 5 }}>
+                      TRANSACTIONS: {commaNumber(allTxs[a])}{' '}
+                      {renderUnconfirmed(unconfirmedTxs[a])}
                     </Text>
-                  </View>
+                  </Body>
 
-                  {/* IF GIVEN NAME !== ADDRESS THEN PUT ADDRESS HERE!!! */}
-                  {/* TODO: Truncate address so text doesn't wrap */}
-                  {sortedAddressNames[a] !== addressList[a] ? (
-                    <Text
-                      numberOfLines={1}
-                      ellipsizeMode="middle"
-                      style={{ paddingRight: 20 }}
-                    >
-                      ADDRESS: {addressList[a]}
-                    </Text>
-                  ) : null}
-
-                  <Text>BALANCE: {satConversion(addressBalance[a])} BTC</Text>
-
-                  <Text style={{ marginBottom: 5 }}>
-                    TRANSACTIONS: {commaNumber(allTxs[a])}{' '}
-                    {renderUnconfirmed(unconfirmedTxs[a])}
-                  </Text>
-                </Body>
-
-                <Icon
-                  name="arrow-forward"
-                  style={[styles.fontTwenty, { paddingTop: 30 }]}
-                />
-              </ListItem>
-            ))}
-          </List>
-        </Card>
-        {/*  */}
+                  <Icon
+                    name="arrow-forward"
+                    style={[styles.fontTwenty, { paddingTop: 30 }]}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          </Card>
+          {/*  */}
+        </ScrollView>
       </Container>
     );
   }
