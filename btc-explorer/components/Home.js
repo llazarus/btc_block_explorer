@@ -114,7 +114,7 @@ export default class Home extends React.Component {
 
           Toast.show({
             text:
-              'Welcome to BTC Block Explorer! Tap the icons in the header to add your first address or change your currency settings!\n\nThe current app version allows you to save up to 6 addresses and refresh each data point at a limit of 200 times per hour.',
+              'Welcome to BTC Block Explorer! Tap the icons in the header to add your first address or change your currency settings!\n\nThe current app version allows you to save up to 3 addresses and refresh each data point at a limit of 200 times per hour.',
             textStyle: {
               fontSize: 14,
               textAlign: 'center',
