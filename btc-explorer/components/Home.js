@@ -182,52 +182,57 @@ export default class Home extends React.Component {
             });
           }
         }
-        // If user has more than 3 addresses saved!
+        // If user has more than 3 addresses saved: for now, clear saved addresses, as free tier API calls will otherwise be exhausted. The lines which have been commented out can be uncommented to allow up to 6 addresses to be tracked; likewise the change will need to be accomodated in the AddAddress component's possibleAddr function.
         else {
-          for (let i = 0; i < addressArray.length; i += 1) {
-            if (i < 2) {
-              addressString1 += addressArray[i][1].concat(';');
-            } else if (i === 2) {
-              addressString1 += addressArray[i][1];
-            } else if (i !== addressArray.length - 1) {
-              addressString2 += addressArray[i][1].concat(';');
-            } else {
-              addressString2 += addressArray[i][1];
-            }
-          }
+          AsyncStorage.clear();
+          this.setState({
+            loading: false,
+            loadingError: false,
+          }); 
+          // for (let i = 0; i < addressArray.length; i += 1) {
+          //   if (i < 2) {
+          //     addressString1 += addressArray[i][1].concat(';');
+          //   } else if (i === 2) {
+          //     addressString1 += addressArray[i][1];
+          //   } else if (i !== addressArray.length - 1) {
+          //     addressString2 += addressArray[i][1].concat(';');
+          //   } else {
+          //     addressString2 += addressArray[i][1];
+          //   }
+          // }
 
-          const responseAddresses1 = await fetch(
-            `https://api.blockcypher.com/v1/btc/main/addrs/${addressString1}`
-          );
-          const jsonAddresses1 = await responseAddresses1.json();
+          // const responseAddresses1 = await fetch(
+          //   `https://api.blockcypher.com/v1/btc/main/addrs/${addressString1}`
+          // );
+          // const jsonAddresses1 = await responseAddresses1.json();
 
-          await new Promise(resolve => setTimeout(resolve, 1100));
+          // await new Promise(resolve => setTimeout(resolve, 1100));
 
-          const responseAddresses2 = await fetch(
-            `https://api.blockcypher.com/v1/btc/main/addrs/${addressString2}`
-          );
-          const jsonAddresses2 = await responseAddresses2.json();
+          // const responseAddresses2 = await fetch(
+          //   `https://api.blockcypher.com/v1/btc/main/addrs/${addressString2}`
+          // );
+          // const jsonAddresses2 = await responseAddresses2.json();
 
-          const jsonAddresses = jsonAddresses1.concat(jsonAddresses2);
+          // const jsonAddresses = jsonAddresses1.concat(jsonAddresses2);
 
-          if (jsonAddresses.length) {
-            for (let i = 0; i < jsonAddresses.length; i += 1) {
-              if (jsonAddresses[i].error !== undefined) {
-                console.log(jsonAddresses[i].error);
-                this.setState({
-                  loadingError: true,
-                });
-              }
-            }
-            if (this.state.loadingError === false) {
-              this.setState({
-                numAddresses: jsonAddresses.length,
-                addresses: jsonAddresses,
-                loading: false,
-                loadingError: false,
-              });
-            }
-          } 
+          // if (jsonAddresses.length) {
+          //   for (let i = 0; i < jsonAddresses.length; i += 1) {
+          //     if (jsonAddresses[i].error !== undefined) {
+          //       console.log(jsonAddresses[i].error);
+          //       this.setState({
+          //         loadingError: true,
+          //       });
+          //     }
+          //   }
+          //   if (this.state.loadingError === false) {
+          //     this.setState({
+          //       numAddresses: jsonAddresses.length,
+          //       addresses: jsonAddresses,
+          //       loading: false,
+          //       loadingError: false,
+          //     });
+          //   }
+          // } 
         }
       }
     } catch {

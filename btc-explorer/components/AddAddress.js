@@ -102,8 +102,8 @@ class AddAddress extends React.Component {
 
       const splitAddresses = allAddrs.split(/SPLITADDRSHERE/g);
 
-      if (splitAddresses.length >= 11) {
-        // do something if user is tracking 5 addresses
+      if (splitAddresses.length >= 7) {
+        // do something if user is tracking 3 addresses
         Toast.show({
           text: 'Address limit reached! Delete a saved address and try again!',
           buttonText: 'Dismiss',
@@ -120,7 +120,6 @@ class AddAddress extends React.Component {
             key: newAddrs.length,
           });
         } catch (error) {
-          // do something if error, maybe a toast popup?
           console.log(error);
           Toast.show({
             text: 'Unable to add address!',
@@ -135,7 +134,6 @@ class AddAddress extends React.Component {
         }
       }
     } else {
-      // Do the things for an invalid address
       Toast.show({
         text: 'Unable to add address!',
         buttonText: 'Dismiss',

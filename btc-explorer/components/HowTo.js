@@ -60,7 +60,7 @@ class HowTo extends React.Component {
               <Body>
                 <Text style={styles.cardHeader}>Adding An Addresses</Text>
                 <Text style={styles.cardText}>
-                  BTC Block Explorer allows users to save up to 5 addresses.
+                  BTC Block Explorer allows users to save up to 3 addresses.
                   Addresses can be input by QR code or manually using the device
                   keyboard. Prior to saving, addresses can be assigned an
                   optional name. Please note that the current version of BTC
