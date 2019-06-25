@@ -29,12 +29,17 @@ class AddAddress extends React.Component {
       address: this.props.navigation.getParam('address', ''),
       addressPossible: false,
       addressError: false,
+      testWidth: '99%'
     };
     this.possibleAddr = this.possibleAddr.bind(this);
     this.confirmAddr = this.confirmAddr.bind(this);
   }
 
   componentDidMount() {
+    setTimeout(() => {
+      this.setState({testWidth: '100%'})
+    }, 100)
+
     if (this.state.address.length > 24) {
       this.possibleAddr(this.state.address);
     }
@@ -162,6 +167,7 @@ class AddAddress extends React.Component {
               <Input
                 onChangeText={name => this.setState({ addressName: name })}
                 defaultValue={addressNameToPersist}
+                style={{width: this.state.testWidth}}
               />
             </Item>
             {this.state.addressError === true ? (
@@ -173,6 +179,7 @@ class AddAddress extends React.Component {
                     this.possibleAddr(addrInput);
                   }}
                   defaultValue={addressToPersist}
+                  style={{width: this.state.testWidth}}
                 />
               </Item>
             ) : (
@@ -184,6 +191,7 @@ class AddAddress extends React.Component {
                     this.possibleAddr(addrInput);
                   }}
                   defaultValue={addressToPersist}
+                  style={{width: this.state.testWidth}}
                 />
               </Item>
             )}
