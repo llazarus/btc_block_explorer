@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "BTC Block Explorer",
-    "description": "A safe, simple tool for observing Bitcoin addresses and their activity.\n\nAvailable to download for Android at https://play.google.com/store/apps/details?id=com.llapplications.btcblockexplorer",
+    "description": "A safe, simple tool for observing Bitcoin addresses and their activity.",
     "slug": "btc-block-explorer",
     "privacy": "public",
     "sdkVersion": "32.0.0",
