@@ -11,7 +11,7 @@
   "dependencies": {
     "@expo/vector-icons": "^9.0.0",
     "comma-number": "^2.0.0",
-    "expo": "^32.0.6",
+    "expo": "^46.0.14",
     "native-base": "^2.12.1",
     "pluralize": "^7.0.0",
     "react": "16.5.0",
